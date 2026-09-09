@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaldean Numerology Pro</title>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6200ea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon-192.png">
+    <style>
+        :root { --primary: #6200ea; --surface: #ffffff; --background: #f3f4f6; --text: #333333; --text-secondary: #666666; --border-radius: 12px; }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--background); margin: 0; padding: 20px; color: var(--text); display: flex; justify-content: center; }
+        .container { width: 100%; height: auto; min-height: 960px; max-width: 500px; background: var(--surface); padding: 24px; border-radius: var(--border-radius); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        
+        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        h1 { font-size: 1.5rem; color: var(--primary); margin: 0; }
+        .lang-toggle { background: #e0e0e0; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
+        
+        .subtitle { text-align: left; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px; margin-top: 4px; }
+        .input-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; }
+        input[type="text"], input[type="date"] { width: 100%; padding: 12px; font-size: 1rem; border: 2px solid #e0e0e0; border-radius: var(--border-radius); box-sizing: border-box; transition: border-color 0.2s; }
+        input[type="text"]:focus, input[type="date"]:focus { border-color: var(--primary); outline: none; }
+        
+        .btn-main { width: 100%; padding: 14px; background-color: var(--primary); color: white; border: none; border-radius: var(--border-radius); font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 10px; }
+        .btn-main:hover { background-color: #4a00b0; }
+        
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+        .btn-pdf { background-color: #00897b; color: white; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-wa { background-color: #25D366; color: white; padding: 10px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        .result-card { margin-top: 24px; border: 1px solid #e0e0e0; border-radius: var(--border-radius); padding: 0; overflow: hidden; display: none; animation: fadeIn 0.4s ease-in-out; background: white; }
+        .card-header { background-color: #f8f9fa; padding: 16px; border-bottom: 1px solid #e0e0e0; display: flex; gap: 16px; flex-wrap: wrap; }
+        .badge-col { display: flex; flex-direction: column; align-items: center; }
+        .badge-title { font-size: 0.75rem; color: var(--text-secondary); font-weight: bold; margin-bottom: 4px; }
+        .number-badge { color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; }
+        
+        .card-body { padding: 20px; }
+        .section-title { font-size: 0.9rem; text-transform: uppercase; margin-bottom: 8px; margin-top: 16px; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+        .trait-text { font-size: 0.95rem; line-height: 1.5; color: #2c3e50; }
+        .breakdown { margin-top: 15px; font-size: 0.85rem; color: var(--text-secondary); background: #fafafa; padding: 10px; border-radius: 8px; }
+        
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+        .dash-item { background: #f4f6f8; padding: 10px; border-radius: 8px; font-size: 0.85rem; text-align: center; border: 1px solid #e0e0e0; }
+        .dash-item strong { display: block; color: var(--primary); margin-bottom: 4px; }
+        
+        .loshu-container { display: flex; justify-content: center; margin-top: 10px; margin-bottom: 20px; }
+        .loshu-table { border-collapse: collapse; background: white; margin: 0 auto; border: 2px solid #6200ea; width: 150px; }
+        .loshu-table td { width: 50px; height: 50px; max-width: 50px; border: 2px solid #6200ea; text-align: center; vertical-align: middle; font-weight: bold; font-size: 1.2rem; color: #333333; }
+        .loshu-empty { color: #cccccc !important; font-weight: normal !important; font-size: 0.85rem !important; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* PDF Export Overrides */
+        .pdf-export-mode, .pdf-export-mode * { 
+            animation: none !important; 
+            transition: none !important; 
+            opacity: 1 !important; 
+        }
+        .pdf-export-mode { padding: 0 !important; margin: 0 !important; background: white !important; }
+        .pdf-export-mode .result-card { border: none !important; box-shadow: none !important; margin-top: 0 !important; padding-top: 0 !important; }
+        .pdf-export-mode .card-body { padding-top: 10px !important; }
+        
+        /* Force Lo Shu grid to render correctly in PDF */
+        .pdf-export-mode .loshu-container { display: block !important; text-align: center !important; }
+        .pdf-export-mode .loshu-table { margin: 0 auto !important; border: 2px solid #6200ea !important; width: 150px !important; }
+        .pdf-export-mode .loshu-table td { border: 2px solid #6200ea !important; color: #333333 !important; background: #ffffff !important; width: 50px !important; height: 50px !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="inputSection">
+        <div class="header-bar">
+            <h1>Name Numerology</h1>
+            <button class="lang-toggle" id="langBtn" onclick="toggleLang()">EN / HI</button>
+        </div>
+        <p class="subtitle" id="subLabel">Advanced Calculation & Analysis</p>
+
+        <div class="input-group">
+            <label for="nameInput" id="nameLabel">Enter Full Name (English)</label>
+            <input type="text" id="nameInput" placeholder="e.g. BHUVAN SHARMA">
+        </div>
+
+        <div class="input-group">
+            <label for="dobInput" id="dobLabel">Enter Birth Date (Optional)</label>
+            <input type="date" id="dobInput">
+        </div>
+
+        <button class="btn-main" id="calcBtn" onclick="calculateNumerology()">Calculate</button>
+    </div>
+
+    <div id="reportArea">
+        <div id="resultCard" class="result-card">
+            
+            <h2 id="pdfHeader" style="display:none; text-align:center; color:var(--primary); margin-top:0; padding-top:15px;">Numerology Report</h2>
+            <p id="pdfNameDisplay" style="display:none; text-align:center; font-weight:bold; font-size:1.1rem; margin-top:-5px; margin-bottom:5px;"></p>
+            <p id="pdfDobDisplay" style="display:none; text-align:center; font-size:0.95rem; color:var(--text-secondary); margin-top:0; margin-bottom:15px;"></p>
+
+            <div class="card-header">
+                <div class="badge-col">
+                    <span class="badge-title" id="l_comp">Compound</span>
+                    <div class="number-badge" style="background-color: var(--primary);" id="totalNumber">0</div>
+                </div>
+                <div class="badge-col">
+                    <span class="badge-title" id="l_nameroot">Name Root</span>
+                    <div class="number-badge" style="background-color: #00897b;" id="rootNumber">0</div>
+                </div>
+                <div class="badge-col dob-dep" style="display:none;">
+                    <span class="badge-title" id="l_psychic">Psychic</span>
+                    <div class="number-badge" style="background-color: #ff9800;" id="psychicNumber">0</div>
+                </div>
+                <div class="badge-col dob-dep" style="display:none;">
+                    <span class="badge-title" id="l_destiny">Destiny</span>
+                    <div class="number-badge" style="background-color: #e53935;" id="destinyNumber">0</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="section-title" style="color: #00897b;" id="l_root_trait">Name Root Trait:</div>
+                <div class="trait-text" id="rootPredictionText"></div>
+                
+                <div class="section-title" style="color: var(--primary);" id="l_comp_trait">Compound Trait:</div>
+                <div class="trait-text" id="predictionText"></div>
+                <div class="breakdown" id="calcBreakdown"></div>
+
+                <div id="dobResultSection" style="display: none;">
+                    
+                    <div class="dashboard-grid">
+                        <div class="dash-item"><strong id="l_color">Lucky Color</strong><span id="luckyColor"></span></div>
+                        <div class="dash-item"><strong id="l_gem">Gemstone</strong><span id="luckyGem"></span></div>
+                        <div class="dash-item"><strong id="l_days">Lucky Days</strong><span id="luckyDays"></span></div>
+                        <div class="dash-item"><strong id="l_year">Personal Year</strong><span id="personalYear" style="font-weight:bold; font-size:1.1rem; color:#e53935;"></span></div>
+                    </div>
+
+                    <div class="section-title" style="color: #ff9800;" id="l_psy_trait">Psychic Trait:</div>
+                    <div class="trait-text" id="psychicText"></div>
+                    
+                    <div class="section-title" style="color: #e53935;" id="l_des_trait">Destiny Trait:</div>
+                    <div class="trait-text" id="destinyText"></div>
+
+                    <div class="section-title" style="color: var(--primary); text-align:center; margin-top:20px; padding-bottom:10px;" id="l_loshu">Lo Shu Grid Analysis</div>
+                    <div class="loshu-container">
+                        <table class="loshu-table" id="loshuGrid">
+                            <tr><td id="ls_4"></td><td id="ls_9"></td><td id="ls_2"></td></tr>
+                            <tr><td id="ls_3"></td><td id="ls_5"></td><td id="ls_7"></td></tr>
+                            <tr><td id="ls_8"></td><td id="ls_1"></td><td id="ls_6"></td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-grid" id="actionBtns" style="display:none;">
+        <button class="btn-pdf" onclick="generatePDF()">📄 Download PDF</button>
+        <button class="btn-wa" onclick="shareWhatsApp()">💬 Share on WA</button>
+    </div>
+</div>
+
+<script>
+    let isEnglish = false; 
+    let currentData = {}; 
+    const currentDate = new Date();
+
+    const chaldeanMap = { 'A':1, 'I':1, 'J':1, 'Q':1, 'Y':1, 'B':2, 'K':2, 'R':2, 'C':3, 'G':3, 'L':3, 'S':3, 'D':4, 'M':4, 'T':4, 'E':5, 'H':5, 'N':5, 'X':5, 'U':6, 'V':6, 'W':6, 'O':7, 'Z':7, 'F':8, 'P':8 };
+
+    const luckyElements = {
+        1: { hi_color: "लाल, पीला", en_color: "Red, Yellow", hi_gem: "माणिक्य (Ruby)", en_gem: "Ruby", hi_days: "रविवार, सोमवार", en_days: "Sun, Mon" },
+        2: { hi_color: "सफेद, हल्का हरा", en_color: "White, Light Green", hi_gem: "मोती (Pearl)", en_gem: "Pearl", hi_days: "सोमवार, शुक्रवार", en_days: "Mon, Fri" },
+        3: { hi_color: "पीला, बैंगनी", en_color: "Yellow, Purple", hi_gem: "पुखराज (Yellow Sapphire)", en_gem: "Yellow Sapphire", hi_days: "गुरुवार, मंगलवार", en_days: "Thu, Tue" },
+        4: { hi_color: "नीला, खाकी", en_color: "Blue, Khaki", hi_gem: "गोमेद (Hessonite)", en_gem: "Hessonite", hi_days: "रविवार, सोमवार", en_days: "Sun, Mon" },
+        5: { hi_color: "हरा, हल्का शेड", en_color: "Green, Light Shades", hi_gem: "पन्ना (Emerald)", en_gem: "Emerald", hi_days: "बुधवार, शुक्रवार", en_days: "Wed, Fri" },
+        6: { hi_color: "सफेद, हल्का नीला", en_color: "White, Light Blue", hi_gem: "हीरा (Diamond)", en_gem: "Diamond", hi_days: "शुक्रवार, मंगलवार", en_days: "Fri, Tue" },
+        7: { hi_color: "हल्का हरा, सफेद", en_color: "Light Green, White", hi_gem: "लहसुनिया (Cat's Eye)", en_gem: "Cat's Eye", hi_days: "रविवार, सोमवार", en_days: "Sun, Mon" },
+        8: { hi_color: "काला, गहरा नीला", en_color: "Black, Dark Blue", hi_gem: "नीलम (Blue Sapphire)", en_gem: "Blue Sapphire", hi_days: "शनिवार, शुक्रवार", en_days: "Sat, Fri" },
+        9: { hi_color: "लाल, गुलाबी", en_color: "Red, Pink", hi_gem: "मूंगा (Red Coral)", en_gem: "Red Coral", hi_days: "मंगलवार, गुरुवार", en_days: "Tue, Thu" }
+    };
+
+    const rootPredictions = {
+        1: { hi: "सूर्य का अंक: नेतृत्व, स्वतंत्रता, दृढ़ इच्छाशक्ति, महत्वाकांक्षा का प्रतीक।", en: "Sun Number: Symbolizes leadership, independence, strong will, and ambition." },
+        2: { hi: "चन्द्रमा का अंक: सौम्यता, भावुकता, कल्पनाशीलता, सहयोग का सूचक।", en: "Moon Number: Indicates gentleness, emotional depth, imagination, and cooperation." },
+        3: { hi: "बृहस्पति (गुरु): ज्ञान, बुद्धि, दूरदर्शिता, विद्या, आध्यात्मिकता तथा सामाजिक प्रतिष्ठा।", en: "Jupiter Number: Represents knowledge, wisdom, foresight, and social prestige." },
+        4: { hi: "राहु का अंक: आकस्मिक परिवर्तन, संघर्ष, अनूठी सोच, मौलिक विचार।", en: "Rahu Number: Symbolizes sudden changes, struggle, unique thinking, and originality." },
+        5: { hi: "बुध का अंक: तीव्र बुद्धि, बहुमुखी प्रतिभा, वाकपटुता, व्यापारिक दक्षता।", en: "Mercury Number: Indicates sharp intellect, versatility, eloquence, and business acumen." },
+        6: { hi: "शुक्र का अंक: प्रेम, सौंदर्य, आकर्षण, भौतिक सुख-सुविधाओं, कला।", en: "Venus Number: Represents love, beauty, attraction, luxury, and artistic flair." },
+        7: { hi: "केतु का अंक: रहस्य, शोध, दार्शनिक दृष्टिकोण, एकांतप्रियता, अंतर्मुखी।", en: "Ketu Number: Symbolizes mystery, research, philosophical outlook, and introversion." },
+        8: { hi: "शनि का अंक: कठिन परिश्रम, अनुशासन, धैर्य, संघर्ष तथा स्थायी सफलता।", en: "Saturn Number: Indicates hard work, discipline, patience, struggle, and eventual success." },
+        9: { hi: "मंगल का अंक: अदम्य साहस, ऊर्जा, पराक्रम, नेतृत्व, आक्रामकता।", en: "Mars Number: Represents indomitable courage, energy, valor, leadership, and aggression." }
+    };
+
+    const compoundPredictions = {
+        10: "यह अंक प्रबल इच्छा शक्ति, आत्मविश्वास तथा धैर्य का सुचक है। ऐसा व्यक्ति एक वार मन में जो निश्चय कर लेता है उसे पूरा करके ही छोड़ता है। ऐसे व्यक्ति साधारण घराने में जन्म लेकर भी काफी ऊंचे उठते हैं।",
+        11: "ऐसा व्यक्ति अस्थिर तथा दुर्बल चित्तवृत्ति का होता है। जीवन में आगे बढ़ने का प्रयत्न तो करता है, परन्तु जल्दी ही निराश होकर बैठ जाता है,जीवन में सफलता अत्यन्त कठिनता से ही प्राप्त होती है।",
+        12: "ऐसा अंक बलिदान का सूचक है। मित्र, सम्बन्धी, परि चिन, बराबर इनसे लाभ उठाएंगे और समय पढ़ने पर इनको पोषा देने । इस प्रकार के व्यक्ति बराबर मानसिक तनाव चिन्ता, तथा कुष्ठाओं में प्रस्त रहते हैं।",
+        13: "ऐसे व्यक्ति अपने विचारों में निरन्तर परिवर्तन करते रहते हैं। किसी भी कार्य का प्रारम्भ तो ये बड़े उत्साह से करते हैं, परन्तु शीघ्र ही इनका उत्साह ठण्डा पड़ जाता है। अधिकतर ऐसे व्यक्ति जीवन में असफल ही रहते देखे गए हैं।",
+        14: "यह मनुष्य भाग्यशाली होता है। आकस्मिक धन-साम जीवन में कई बार होता है, तथा अपने ही प्रयत्नों से अपने लक्ष्य तक पहुंचने में पूर्णतः सफल रहता है। ऐसा व्यक्ति एकान्तप्रिय न होकरसामाजिक कार्यों में बढ़-चढ़कर हिस्सा लेता है, तथा सफल होता है।",
+        15: "निश्चय ही ऐसे व्यक्ति कला, संगीत आदि के शौकीन होते है तथा जीवन का अधिकांश समय इसी प्रकार के कार्य में व्यतीत कर देते हैं। यह अंक रहस्य का भी सूचक है। इस व्यक्ति के मन में क्या हे यह इसके होंठों पर नहीं आता । अतः इसके बारे में अनुमान लगाना कठिन ही है। यह अंक भाग्यवान, साहसी तथा निरन्तर ऊंचा उठने वाला है।",
+        16: "ऐसे व्यक्ति निरन्तर अनिश्चय के वातावरण में जूझते रहते है। इनके जीवन में जरूरत से ज्यादा आकस्मिक घटनाएं घटित होती रहती हैं। जितनी जल्दी ये उन्नति करते हैं उतनी ही जल्दी इनका पतन भी देखा गया है। इस प्रकार के व्यक्तियों को निरन्तर नाओंका सामना करते रहना पड़ता है।",
+        17: "निश्चय ही ये व्यक्ति संघर्षशील, अपने लक्ष्य तक पहुंचने उन सफलता को चूमने वाले होते हैं। चाहे जीवन में कितनी दया कठिनाइयां अथवा अड़चनें आवें, जीवन में ऐसे व्यक्ति हार नही मानते । और अन्न में सफलता पाकर ही दम लेते हैं। ऐसे प्रविन उदार, धैर्यवान तथा समागील होते हैं। इनके कार्यों से इनको तथा प्रशंसा प्राप्त होती है।",
+        18: "यह अंक विरोध तथा पराजय का सूचक है। ऐसे व्यक्ति नेरन्तर कलह तथा परेशानियों में डूबे रहते हैं। कोई न कोई मानमेक परेशानी इनके चारों ओर मंडराती रहती है। गृहस्थ बीवन की दृष्टि से भी यह अंक ज्यादा अनुकूल नहीं कहा जा सकता ।",
+        19: "इस अंक को विद्वानों ने न्याय का प्रतीक माना है। ऐसे व्यक्ति जीवन में न्यायप्रियता के लिए सुप्रसिद्ध होते हैं। बीवन में अनुशासन तथा सद्‌गुणों का ये दृढ़ता से पालन करते हैं।",
+        20: "यह अंक व्यक्ति की उन्नति का सूचक है। ऐसा व्यक्ति वारण घराने में जन्म लेकर भी काफी ऊंचा उठता है। जीवन में का सम्मान की किसी प्रकार से कोई कमी नहीं रहती।",
+        21: "यह अंक अत्यन्त ही अनुकूल एवं सफलता का सूचक माना या है। ऐसा व्यक्ति निरन्तर उन्नति करता रहता है। मञ्च, सम्मान की दृष्टि से विख्यात होता है। चाहे किसी भी क्षेत्र में हो,ऐसे व्यक्ति",
+        22: "यह अंक भावुकता का अंक है, ऐसे व्यक्ति कल्पना लोक में जीवित रहते हैं, किसीको भी दुखी या परेशान देखकर अपने स्वयं का काम छोड़ देते हैं और उसके लिए सब कुछ बलिदान करनेको सार रहते हैं। जीवन की कठोरताओं को तथा वास्तविकताओं को भेल नहीं पाते ऐसे व्यक्तियों को अंक शास्त्रियों ने स्वप्न दर्शी कहा है।",
+        23: "ऐसे व्यक्ति खुद कुछ भी नहीं करते, या स्वयं सहज हो निर्णय नहीं ले पाते। इनके मित्र या परिचित इनको जो भी रास्ता बनाते हैं,उसीके अनुसार ये काम करने लग जाते हैं। इनकी उन्नति में बराबर बाधाएं बनी रहती हैं।",
+        24: "यह अंक लाभ का अंक है । ऐसा व्यक्ति अपने जीवन में वरावर सावधान रहता है। अपनी उन्नति के लिए सतर्क तथा ध्यान रखने वाला होता है। किसी भी कार्य को यह व्यक्ति योजनाबद्ध रूप से करता है तथा अपने कार्य में या योजनाओं में किसी भी प्रकार ने कोई शिथिलता नहीं बरतता । विपरीत सेक्स के प्रति इनकी इच्छाएं बढ़ी-चढ़ी रहती हैं।",
+        25: "यह अंक मिश्रित फल देने वाला है। इसे जीवन में सफल - ताएं तो मिलती हैं, परन्तु काफी बाधाओं तथा परेशानियों के बाद हो । यद्यपि ऐसा व्यक्ति परिश्रमी, नये विचारों को ग्रहण करने वाला तथा अपने जीवन में आगे बढ़ने वाला होता है, परन्तु बाधाओं की वजह से यह अपने कार्य में पूरी तरह से सफल नहीं हो पाता।",
+        26: "ऐसा व्यक्ति अत्यन्त चालाक तथा अपने लाभ के प्रति गिद्ध दृष्टि रखने वाला होता है। इसपर सहज ही भरोसा या विश्वास नहीं किया जाता । किसी भी समय यह घोखा दे सकता हैं।",
+        27: "यह व्यक्ति बुद्धिमान, चतुर तथा अपने कार्य में तत्पर रहता है। अपनी बुद्धि के बल पर यह अपने लक्ष्य तक पहुंच जात है तथा समाज में सम्माननीय स्थान बना लेता है। इनके विचा पूर्णतः मौलिक तथा नवीनता लिए हुए होते हैं। ये व्यक्ति कर्मक्षेत्र मे सफल व्यक्तियों की श्रेणी में आते हैं।",
+        28: "यह अंक 'इन्द्र' का अंक है। इस अंक में जितना शुभ प्रभाव है। उतना ही अशुभ प्रभाव भी। ऐसे व्यक्ति घोर परिश्रमी, संयमी, या मन होते हैं। फिर भी ये अपने जीवन में सफल नहीं हो पाते। कठिनाइयां बराबर इनके जीवन में बनी रहती हैं। ",
+        29: "यहअंक अनिश्चय का सूचक है। किसी भी कार्य को करने से पहले हजारों बार सोचते हैं फिर भी उस कार्य को प्रारम्भ नहीं कर पाते। यदि प्रारम्भ कर देते हैं तो उसे पूरा नहीं कर पाते। झूठी ज्ञान और व्यर्थ के दिखावे में इनका काफी धन तथा समय बरबाद होता रहता है।",
+        30: "यह अंक प्रतिभा का अंक है। अपनी बुद्धि या अपनी विशिष्टता के कारण समाज में इनका अपना स्थान होता है। इनको अपनी बुद्धि पर भरोसा रहता है, और अपनी बुद्धि के बल पर ही ऐसे व्यक्ति जीवन में ऊंचे उठते हैं। जीवन में धन की अपेक्षा विद्या को ये ज्यादा महत्त्व देते हैं।",
+        31: "यह अंक अन्तर्मुखी प्रवृत्ति का बोतक है। भीड़ से कटा हुआ रहता है। समाज में जाने से घबराता है। यह अपने आपको अकेला अनुभव करता है। सांसारिक दृष्टि से ऐसे व्यक्ति पूर्णतः असफल होते हैं।",
+        32: "बुद्धि की दृष्टि से ऐसे व्यक्ति अत्यन्त सफल, श्रेष्ठ एवं उन्नत कहे जाते हैं। यदि गम्भीरतापूर्वक ये अपने कार्य में लगे तो निश्चय ही पूरी सफलता प्राप्त कर सकते हैं, परन्तु ऐसे व्यक्तियों के जीवन में आलस्य जरूरत से ज्यादा होता है, जिसके कारण सफलता इनसे दूर ही रहती है।",
+        33: "यह अंक प्रबल आत्म-विश्वास का अंक है। एक बार जो कार्य ये सोच लेते हैं उसे पूरा करके ही छोड़ते हैं। फिर भले ही मार्ग में कितनी ही बड़ी बाधाएं आवें । अन्तहीन तथा प्रबल धैर्य, अट श्रात्म-विश्वास जीवन शक्ति ही इन व्यक्तियों पूरी तरह से सफल के गुण हैं। ये जीवन में पूरी तरह सफल होते है। ",
+        34: "इनके जीवन में जरूरत से ज्यादा कठिनाइयां होती हैं। एक  तथा बाधाएं है, जिसकी वजह प्रकार की झिझक इनके मन में बरावर बनी रहती ऊंचे  से ये दूसरों को प्रभावित नहीं कर पाते। अपने से अधिकारियों आत्महीनता  से बात करते हुए घबराते हैं। एक प्रकार कीहुए भी  इनके जीवन में छाई रहती है, जिसकी वजह से चाहते ये व्यक्ति सफलता प्राप्त नहीं कर पाते ।",
+        35: "ऐसे व्यक्ति किसी न किसी प्रकारसे जीवन जीने में विश्वास करते हैं। इनके जीवन में न तो किसी नये कार्य के प्रति उमंग या उत्साह होता है और न ऐसे व्यक्ति ऊंचा उठने का प्रयत्न ही करते हैं। दूसरों के भरोसे काम छोड़कर ये निश्चित हो जाते हैं ",
+        36: "ऐसे व्यक्ति अपनी जबान के पक्के तथा पूर्ण आत्माभिमानी होते हैं। इनके जिम्मे जो भी कार्य होता है, उसे पूरा करके ही ये विश्राम करते हैं। अपने जीवन में अपने प्रयत्नों से ये पूर्ण सफलता प्राप्त करते देखे गए हैं। मस्तिष्क से ये व्यक्ति सुलझे हुए तथा सही रास्ते को अपनाने वाले होते हैं।",
+        37: "यह अंक सहयोग का अंक है। ऐसे व्यक्तियों का भाग्यो- दम तभी संभव है जब ये किसीके साथ कार्य करें, या किसीके सहअपने योग में कार्य करें । बुद्धि एवं प्रतिभा में ये अत्यन्त चतुर होते हैं तथा मान्य का ये स्वयं निर्माण करते हैं।",
+        38: "यह अंक अस्थिरता का सूचक है। किसी एक विषय पर वे व्यक्ति लम्बे समत बीच नहीं सकते। टिककर या जमकर बेठना इनके वश की बात नहीं । 'फील्ड वर्क' में ये व्यक्ति ज्यादा सफल हो सकते हैं।",
+        39: " यह अंक वीरता वीरता का अंक है। इनका मस्तिष्क अत्यन्त उर्वर होता है, चाहे कितनी बाधाएं इनके सामने आयें से हताश नहीं होते तथा अपने मार्ग से नहीं हटते । अपने प्रयत्नों से ही ये जीवन में पूर्ण सफल होते देखे गए हैं।",
+        40: " ये व्यक्ति बाहर से नास्तिक होते हुए भी अन्दर से पूरे धर्म-भीरु तथा ईश्वर में विश्वास रखने वाले होते हैं। एक प्रकार से ये अपने-आपमें ही सिमटे रहते हैं। सांसारिक कार्यों के प्रति ये उदा सीन होते हैं। काफी ठोकरें खाने के बाद ही ये जीवन में सफल होते हैं।",
+        41: " ऐसे व्यक्ति साधारण कुल में जन्म लेकर भी काफी ऊंचे उठते हैं । प्रयत्न कर अपने जीवन में ही अपने लक्ष्य को भली प्रकार से प्राप्त कर लेते हैं। इनकी प्रतिभा सराहनीय होती है। समाज में ये पूर्णतः यश के भाभी होते हैं।",
+        42: " ऐसे व्यक्ति पराश्रयी कहलाते हैं। यद्यपि इनमें वृद्धि और प्रतिभा होती है, परन्तु ये उसका भली प्रकार से उपयोग नहीं कर पाते । दूसरों के सहारे ही जीवन में ऊंचे उठते हैं।",
+        43: " यह अंक बाधाओं का अंक है। ऐसे व्यक्ति जीवन में असफल ही होते हैं। इनके जीवन में कोई भी कार्य बिना बाधाओं या परेशानियों के सम्पन्न नहीं होता । बार-बार अड़चनें, मुकदमें, सिर दर्द, लड़ाई-झगड़े होते ही रहते हैं।",
+        44: " दूसरों के सहयोग के विना ये व्यक्ति कार्य नहीं कर पाते। साथ ही यह बात भी सही है कि ये जब भी दूसरे व्यक्तियों का सहारा लेते हैं इनको लोखा मिलता है: हानि उठाते हैं या अपने लिए समस्याएं पैदा कर लेते हैं।",
+        45: " उच्च महत्त्वाकांक्षाओं से सम्पन्न ऐसे व्यक्ति जीवन में पूर्णतः सफल होते हैं। परिस्थितियों के अनुसार अपने-आपको ढाल लेने में इनमें अ‌द्भुत क्षमता होती है। जीवन के यौवन काल में ही ऐसे व्यक्ति अपने लक्ष्य तक पहुंच जाने में सफल हो जाते हैं।",
+        46: " यह भाग्यवर्द्धक अंक है। इनके जीवन मेंजो भी घटनाएं घटित होती है वे आकस्मिक रूप से ही होती हैं। ये व्यक्ति जो मी कार्य करते हैं एक विशेष तरीके से करते हैं जिसकी वजह से इनके कार्यों की समाज में सर्वत्र सराहना होती है।",
+        47: " यह अंक अनिश्चय का सूचक है। इनके जीवन में कब क्या घटना घटित हो जाएगी, कुछ कहा नहीं जा सकता। ऐसे व्यक्ति असाधारण बुद्धि के होते हुए भी दरिद्री और असाधारण जीवन व्यतीत करते देखे गए हैं।",
+        48: " यह अंक बुद्धि, प्रतिभा एवं सादगी का अंक है। जीवन में ये सादगीपूर्ण बने रहते हैं, परन्तु ये समाज को एक विशिष्ट देन देते हैं, जिसकी वजह से इनका नाम आगे की पीढ़ियों में अमर बना रहता है। आर्थिक दृष्टि से इनका जीवन सामान्य स्तर का ही कहा जा सकता है।",
+        49: " ऐसे व्यक्ति अन्तर्मुखी होते हैं। समाज के संघर्षों से ये जल्दी ही हार जाते हैं। समाज में इनको कम ही देखा जाता है। इनके जीवन में मित्रों की संख्या बहुत कम होती है।",
+        50: " यह अंक पूर्ण उर्वर कल्पना का सूचक अंक है। ऐसे व्यक्ति जीवन में दयावान, भाबुक, सहयोगी, एवं कल्पनाप्रिय होते हैं। जीवन की कठोर वास्तविकताओं से ये व्यक्ति दूर ही रहते हैं। इनके जीवद में बराबर मानसिक अशान्ति तथा परेशानियां बनी रहती हैं। जीवन में ये स्वप्नदर्शी होते हैं तथा स्वप्नदर्शी ही बने चाहते हैं ",
+        51: " यह अंक पूर्ण विजय का अंक है। ऐसे व्यक्तियों के जीवन मेंसंघर्ष के अवसर कम ही आते हैं, पर संघर्ष आने पर इन मस्तिष्क और भी अधिक उर्वर तथा दक्ष हो जाता है। संघर्ष में पूर्णतः सफलता प्राप्त करके ही रहते हैं। इनके जीवन में जरूरत से ज्यादा शत्रु होते हैं पर किसी भी प्रकार से शत्रु इनका अहित नहीं कर सकते ।",
+        52: " यह अंक पराजय तथा परेशानियों का अंक है। ऐसे व्यक्तियों के जीवन में चार दिन भी आराम से नहीं बीतते । जीवन में निरन्तर उथल-पुथल तथा परेशानियां बनी रहती हैं।",
+        53: " यह रहस्य का अंक कहलाता है। मन में ये कुछ और योजनाएं बनाते हैं तथा मुंह से कुछ और ही बात कहते हैं। इन व्यक्तियों में यह विशेषता होती है कि इनके चेहरे से यह ज्ञात नहीं होता कि इनके मन में क्या है। चेहरे को निर्विकार बनाए रखना अपने प्रापमें इनकी साधना है, और ये उस साधना में पूर्णतः सफल होते हैं। ऐसे व्यक्ति अच्छे गुप्तचर हो सकते हैं।",
+        54: " यह अंक नेतृत्व का सूचक है, ऐसे व्यक्ति हमेशा समाज तथा देश का नेतृत्व करने में सक्षम होते हैं। अपने नेतृत्व, तुरन्त निर्णय एवं बुद्धि के माध्यम से ये व्यक्ति शीघ्र ही अपने लक्ष्य को पा लेते हैं।",
+        55: " यह अंक विद्वता का सूचक है। बोलने में होशियार, तर्क देने तथा अपनी बातचीत से विरोधियों को परास्त करने में दक्ष होते हैं। इनके अकाट्य तक के सामने विरोधी टिक नहीं सकते। ये अपने भारमाल से स्याति एवं सम्मान प्राप्त करके ही दम लेते हैं।",
+        56: " यह बाधाओं का अंक है । यद्यपि ये व्यक्ति जीवन में ऊंचे उठना चाहते है,परन्तु इनकी योजनाएं अव्यवस्थित तथा गलत होती है, जिसकी वजह से ये सफल नहीं हो पाते। इनके मित्र कमजोर तथा अदूरदर्शी होते हैं।",
+        57: " पूर्ण आत्म-विश्वास रखने वाला, खुश मिजाज, तथा प्रसन्नता बिखेरने वाला । ऐसा व्यक्ति अपने व्यापार-व्यवसाय में पूर्णतः सफल होता है। निरन्तर आगे बढ़ते रहना, इनके जीवन को मूलमंत्र होता है।",
+        58: " इनका जीवन पूर्णतः स्पष्ट एवं खुली हुई किताब के समान होता है। न तो इनके मन में कोई गांठ होती है, और न आत्म-हीनता ही। कुल मिलाकर ये व्यक्ति अपने जीवने में पूर्णतः सफलता प्राप्त करते हैं।",
+        59: " जीवन में जितने उतार-चढ़ाव इन व्यक्तियों को देखने पड़ते हैं उतने शायद ही किसी अन्य को देखने पड़ते होंगे। चरित्र की दृष्टि से ऐसे व्यक्ति कमजोर ही होते हैं। येन केन प्रकारेण धन संचय करना ही इनकी प्रवृत्ति होती है। आर्थिक दृष्टि से ये व्यक्ति सम्पन्न होते हैं।",
+        60: " सदैव मुस्कराते रहना तथा अपने चारों ओर के वातावरण को प्रसन्न बनाए रखना इनके जीवन की विशेषता कही जा सकती है। कठिन से कठिन क्षणों में भी ये हताश या निराश नहीं होते । चिकित्सा, पूर्णतः देश सेवा तथा समाज सुधार सम्बन्धी कार्यों में ये व्यक्ति सफल होते हैं।",
+        61: " ये पूर्णतः श्रात्म-संयमी, अल्प भाषी तथा अपने-आपपर नियन्त्रण रखने वाले होते हैं। यद्यपि प्रारम्भ में इन्हें जरूरत से ज्यादा कष्ट देखने पड़ते हैं पर शीघ्र ही ये सफलता प्राप्त कर लेते हैं।",
+        62: " सैनिक नेतृत्व में यह अंक पूर्ण सफलता का सूचक है। इसकी गति तूफान की तरह होती है तथा इसे अपने-आपपर पूरा भरोसा होता है।",
+        63: " यह परोपकारी अंक होता है। दूसरों की उन्नति, दूसरों की भलाई तथा धार्मिक कार्यों में लगे रहना इनका स्वभाव होता है। समाज में इनको पूरा पूरा सम्मान मिलता है।",
+        64: " यह मानसिक परेशानियों तथा जीवन में अस्थिरता का सूचक अंक है। इनका गृहस्थ जीवन ज्यादा सुखमय नहीं कहा जा सकता ।",
+        65: " यह दुर्घटनाओं का अंक है। इनके जीवन में निरन्तर घटनाएं घटित होती ही रहती है। इनका पूरा जीवन संघर्षमय ही वीतता है।",
+        66: " यह अंक पूर्ण सफलता का परिचायक है। जीवन के बिस क्षेत्र में ये होते हैं उसमें पूरी पूरी सफलता प्राप्त करते हैं। लक्ष्य के प्रति ऐसे व्यक्ति सतत् जागरूक बने रहते हैं।",
+        67: " ये व्यक्ति अपने जीवन में सरल, सात्विक एवं स्पष्ट वक्ता होते हैं। सामाजिक दृष्टि से इन्हें पूरा सम्मान तथा यश मिलता है।",
+        68: " ऐसे व्यक्ति हर समय घबराए हुए तथा परेशान रहते हैं। इनके जीवन में निरन्तर उतार-चढ़ाव तथा उथल-पुथल बनी रहती है। एक प्रकार से यह छल-कपट तथा धोखे का सूचक अंक है।",
+        69: " यह कीति का अंक है। ऐसा व्यक्ति अपने कार्यों तथा अपने व्यवहार से धन-संचय तथा यश-लाभ करता है। जीवन में ये पूर्णतः सुखी, सम्पन्न एवं कीतिवान होते हैं।",
+        70: " यह सौभाग्य का अंक है। ये व्यक्ति जिस क्षेत्र में भी जाते है उसमें पूरी पूरी सफलता प्राप्त करते हैं। वृद्धावस्था पूर्णतः सुख मय कही जा सकती है।",
+        71: " यह बाधाओं का अंक है। इनके जीवन में निरन्तर बाधाएं बनी रहती है, जिसकी वजह से ये आराम से नहीं बैठ सकते । हर समय इनके दिमाग में एक अज्ञात आशंका बनी रहती है।",
+        72: " यह अंक परिश्रम का अंक है। काफी बाधाओं, समस्याओं तथा संघर्षों के बाद ये व्यक्ति सफल होते हैं। परिश्रम करने पर भी इनके चेहरे पर किसी प्रकार की निराशा के चिह्न दिखाई नहीं देते ।",
+        73: " यह साधारण अंक है। यद्यपि ऐसे व्यक्ति जरूरत से ज्यादा परिश्रम करते हैं परन्तु प्रयत्न करने पर भी इनके जीवन में सफलता, कठिनता से ही मिलती है। जरूरत से ज्यादा बाबाएं आने की वजह से ये जीवन में हतोत्साह हो जाते हैं।",
+        74: " यह अंक पूर्णतया सफलता तथा श्रेष्ठता का प्रतीक है। साधारण कुल में जन्म लेकर भी ये व्यक्ति अत्यन्त ऊंचे उठते देखे गए हैं। विरोधी परिस्थितियों से ये बराबर संघर्ष करते रहते हैं और सफल होते हैं।",
+        75: " यह अंक भोग प्रधान है। ऐसे व्यक्ति पूरे संसारी, भोगी, नास्तिक तथा ऐश-आराम में ही जीवन व्यतीत करने वाले होते हैं। जीवन में आर्थिक अभाव बराबर बना रहता है।",
+        76: " यह अंक अभाग्य का सूचक है। ऐसे व्यक्ति परिश्रम करने के बाद भी सफल नहीं होते । जीवन में कुछ न कुछ समस्याएं इनके साथ बनी ही रहती हैं।",
+        77: " यह विरक्ति का अंक है। स्वार्थ की भावना इनमें जरूरत से ज्यादा होती है। किसी भी कार्य को करने से पहले ये अपना स्वार्थ सबसे पहले देखते हैं। समाज में इनको सम्मन नहीं मिलता ।",
+        78: " यह अंक धन का प्रतीक है। अनायास धन प्राप्त होने के नई सवसर इनके जीवन में आते हैं। जिस कार्य या व्यापार में दूसरे व्यक्ति सफल नहीं होते उसमें यह सफलता प्राप्त कर दिखा देते हैं। व्यावसायिक बुद्धि इनमें जरूरत से ज्यादा होती है।",
+        79: " यह परोपकारी अंक है। खुद का बिगाड़ करके भी ऐसे व्यक्ति दूसरों का भला करते देखे गए हैं। सार्वजनिक क्षेत्र में ये व्यक्ति अग्रणी होते हैं।",
+        80: "यह अंक पूर्णतः सफलता का परिचायक अंक है। जीवन में अपने प्रयत्नों से ये ऊंचे उठते हैं। धर्म, अर्थ, काम, और मोक्ष चारों ही दृष्टियों से ऐसे व्यक्ति सफल, मुखी और सन्तुष्ट होते हैं।"
+    };
+
+    function toggleLang() {
+        isEnglish = !isEnglish;
+        const btn = document.getElementById('langBtn');
+        btn.innerText = isEnglish ? "HI / EN" : "EN / HI";
+        
+        document.getElementById('nameLabel').innerText = isEnglish ? "Enter Full Name" : "पूरा नाम दर्ज करें (English)";
+        document.getElementById('dobLabel').innerText = isEnglish ? "Enter Birth Date" : "जन्म तिथि (वैकल्पिक)";
+        document.getElementById('calcBtn').innerText = isEnglish ? "Calculate" : "गणना करें";
+        document.getElementById('l_comp').innerText = isEnglish ? "Compound" : "संयुक्त अंक";
+        document.getElementById('l_nameroot').innerText = isEnglish ? "Name Root" : "नामांक";
+        document.getElementById('l_psychic').innerText = isEnglish ? "Psychic" : "मूलांक";
+        document.getElementById('l_destiny').innerText = isEnglish ? "Destiny" : "भाग्यांक";
+        document.getElementById('l_root_trait').innerText = isEnglish ? "Name Root Trait:" : "नामांक फल:";
+        document.getElementById('l_comp_trait').innerText = isEnglish ? "Compound Trait (Hindi Data):" : "संयुक्त अंक फल:";
+        document.getElementById('l_psy_trait').innerText = isEnglish ? "Psychic Trait:" : "मूलांक फल:";
+        document.getElementById('l_des_trait').innerText = isEnglish ? "Destiny Trait:" : "भाग्यांक फल:";
+        document.getElementById('l_color').innerText = isEnglish ? "Lucky Color" : "शुभ रंग";
+        document.getElementById('l_gem').innerText = isEnglish ? "Gemstone" : "रत्न";
+        document.getElementById('l_days').innerText = isEnglish ? "Lucky Days" : "शुभ दिन";
+        document.getElementById('l_year').innerText = isEnglish ? "Personal Year" : "व्यक्तिगत वर्ष";
+        document.getElementById('l_loshu').innerText = isEnglish ? "Lo Shu Grid Analysis" : "लो शु ग्रिड विश्लेषण";
+
+        if(currentData.name) { calculateNumerology(true); }
+    }
+
+    function calculateRoot(num) {
+        while (num > 9) { num = num.toString().split('').reduce((sum, d) => sum + parseInt(d, 10), 0); }
+        return num;
+    }
+
+    function generateLoShu(dateStr) {
+        // Enforce strong non-breaking spaces
+        [1,2,3,4,5,6,7,8,9].forEach(n => {
+            const el = document.getElementById('ls_'+n);
+            el.innerHTML = '&nbsp;';
+            el.className = 'loshu-empty';
+        });
+
+        const digitsStr = dateStr.replace(/\D/g, '');
+        let counts = {};
+        for(let d of digitsStr) {
+            if(d != '0') counts[d] = (counts[d] || 0) + 1;
+        }
+
+        for(let n in counts) {
+            const el = document.getElementById('ls_'+n);
+            el.innerText = n.repeat(counts[n]);
+            el.className = '';
+        }
+    }
+
+    function calculateNumerology(isRecalc = false) {
+        try {
+            const rawInput = document.getElementById('nameInput').value.toUpperCase().trim();
+            const dobInput = document.getElementById('dobInput').value;
+            const sanitizedInput = rawInput.replace(/[^A-Z]/g, '');
+            
+            if (!isRecalc && !sanitizedInput) { alert("Please enter a valid English name."); return; }
+            
+            currentData.name = rawInput;
+
+            let totalScore = 0;
+            let breakdownParts = [];
+            for (let char of sanitizedInput) {
+                if (chaldeanMap[char]) {
+                    totalScore += chaldeanMap[char];
+                    breakdownParts.push(`${char}(${chaldeanMap[char]})`);
+                }
+            }
+            const rootScore = calculateRoot(totalScore);
+            currentData.compound = totalScore;
+            currentData.root = rootScore;
+
+            document.getElementById('totalNumber').innerText = totalScore;
+            document.getElementById('rootNumber').innerText = rootScore;
+            document.getElementById('calcBreakdown').innerHTML = `${isEnglish?'Calculation':'गणना'}: ${breakdownParts.join('+')} = <strong>${totalScore}</strong>`;
+            
+            const langKey = isEnglish ? 'en' : 'hi';
+            document.getElementById('rootPredictionText').innerText = rootPredictions[rootScore] ? rootPredictions[rootScore][langKey] : "";
+            
+            let compoundText = compoundPredictions[totalScore] || (totalScore < 10 ? (isEnglish?"Single digit only.":"एकल अंक") : (isEnglish?"N/A":"उपलब्ध नहीं"));
+            document.getElementById('predictionText').innerText = compoundText;
+
+            const dobResultSection = document.getElementById('dobResultSection');
+            const dobBadges = document.querySelectorAll('.dob-dep');
+            
+            if (dobInput) {
+                currentData.dob = dobInput;
+                const parts = dobInput.split('-'); 
+                
+                const daySum = parts[2].split('').reduce((s, d) => s + parseInt(d, 10), 0);
+                const psychicScore = calculateRoot(daySum);
+                
+                const fullDateSum = dobInput.replace(/\D/g, '').split('').reduce((s, d) => s + parseInt(d, 10), 0);
+                const destinyScore = calculateRoot(fullDateSum);
+                
+                const currYearSum = currentDate.getFullYear().toString().split('').reduce((s, d) => s + parseInt(d, 10), 0);
+                const pySum = currYearSum + daySum + parts[1].split('').reduce((s, d) => s + parseInt(d, 10), 0);
+                const personalYear = calculateRoot(pySum);
+
+                currentData.psychic = psychicScore;
+                currentData.destiny = destinyScore;
+                currentData.personalYear = personalYear;
+
+                document.getElementById('psychicNumber').innerText = psychicScore;
+                document.getElementById('destinyNumber').innerText = destinyScore;
+                document.getElementById('psychicText').innerText = rootPredictions[psychicScore][langKey];
+                document.getElementById('destinyText').innerText = rootPredictions[destinyScore][langKey];
+                
+                const elKeyColor = isEnglish ? 'en_color' : 'hi_color';
+                const elKeyGem = isEnglish ? 'en_gem' : 'hi_gem';
+                const elKeyDay = isEnglish ? 'en_days' : 'hi_days';
+                
+                document.getElementById('luckyColor').innerText = luckyElements[psychicScore][elKeyColor];
+                document.getElementById('luckyGem').innerText = luckyElements[psychicScore][elKeyGem];
+                document.getElementById('luckyDays').innerText = luckyElements[psychicScore][elKeyDay];
+                document.getElementById('personalYear').innerText = personalYear;
+                
+                generateLoShu(dobInput);
+
+                dobResultSection.style.display = 'block';
+                dobBadges.forEach(b => b.style.display = 'flex');
+            } else {
+                currentData.dob = null;
+                dobResultSection.style.display = 'none';
+                dobBadges.forEach(b => b.style.display = 'none');
+            }
+
+            document.getElementById('resultCard').style.display = 'block';
+            document.getElementById('actionBtns').style.display = 'grid';
+
+        } catch (error) {
+            alert("App Crash: " + error.message);
+        }
+    }
+
+    function generatePDF() {
+        const element = document.getElementById('reportArea');
+        
+        element.classList.add('pdf-export-mode');
+        document.getElementById('pdfHeader').style.display = 'block';
+        document.getElementById('pdfNameDisplay').innerText = `Report for: ${currentData.name}`;
+        document.getElementById('pdfNameDisplay').style.display = 'block';
+
+        if (currentData.dob) {
+            const dobFormatted = currentData.dob.split('-').reverse().join('-');
+            document.getElementById('pdfDobDisplay').innerText = `Birth Date: ${dobFormatted}`;
+            document.getElementById('pdfDobDisplay').style.display = 'block';
+        }
+
+        const opt = {
+            margin:       0.2, // Small margin to prevent clipping
+            filename:     `${currentData.name.replace(/\s+/g, '_')}_Numerology.pdf`,
+            image:        { type: 'jpeg', quality: 1.0 },
+            html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false, scrollY: 0 },
+            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+        
+        setTimeout(() => {
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.classList.remove('pdf-export-mode');
+                document.getElementById('pdfHeader').style.display = 'none';
+                document.getElementById('pdfNameDisplay').style.display = 'none';
+                document.getElementById('pdfDobDisplay').style.display = 'none';
+            });
+        }, 100);
+    }
+
+    function shareWhatsApp() {
+        const langKey = isEnglish ? 'en' : 'hi';
+        let text = `*Numerology Report: ${currentData.name}*\n\n`;
+        
+        text += `*NAME NUMBERS*\n`;
+        text += `🔹 Compound Name: ${currentData.compound}\n`;
+        text += `🔹 Name Root: ${currentData.root}\n`;
+        if (rootPredictions[currentData.root]) {
+            text += `📝 Trait: ${rootPredictions[currentData.root][langKey]}\n\n`;
+        }
+        
+        if (currentData.dob) {
+            const dobFormatted = currentData.dob.split('-').reverse().join('-');
+            text += `*BIRTH DETAILS*\n`;
+            text += `🔹 DOB: ${dobFormatted}\n`;
+            text += `🔹 Psychic (मूलांक): ${currentData.psychic}\n`;
+            text += `🔹 Destiny (भाग्यांक): ${currentData.destiny}\n`;
+            text += `🔹 Personal Year: ${currentData.personalYear}\n\n`;
+            
+            text += `*LUCKY ELEMENTS*\n`;
+            text += `🎨 Color: ${luckyElements[currentData.psychic][isEnglish ? 'en_color' : 'hi_color']}\n`;
+            text += `💎 Gemstone: ${luckyElements[currentData.psychic][isEnglish ? 'en_gem' : 'hi_gem']}\n`;
+            text += `📅 Days: ${luckyElements[currentData.psychic][isEnglish ? 'en_days' : 'hi_days']}\n\n`;
+        }
+        
+        text += `_Generated via KL Sharma Numerology_`;
+        
+        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+    }
+
+  if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker Registered!', reg))
+                .catch(err => console.error('Service Worker Registration Failed!', err));
+        });
+    }
+  
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+</body>
+</html>
