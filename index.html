@@ -4,18 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chaldean Numerology & Choghadiya Pro</title>
+
+    <!-- PWA & Mobile Meta Tags -->
+    <meta name="theme-color" content="#6200ea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Numerology Pro">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/om.png">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/192/om.png">
+    <link rel="manifest" id="manifestLink" href="manifest.json">
+
     <style>
         :root { --primary: #6200ea; --surface: #ffffff; --background: #f3f4f6; --text: #333333; --text-secondary: #666666; --border-radius: 12px; }
         body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--background); margin: 0; padding: 20px; color: var(--text); display: flex; justify-content: center; }
         .container { width: 100%; height: auto; min-height: 960px; max-width: 500px; background: var(--surface); padding: 24px; border-radius: var(--border-radius); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
         
+        /* PWA Install Banner */
+        .install-btn { display: none; background: #00897b; color: white; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
+
         /* Tab Navigation */
-        .tab-container { display: flex; gap: 8px; margin-bottom: 24px; background: #e0e0e0; padding: 4px; border-radius: 8px; }
+        .tab-container { display: flex; gap: 8px; margin-bottom: 20px; background: #e0e0e0; padding: 4px; border-radius: 8px; }
         .tab-btn { flex: 1; padding: 12px; text-align: center; border: none; background: transparent; cursor: pointer; border-radius: 6px; font-weight: bold; color: var(--text-secondary); transition: all 0.2s; font-size: 0.95rem; }
         .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
         .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        h1 { font-size: 1.5rem; color: var(--primary); margin: 0; }
+        h1 { font-size: 1.4rem; color: var(--primary); margin: 0; }
+        .header-actions { display: flex; gap: 8px; align-items: center; }
         .lang-toggle { background: #e0e0e0; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
         
         .subtitle { text-align: left; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px; margin-top: 4px; }
@@ -63,16 +77,14 @@
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* PDF Export Overrides */
+        /* PDF Overrides */
         .pdf-export-mode, .pdf-export-mode * { animation: none !important; transition: none !important; opacity: 1 !important; }
         .pdf-export-mode { padding: 0 !important; margin: 0 !important; background: white !important; }
         .pdf-export-mode .result-card { border: none !important; box-shadow: none !important; margin-top: 0 !important; padding-top: 0 !important; }
         .pdf-export-mode .card-body { padding-top: 10px !important; }
-        
         .pdf-export-mode .loshu-container { display: block !important; text-align: center !important; }
         .pdf-export-mode .loshu-table { margin: 0 auto !important; border: 2px solid #6200ea !important; width: 150px !important; }
         .pdf-export-mode .loshu-table td { border: 2px solid #6200ea !important; color: #333333 !important; background: #ffffff !important; width: 50px !important; height: 50px !important; }
-        
         .pdf-export-mode .chog-table th { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #f8f9fa !important; }
         .pdf-export-mode .chog-good { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #e6f4ea !important; color: #137333 !important; }
         .pdf-export-mode .chog-bad { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #fce8e6 !important; color: #c5221f !important; }
@@ -83,7 +95,7 @@
 
 <div class="container">
     
-    <!-- Tab Navigation -->
+    <!-- Tab Switcher -->
     <div class="tab-container no-print">
         <button class="tab-btn active" onclick="switchTab('num')" id="btnTabNum">Numerology</button>
         <button class="tab-btn" onclick="switchTab('chog')" id="btnTabChog">Choghadiya</button>
@@ -94,7 +106,10 @@
         <div id="inputSectionNum">
             <div class="header-bar">
                 <h1>Name Numerology</h1>
-                <button class="lang-toggle no-print" id="langBtn" onclick="toggleLang()">EN / HI</button>
+                <div class="header-actions">
+                    <button class="install-btn" id="pwaInstallBtn" onclick="installPWA()">📲 Install</button>
+                    <button class="lang-toggle no-print" id="langBtn" onclick="toggleLang()">EN / HI</button>
+                </div>
             </div>
             <p class="subtitle no-print" id="subLabel">Advanced Calculation & Analysis</p>
 
@@ -231,7 +246,59 @@
 </div>
 
 <script>
-    // --- TAB LOGIC ---
+    // --- PWA LOGIC ---
+    let deferredPrompt;
+    const pwaBtn = document.getElementById('pwaInstallBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (pwaBtn) pwaBtn.style.display = 'inline-block';
+    });
+
+    function installPWA() {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choice) => {
+            if (choice.outcome === 'accepted') {
+                if (pwaBtn) pwaBtn.style.display = 'none';
+            }
+            deferredPrompt = null;
+        });
+    }
+
+    // Auto data-URI fallback for manifest
+    (function injectManifest() {
+        const manifest = {
+            "name": "Chaldean Numerology & Choghadiya Pro",
+            "short_name": "Numerology Pro",
+            "start_url": "./",
+            "display": "standalone",
+            "background_color": "#ffffff",
+            "theme_color": "#6200ea",
+            "icons": [
+                { "src": "https://img.icons8.com/color/192/om.png", "sizes": "192x192", "type": "image/png" },
+                { "src": "https://img.icons8.com/color/512/om.png", "sizes": "512x512", "type": "image/png" }
+            ]
+        };
+        const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+        const manifestURL = URL.createObjectURL(blob);
+        const link = document.getElementById('manifestLink');
+        if (link && !window.location.protocol.startsWith('http')) {
+            link.setAttribute('href', manifestURL);
+        }
+    })();
+
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('SW Registered!', reg))
+                .catch(err => console.log('SW Registration skipped / not found on sandbox:', err));
+        });
+    }
+
+    // --- TAB SWITCHER ---
     function switchTab(tab) {
         document.getElementById('tabNumerology').style.display = tab === 'num' ? 'block' : 'none';
         document.getElementById('tabChoghadiya').style.display = tab === 'chog' ? 'block' : 'none';
@@ -261,7 +328,7 @@
     const rootPredictions = {
         1: { hi: "सूर्य का अंक: नेतृत्व, स्वतंत्रता, दृढ़ इच्छाशक्ति, महत्वाकांक्षा का प्रतीक।", en: "Sun Number: Symbolizes leadership, independence, strong will, and ambition." },
         2: { hi: "चन्द्रमा का अंक: सौम्यता, भावुकता, कल्पनाशीलता, सहयोग का सूचक।", en: "Moon Number: Indicates gentleness, emotional depth, imagination, and cooperation." },
-        3: { hi: "बृहस्पति (गुरु): ज्ञान, बुद्धि, दूरदर्शिता, विद्या, आध्यात्मिकता तथा सामाजिक प्रतिष्ठा।", en: "Jupiter Number: Represents knowledge, wisdom, foresight, and social prestige." },
+        3: { hi: "बृहस्पति (गुरु): ज्ञान, बुद्धि, दूरदर्शिता, विद्या, सामाजिक प्रतिष्ठा।", en: "Jupiter Number: Represents knowledge, wisdom, foresight, and social prestige." },
         4: { hi: "राहु का अंक: आकस्मिक परिवर्तन, संघर्ष, अनूठी सोच, मौलिक विचार।", en: "Rahu Number: Symbolizes sudden changes, struggle, unique thinking, and originality." },
         5: { hi: "बुध का अंक: तीव्र बुद्धि, बहुमुखी प्रतिभा, वाकपटुता, व्यापारिक दक्षता।", en: "Mercury Number: Indicates sharp intellect, versatility, eloquence, and business acumen." },
         6: { hi: "शुक्र का अंक: प्रेम, सौंदर्य, आकर्षण, भौतिक सुख-सुविधाओं, कला।", en: "Venus Number: Represents love, beauty, attraction, luxury, and artistic flair." },
@@ -295,7 +362,7 @@
         31: "यह अंक अन्तर्मुखी प्रवृत्ति का बोतक है। भीड़ से कटा हुआ रहता है। समाज में जाने से घबराता है। यह अपने आपको अकेला अनुभव करता है। सांसारिक दृष्टि से ऐसे व्यक्ति पूर्णतः असफल होते हैं।",
         32: "बुद्धि की दृष्टि से ऐसे व्यक्ति अत्यन्त सफल, श्रेष्ठ एवं उन्नत कहे जाते हैं। यदि गम्भीरतापूर्वक ये अपने कार्य में लगे तो निश्चय ही पूरी सफलता प्राप्त कर सकते हैं, परन्तु ऐसे व्यक्तियों के जीवन में आलस्य जरूरत से ज्यादा होता है, जिसके कारण सफलता इनसे दूर ही रहती है।",
         33: "यह अंक प्रबल आत्म-विश्वास का अंक है। एक बार जो कार्य ये सोच लेते हैं उसे पूरा करके ही छोड़ते हैं। फिर भले ही मार्ग में कितनी ही बड़ी बाधाएं आवें । अन्तहीन तथा प्रबल धैर्य, अट श्रात्म-विश्वास जीवन शक्ति ही इन व्यक्तियों पूरी तरह से सफल के गुण हैं। ये जीवन में पूरी तरह सफल होते है। ",
-        34: "इनके जीवन में जरूरत से ज्यादा कठिनाइयां होती हैं। एक  तथा बाधाएं है, जिसकी वजह प्रकार की झिझक इनके मन में बरावर बनी रहती ऊंचे  से ये दूसरों को प्रभावित नहीं कर पाते। अपने से अधिकारियों आत्महीनता  से बात करते हुए घबराते हैं। एक प्रकार कीहुए भी  इनके जीवन में छाई रहती है, जिसकी वजह से चाहते ये व्यक्ति सफलता प्राप्त नहीं कर पाते ।",
+        34: "इनके जीवन में जरूरत से ज्यादा कठिनाइयां होती हैं। एक तथा बाधाएं है, जिसकी वजह प्रकार की झिझक इनके मन में बरावर बनी रहती ऊंचे से ये दूसरों को प्रभावित नहीं कर पाते। अपने से अधिकारियों आत्महीनता से बात करते हुए घबराते हैं। एक प्रकार कीहुए भी इनके जीवन में छाई रहती है, जिसकी वजह से चाहते ये व्यक्ति सफलता प्राप्त नहीं कर पाते ।",
         35: "ऐसे व्यक्ति किसी न किसी प्रकारसे जीवन जीने में विश्वास करते हैं। इनके जीवन में न तो किसी नये कार्य के प्रति उमंग या उत्साह होता है और न ऐसे व्यक्ति ऊंचा उठने का प्रयत्न ही करते हैं। दूसरों के भरोसे काम छोड़कर ये निश्चित हो जाते हैं ",
         36: "ऐसे व्यक्ति अपनी जबान के पक्के तथा पूर्ण आत्माभिमानी होते हैं। इनके जिम्मे जो भी कार्य होता है, उसे पूरा करके ही ये विश्राम करते हैं। अपने जीवन में अपने प्रयत्नों से ये पूर्ण सफलता प्राप्त करते देखे गए हैं। मस्तिष्क से ये व्यक्ति सुलझे हुए तथा सही रास्ते को अपनाने वाले होते हैं।",
         37: "यह अंक सहयोग का अंक है। ऐसे व्यक्तियों का भाग्यो- दम तभी संभव है जब ये किसीके साथ कार्य करें, या किसीके सहअपने योग में कार्य करें । बुद्धि एवं प्रतिभा में ये अत्यन्त चतुर होते हैं तथा मान्य का ये स्वयं निर्माण करते हैं।",
@@ -305,7 +372,7 @@
         41: " ऐसे व्यक्ति साधारण कुल में जन्म लेकर भी काफी ऊंचे उठते हैं । प्रयत्न कर अपने जीवन में ही अपने लक्ष्य को भली प्रकार से प्राप्त कर लेते हैं। इनकी प्रतिभा सराहनीय होती है। समाज में ये पूर्णतः यश के भाभी होते हैं।",
         42: " ऐसे व्यक्ति पराश्रयी कहलाते हैं। यद्यपि इनमें वृद्धि और प्रतिभा होती है, परन्तु ये उसका भली प्रकार से उपयोग नहीं कर पाते । दूसरों के सहारे ही जीवन में ऊंचे उठते हैं।",
         43: " यह अंक बाधाओं का अंक है। ऐसे व्यक्ति जीवन में असफल ही होते हैं। इनके जीवन में कोई भी कार्य बिना बाधाओं या परेशानियों के सम्पन्न नहीं होता । बार-बार अड़चनें, मुकदमें, सिर दर्द, लड़ाई-झगड़े होते ही रहते हैं।",
-        44: " दूसरों के सहयोग के विना ये व्यक्ति कार्य সহকারী नहीं कर पाते। साथ ही यह बात भी सही है कि ये जब भी दूसरे व्यक्तियों का सहारा लेते हैं इनको लोखा मिलता है: हानि उठाते हैं या अपने लिए समस्याएं पैदा कर लेते हैं।",
+        44: " दूसरों के सहयोग के विना ये व्यक्ति कार्य नहीं कर पाते। साथ ही यह बात भी सही है कि ये जब भी दूसरे व्यक्तियों का सहारा लेते हैं इनको लोखा मिलता है: हानि उठाते हैं या अपने लिए समस्याएं पैदा कर लेते हैं।",
         45: " उच्च महत्त्वाकांक्षाओं से सम्पन्न ऐसे व्यक्ति जीवन में पूर्णतः सफल होते हैं। परिस्थितियों के अनुसार अपने-आपको ढाल लेने में इनमें अ‌द्भुत क्षमता होती है। जीवन के यौवन काल में ही ऐसे व्यक्ति अपने लक्ष्य तक पहुंच जाने में सफल हो जाते हैं।",
         46: " यह भाग्यवर्द्धक अंक है। इनके जीवन मेंजो भी घटनाएं घटित होती है वे आकस्मिक रूप से ही होती हैं। ये व्यक्ति जो मी कार्य करते हैं एक विशेष तरीके से करते हैं जिसकी वजह से इनके कार्यों की समाज में सर्वत्र सराहना होती है।",
         47: " यह अंक अनिश्चय का सूचक है। इनके जीवन में कब क्या घटना घटित हो जाएगी, कुछ कहा नहीं जा सकता। ऐसे व्यक्ति असाधारण बुद्धि के होते हुए भी दरिद्री और असाधारण जीवन व्यतीत करते देखे गए हैं।",
@@ -608,7 +675,7 @@
 
     // --- SHARED EXPORT LOGIC ---
     function generatePDF(type) {
-        let element, filename, opt;
+        let element, filename;
         
         if (type === 'num') {
             element = document.getElementById('reportAreaNum');
@@ -633,7 +700,7 @@
             filename = `Choghadiya_${currentChogData.city}_${currentChogData.date}.pdf`;
         }
 
-        opt = {
+        const opt = {
             margin:       0.2,
             filename:     filename,
             image:        { type: 'jpeg', quality: 1.0 },
@@ -668,10 +735,10 @@
             text += `*LUCKY ELEMENTS*\n🎨 Color: ${luckyElements[currentData.psychic][isEnglish ? 'en_color' : 'hi_color']}\n💎 Gemstone: ${luckyElements[currentData.psychic][isEnglish ? 'en_gem' : 'hi_gem']}\n📅 Days: ${luckyElements[currentData.psychic][isEnglish ? 'en_days' : 'hi_days']}\n\n`;
         }
         text += `_Generated via KL Sharma Numerology_`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`;, '_blank');
     }
 
-    // Default Initialization
+    // Default Init
     document.addEventListener('DOMContentLoaded', () => {
         const chogDateInput = document.getElementById('chogDateInput');
         const today = new Date();
@@ -681,6 +748,5 @@
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 </body>
 </html>

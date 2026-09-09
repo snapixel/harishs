@@ -1,26 +1,20 @@
-const CACHE_NAME = 'numerology-cache-v1';
-const urlsToCache = [
+const CACHE_NAME = 'numerology-choghadiya-v2';
+const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js'
+  'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js',
+  'https://img.icons8.com/color/192/om.png'
 ];
 
-// Install the service worker and cache resources
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
   );
 });
 
-// Serve cached content when offline
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Return the cached version if found, otherwise fetch from the network
-        return response || fetch(event.request);
-      })
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    caches.match(e.request).then((res) => res || fetch(e.request))
   );
 });

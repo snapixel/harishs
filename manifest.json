@@ -1,19 +1,19 @@
 {
-  "name": "Chaldean Numerology Pro",
-  "short_name": "Numerology",
-  "description": "Advanced Chaldean Numerology & Lo Shu Grid Calculator",
+  "name": "Chaldean Numerology & Choghadiya Pro",
+  "short_name": "Numerology Pro",
+  "description": "Chaldean Numerology Calculator, Lo Shu Grid, and Subha Choghadiya Timings",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f3f4f6",
+  "background_color": "#ffffff",
   "theme_color": "#6200ea",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "https://img.icons8.com/color/192/om.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "icon-512.png",
+      "src": "https://img.icons8.com/color/512/om.png",
       "type": "image/png",
       "sizes": "512x512"
     }
