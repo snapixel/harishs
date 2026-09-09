@@ -328,7 +328,7 @@
     const rootPredictions = {
         1: { hi: "सूर्य का अंक: नेतृत्व, स्वतंत्रता, दृढ़ इच्छाशक्ति, महत्वाकांक्षा का प्रतीक।", en: "Sun Number: Symbolizes leadership, independence, strong will, and ambition." },
         2: { hi: "चन्द्रमा का अंक: सौम्यता, भावुकता, कल्पनाशीलता, सहयोग का सूचक।", en: "Moon Number: Indicates gentleness, emotional depth, imagination, and cooperation." },
-        3: { hi: "बृहस्पति (गुरु): ज्ञान, बुद्धि, दूरदर्शिता, विद्या, सामाजिक प्रतिष्ठा।", en: "Jupiter Number: Represents knowledge, wisdom, foresight, and social prestige." },
+        3: { hi: "बृहस्पति (गुरु): ज्ञान, बुद्धि, दूरदर्शिता, विद्या, आध्यात्मिकता तथा सामाजिक प्रतिष्ठा।", en: "Jupiter Number: Represents knowledge, wisdom, foresight, and social prestige." },
         4: { hi: "राहु का अंक: आकस्मिक परिवर्तन, संघर्ष, अनूठी सोच, मौलिक विचार।", en: "Rahu Number: Symbolizes sudden changes, struggle, unique thinking, and originality." },
         5: { hi: "बुध का अंक: तीव्र बुद्धि, बहुमुखी प्रतिभा, वाकपटुता, व्यापारिक दक्षता।", en: "Mercury Number: Indicates sharp intellect, versatility, eloquence, and business acumen." },
         6: { hi: "शुक्र का अंक: प्रेम, सौंदर्य, आकर्षण, भौतिक सुख-सुविधाओं, कला।", en: "Venus Number: Represents love, beauty, attraction, luxury, and artistic flair." },
@@ -609,9 +609,9 @@
     }
 
     async function getCoordinates(city) {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`);
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&email=klsharma@example.com`);
         const data = await res.json();
-        if (data.length === 0) throw new Error("City not found.");
+        if (data.length === 0) throw new Error("City not found. Please try a different spelling.");
         return { lat: data[0].lat, lng: data[0].lon, displayName: data[0].display_name };
     }
 
@@ -735,7 +735,10 @@
             text += `*LUCKY ELEMENTS*\n🎨 Color: ${luckyElements[currentData.psychic][isEnglish ? 'en_color' : 'hi_color']}\n💎 Gemstone: ${luckyElements[currentData.psychic][isEnglish ? 'en_gem' : 'hi_gem']}\n📅 Days: ${luckyElements[currentData.psychic][isEnglish ? 'en_days' : 'hi_days']}\n\n`;
         }
         text += `_Generated via KL Sharma Numerology_`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`;, '_blank');
+        
+        // This is the line that had the typo in the previous version!
+        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
     }
 
     // Default Init
