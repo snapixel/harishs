@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex">
-    <title>Bhuvan Numerology Pro</title>
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#6200ea">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="icon-192.png">
+    <title>Chaldean Numerology & Choghadiya Pro</title>
     <style>
         :root { --primary: #6200ea; --surface: #ffffff; --background: #f3f4f6; --text: #333333; --text-secondary: #666666; --border-radius: 12px; }
         body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--background); margin: 0; padding: 20px; color: var(--text); display: flex; justify-content: center; }
         .container { width: 100%; height: auto; min-height: 960px; max-width: 500px; background: var(--surface); padding: 24px; border-radius: var(--border-radius); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
         
+        /* Tab Navigation */
+        .tab-container { display: flex; gap: 8px; margin-bottom: 24px; background: #e0e0e0; padding: 4px; border-radius: 8px; }
+        .tab-btn { flex: 1; padding: 12px; text-align: center; border: none; background: transparent; cursor: pointer; border-radius: 6px; font-weight: bold; color: var(--text-secondary); transition: all 0.2s; font-size: 0.95rem; }
+        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
         .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         h1 { font-size: 1.5rem; color: var(--primary); margin: 0; }
         .lang-toggle { background: #e0e0e0; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
@@ -52,116 +51,195 @@
         .loshu-table td { width: 50px; height: 50px; max-width: 50px; border: 2px solid #6200ea; text-align: center; vertical-align: middle; font-weight: bold; font-size: 1.2rem; color: #333333; }
         .loshu-empty { color: #cccccc !important; font-weight: normal !important; font-size: 0.85rem !important; }
 
+        /* Choghadiya Styles */
+        .status-msg { text-align: center; font-weight: bold; margin: 15px 0 5px; color: #d35400; font-size: 0.9rem; }
+        .chog-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 10px; }
+        .chog-table th, .chog-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        .chog-table th { background-color: #f8f9fa; color: var(--primary); font-weight: bold; text-transform: uppercase; font-size: 0.8rem; }
+        .chog-good { background-color: #e6f4ea; color: #137333; font-weight: 600; }
+        .chog-bad { background-color: #fce8e6; color: #c5221f; font-weight: 600; }
+        .chog-neutral { background-color: #fef7e0; color: #b06000; font-weight: 600; }
+        .chog-meaning { font-size: 0.8em; font-weight: normal; opacity: 0.8; display: block; margin-top: 2px; }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* PDF Export Overrides */
-        .pdf-export-mode, .pdf-export-mode * { 
-            animation: none !important; 
-            transition: none !important; 
-            opacity: 1 !important; 
-        }
+        .pdf-export-mode, .pdf-export-mode * { animation: none !important; transition: none !important; opacity: 1 !important; }
         .pdf-export-mode { padding: 0 !important; margin: 0 !important; background: white !important; }
         .pdf-export-mode .result-card { border: none !important; box-shadow: none !important; margin-top: 0 !important; padding-top: 0 !important; }
         .pdf-export-mode .card-body { padding-top: 10px !important; }
         
-        /* Force Lo Shu grid to render correctly in PDF */
         .pdf-export-mode .loshu-container { display: block !important; text-align: center !important; }
         .pdf-export-mode .loshu-table { margin: 0 auto !important; border: 2px solid #6200ea !important; width: 150px !important; }
         .pdf-export-mode .loshu-table td { border: 2px solid #6200ea !important; color: #333333 !important; background: #ffffff !important; width: 50px !important; height: 50px !important; }
+        
+        .pdf-export-mode .chog-table th { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #f8f9fa !important; }
+        .pdf-export-mode .chog-good { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #e6f4ea !important; color: #137333 !important; }
+        .pdf-export-mode .chog-bad { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #fce8e6 !important; color: #c5221f !important; }
+        .pdf-export-mode .chog-neutral { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #fef7e0 !important; color: #b06000 !important; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="inputSection">
-        <div class="header-bar">
-            <h1>Name Numerology</h1>
-            <button class="lang-toggle" id="langBtn" onclick="toggleLang()">EN / HI</button>
-        </div>
-        <p class="subtitle" id="subLabel">Advanced Calculation & Analysis</p>
-
-        <div class="input-group">
-            <label for="nameInput" id="nameLabel">Enter Full Name (English)</label>
-            <input type="text" id="nameInput" placeholder="e.g. BHUVAN SHARMA">
-        </div>
-
-        <div class="input-group">
-            <label for="dobInput" id="dobLabel">Enter Birth Date (Optional)</label>
-            <input type="date" id="dobInput">
-        </div>
-
-        <button class="btn-main" id="calcBtn" onclick="calculateNumerology()">Calculate</button>
+    
+    <!-- Tab Navigation -->
+    <div class="tab-container no-print">
+        <button class="tab-btn active" onclick="switchTab('num')" id="btnTabNum">Numerology</button>
+        <button class="tab-btn" onclick="switchTab('chog')" id="btnTabChog">Choghadiya</button>
     </div>
 
-    <div id="reportArea">
-        <div id="resultCard" class="result-card">
-            
-            <h2 id="pdfHeader" style="display:none; text-align:center; color:var(--primary); margin-top:0; padding-top:15px;">Numerology Report</h2>
-            <p id="pdfNameDisplay" style="display:none; text-align:center; font-weight:bold; font-size:1.1rem; margin-top:-5px; margin-bottom:5px;"></p>
-            <p id="pdfDobDisplay" style="display:none; text-align:center; font-size:0.95rem; color:var(--text-secondary); margin-top:0; margin-bottom:15px;"></p>
-
-            <div class="card-header">
-                <div class="badge-col">
-                    <span class="badge-title" id="l_comp">Compound</span>
-                    <div class="number-badge" style="background-color: var(--primary);" id="totalNumber">0</div>
-                </div>
-                <div class="badge-col">
-                    <span class="badge-title" id="l_nameroot">Name Root</span>
-                    <div class="number-badge" style="background-color: #00897b;" id="rootNumber">0</div>
-                </div>
-                <div class="badge-col dob-dep" style="display:none;">
-                    <span class="badge-title" id="l_psychic">Psychic</span>
-                    <div class="number-badge" style="background-color: #ff9800;" id="psychicNumber">0</div>
-                </div>
-                <div class="badge-col dob-dep" style="display:none;">
-                    <span class="badge-title" id="l_destiny">Destiny</span>
-                    <div class="number-badge" style="background-color: #e53935;" id="destinyNumber">0</div>
-                </div>
+    <!-- ==================== NUMEROLOGY SECTION ==================== -->
+    <div id="tabNumerology">
+        <div id="inputSectionNum">
+            <div class="header-bar">
+                <h1>Name Numerology</h1>
+                <button class="lang-toggle no-print" id="langBtn" onclick="toggleLang()">EN / HI</button>
             </div>
-            
-            <div class="card-body">
-                <div class="section-title" style="color: #00897b;" id="l_root_trait">Name Root Trait:</div>
-                <div class="trait-text" id="rootPredictionText"></div>
+            <p class="subtitle no-print" id="subLabel">Advanced Calculation & Analysis</p>
+
+            <div class="input-group no-print">
+                <label for="nameInput" id="nameLabel">Enter Full Name (English)</label>
+                <input type="text" id="nameInput" placeholder="e.g. BHUVAN SHARMA">
+            </div>
+
+            <div class="input-group no-print">
+                <label for="dobInput" id="dobLabel">Enter Birth Date (Optional)</label>
+                <input type="date" id="dobInput">
+            </div>
+
+            <button class="btn-main no-print" id="calcBtn" onclick="calculateNumerology()">Calculate Numerology</button>
+        </div>
+
+        <div id="reportAreaNum">
+            <div id="resultCardNum" class="result-card">
                 
-                <div class="section-title" style="color: var(--primary);" id="l_comp_trait">Compound Trait:</div>
-                <div class="trait-text" id="predictionText"></div>
-                <div class="breakdown" id="calcBreakdown"></div>
+                <h2 id="pdfHeader" style="display:none; text-align:center; color:var(--primary); margin-top:0; padding-top:15px;">Numerology Report</h2>
+                <p id="pdfNameDisplay" style="display:none; text-align:center; font-weight:bold; font-size:1.1rem; margin-top:-5px; margin-bottom:5px;"></p>
+                <p id="pdfDobDisplay" style="display:none; text-align:center; font-size:0.95rem; color:var(--text-secondary); margin-top:0; margin-bottom:15px;"></p>
 
-                <div id="dobResultSection" style="display: none;">
-                    
-                    <div class="dashboard-grid">
-                        <div class="dash-item"><strong id="l_color">Lucky Color</strong><span id="luckyColor"></span></div>
-                        <div class="dash-item"><strong id="l_gem">Gemstone</strong><span id="luckyGem"></span></div>
-                        <div class="dash-item"><strong id="l_days">Lucky Days</strong><span id="luckyDays"></span></div>
-                        <div class="dash-item"><strong id="l_year">Personal Year</strong><span id="personalYear" style="font-weight:bold; font-size:1.1rem; color:#e53935;"></span></div>
+                <div class="card-header">
+                    <div class="badge-col">
+                        <span class="badge-title" id="l_comp">Compound</span>
+                        <div class="number-badge" style="background-color: var(--primary);" id="totalNumber">0</div>
                     </div>
-
-                    <div class="section-title" style="color: #ff9800;" id="l_psy_trait">Psychic Trait:</div>
-                    <div class="trait-text" id="psychicText"></div>
+                    <div class="badge-col">
+                        <span class="badge-title" id="l_nameroot">Name Root</span>
+                        <div class="number-badge" style="background-color: #00897b;" id="rootNumber">0</div>
+                    </div>
+                    <div class="badge-col dob-dep" style="display:none;">
+                        <span class="badge-title" id="l_psychic">Psychic</span>
+                        <div class="number-badge" style="background-color: #ff9800;" id="psychicNumber">0</div>
+                    </div>
+                    <div class="badge-col dob-dep" style="display:none;">
+                        <span class="badge-title" id="l_destiny">Destiny</span>
+                        <div class="number-badge" style="background-color: #e53935;" id="destinyNumber">0</div>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <div class="section-title" style="color: #00897b;" id="l_root_trait">Name Root Trait:</div>
+                    <div class="trait-text" id="rootPredictionText"></div>
                     
-                    <div class="section-title" style="color: #e53935;" id="l_des_trait">Destiny Trait:</div>
-                    <div class="trait-text" id="destinyText"></div>
+                    <div class="section-title" style="color: var(--primary);" id="l_comp_trait">Compound Trait:</div>
+                    <div class="trait-text" id="predictionText"></div>
+                    <div class="breakdown" id="calcBreakdown"></div>
 
-                    <div class="section-title" style="color: var(--primary); text-align:center; margin-top:20px; padding-bottom:10px;" id="l_loshu">Lo Shu Grid Analysis</div>
-                    <div class="loshu-container">
-                        <table class="loshu-table" id="loshuGrid">
-                            <tr><td id="ls_4"></td><td id="ls_9"></td><td id="ls_2"></td></tr>
-                            <tr><td id="ls_3"></td><td id="ls_5"></td><td id="ls_7"></td></tr>
-                            <tr><td id="ls_8"></td><td id="ls_1"></td><td id="ls_6"></td></tr>
-                        </table>
+                    <div id="dobResultSection" style="display: none;">
+                        <div class="dashboard-grid">
+                            <div class="dash-item"><strong id="l_color">Lucky Color</strong><span id="luckyColor"></span></div>
+                            <div class="dash-item"><strong id="l_gem">Gemstone</strong><span id="luckyGem"></span></div>
+                            <div class="dash-item"><strong id="l_days">Lucky Days</strong><span id="luckyDays"></span></div>
+                            <div class="dash-item"><strong id="l_year">Personal Year</strong><span id="personalYear" style="font-weight:bold; font-size:1.1rem; color:#e53935;"></span></div>
+                        </div>
+
+                        <div class="section-title" style="color: #ff9800;" id="l_psy_trait">Psychic Trait:</div>
+                        <div class="trait-text" id="psychicText"></div>
+                        
+                        <div class="section-title" style="color: #e53935;" id="l_des_trait">Destiny Trait:</div>
+                        <div class="trait-text" id="destinyText"></div>
+
+                        <div class="section-title" style="color: var(--primary); text-align:center; margin-top:20px; padding-bottom:10px;" id="l_loshu">Lo Shu Grid Analysis</div>
+                        <div class="loshu-container">
+                            <table class="loshu-table" id="loshuGrid">
+                                <tr><td id="ls_4"></td><td id="ls_9"></td><td id="ls_2"></td></tr>
+                                <tr><td id="ls_3"></td><td id="ls_5"></td><td id="ls_7"></td></tr>
+                                <tr><td id="ls_8"></td><td id="ls_1"></td><td id="ls_6"></td></tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="action-grid no-print" id="actionBtnsNum" style="display:none;">
+            <button class="btn-pdf" onclick="generatePDF('num')">📄 Download PDF</button>
+            <button class="btn-wa" onclick="shareWhatsApp()">💬 Share on WA</button>
+        </div>
     </div>
 
-    <div class="action-grid" id="actionBtns" style="display:none;">
-        <button class="btn-pdf" onclick="generatePDF()">📄 Download PDF</button>
-        <button class="btn-wa" onclick="shareWhatsApp()">💬 Share on WA</button>
+    <!-- ==================== CHOGHADIYA SECTION ==================== -->
+    <div id="tabChoghadiya" style="display: none;">
+        <div id="inputSectionChog">
+            <div class="header-bar">
+                <h1>Choghadiya Muhurat</h1>
+            </div>
+            <p class="subtitle no-print">Dynamic Auspicious Timings by City</p>
+
+            <div class="input-group no-print">
+                <label for="cityInput">Enter City</label>
+                <input type="text" id="cityInput" placeholder="e.g., Udaipur" value="Udaipur">
+            </div>
+
+            <div class="input-group no-print">
+                <label for="chogDateInput">Select Date</label>
+                <input type="date" id="chogDateInput">
+            </div>
+
+            <button class="btn-main no-print" onclick="calculateChoghadiya()">Get Timings</button>
+        </div>
+        
+        <div id="statusMsg" class="status-msg no-print"></div>
+
+        <div id="reportAreaChog">
+            <div id="resultCardChog" class="result-card" style="border: none !important;">
+                
+                <h2 id="pdfChogHeader" style="display:none; text-align:center; color:var(--primary); margin-top:0; padding-top:15px;">Choghadiya Muhurat</h2>
+                <p id="pdfChogLocation" style="display:none; text-align:center; font-weight:bold; font-size:1.1rem; margin-top:-5px; margin-bottom:5px; color:var(--text-secondary);"></p>
+
+                <div class="card-body" style="padding-top: 0;">
+                    <div class="section-title" style="color: #00897b; margin-top: 0;">Day Timings (Sunrise to Sunset)</div>
+                    <table class="chog-table" id="dayTable">
+                        <thead><tr><th>Time</th><th>Choghadiya</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <div class="section-title" style="color: var(--primary); margin-top: 24px;">Night Timings (Sunset to Sunrise)</div>
+                    <table class="chog-table" id="nightTable">
+                        <thead><tr><th>Time</th><th>Choghadiya</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-grid no-print" id="actionBtnsChog" style="display:none; grid-template-columns: 1fr;">
+            <button class="btn-pdf" onclick="generatePDF('chog')">📄 Download Timings as PDF</button>
+        </div>
     </div>
+
 </div>
 
 <script>
+    // --- TAB LOGIC ---
+    function switchTab(tab) {
+        document.getElementById('tabNumerology').style.display = tab === 'num' ? 'block' : 'none';
+        document.getElementById('tabChoghadiya').style.display = tab === 'chog' ? 'block' : 'none';
+        document.getElementById('btnTabNum').className = tab === 'num' ? 'tab-btn active' : 'tab-btn';
+        document.getElementById('btnTabChog').className = tab === 'chog' ? 'tab-btn active' : 'tab-btn';
+    }
+
+    // --- NUMEROLOGY DATA & LOGIC ---
     let isEnglish = false; 
     let currentData = {}; 
     const currentDate = new Date();
@@ -227,7 +305,7 @@
         41: " ऐसे व्यक्ति साधारण कुल में जन्म लेकर भी काफी ऊंचे उठते हैं । प्रयत्न कर अपने जीवन में ही अपने लक्ष्य को भली प्रकार से प्राप्त कर लेते हैं। इनकी प्रतिभा सराहनीय होती है। समाज में ये पूर्णतः यश के भाभी होते हैं।",
         42: " ऐसे व्यक्ति पराश्रयी कहलाते हैं। यद्यपि इनमें वृद्धि और प्रतिभा होती है, परन्तु ये उसका भली प्रकार से उपयोग नहीं कर पाते । दूसरों के सहारे ही जीवन में ऊंचे उठते हैं।",
         43: " यह अंक बाधाओं का अंक है। ऐसे व्यक्ति जीवन में असफल ही होते हैं। इनके जीवन में कोई भी कार्य बिना बाधाओं या परेशानियों के सम्पन्न नहीं होता । बार-बार अड़चनें, मुकदमें, सिर दर्द, लड़ाई-झगड़े होते ही रहते हैं।",
-        44: " दूसरों के सहयोग के विना ये व्यक्ति कार्य नहीं कर पाते। साथ ही यह बात भी सही है कि ये जब भी दूसरे व्यक्तियों का सहारा लेते हैं इनको लोखा मिलता है: हानि उठाते हैं या अपने लिए समस्याएं पैदा कर लेते हैं।",
+        44: " दूसरों के सहयोग के विना ये व्यक्ति कार्य সহকারী नहीं कर पाते। साथ ही यह बात भी सही है कि ये जब भी दूसरे व्यक्तियों का सहारा लेते हैं इनको लोखा मिलता है: हानि उठाते हैं या अपने लिए समस्याएं पैदा कर लेते हैं।",
         45: " उच्च महत्त्वाकांक्षाओं से सम्पन्न ऐसे व्यक्ति जीवन में पूर्णतः सफल होते हैं। परिस्थितियों के अनुसार अपने-आपको ढाल लेने में इनमें अ‌द्भुत क्षमता होती है। जीवन के यौवन काल में ही ऐसे व्यक्ति अपने लक्ष्य तक पहुंच जाने में सफल हो जाते हैं।",
         46: " यह भाग्यवर्द्धक अंक है। इनके जीवन मेंजो भी घटनाएं घटित होती है वे आकस्मिक रूप से ही होती हैं। ये व्यक्ति जो मी कार्य करते हैं एक विशेष तरीके से करते हैं जिसकी वजह से इनके कार्यों की समाज में सर्वत्र सराहना होती है।",
         47: " यह अंक अनिश्चय का सूचक है। इनके जीवन में कब क्या घटना घटित हो जाएगी, कुछ कहा नहीं जा सकता। ऐसे व्यक्ति असाधारण बुद्धि के होते हुए भी दरिद्री और असाधारण जीवन व्यतीत करते देखे गए हैं।",
@@ -273,7 +351,7 @@
         
         document.getElementById('nameLabel').innerText = isEnglish ? "Enter Full Name" : "पूरा नाम दर्ज करें (English)";
         document.getElementById('dobLabel').innerText = isEnglish ? "Enter Birth Date" : "जन्म तिथि (वैकल्पिक)";
-        document.getElementById('calcBtn').innerText = isEnglish ? "Calculate" : "गणना करें";
+        document.getElementById('calcBtn').innerText = isEnglish ? "Calculate Numerology" : "गणना करें";
         document.getElementById('l_comp').innerText = isEnglish ? "Compound" : "संयुक्त अंक";
         document.getElementById('l_nameroot').innerText = isEnglish ? "Name Root" : "नामांक";
         document.getElementById('l_psychic').innerText = isEnglish ? "Psychic" : "मूलांक";
@@ -297,7 +375,6 @@
     }
 
     function generateLoShu(dateStr) {
-        // Enforce strong non-breaking spaces
         [1,2,3,4,5,6,7,8,9].forEach(n => {
             const el = document.getElementById('ls_'+n);
             el.innerHTML = '&nbsp;';
@@ -306,9 +383,7 @@
 
         const digitsStr = dateStr.replace(/\D/g, '');
         let counts = {};
-        for(let d of digitsStr) {
-            if(d != '0') counts[d] = (counts[d] || 0) + 1;
-        }
+        for(let d of digitsStr) { if(d != '0') counts[d] = (counts[d] || 0) + 1; }
 
         for(let n in counts) {
             const el = document.getElementById('ls_'+n);
@@ -394,31 +469,173 @@
                 dobBadges.forEach(b => b.style.display = 'none');
             }
 
-            document.getElementById('resultCard').style.display = 'block';
-            document.getElementById('actionBtns').style.display = 'grid';
+            document.getElementById('resultCardNum').style.display = 'block';
+            document.getElementById('actionBtnsNum').style.display = 'grid';
 
-        } catch (error) {
-            alert("App Crash: " + error.message);
+        } catch (error) { alert("App Crash: " + error.message); }
+    }
+
+    // --- CHOGHADIYA DATA & LOGIC ---
+    let currentChogData = {};
+    const choghadiyaInfo = {
+        "Amrit": { class: "chog-good", meaning: "Auspicious" },
+        "Shubh": { class: "chog-good", meaning: "Auspicious" },
+        "Labh": { class: "chog-good", meaning: "Auspicious" },
+        "Chal": { class: "chog-neutral", meaning: "Neutral" },
+        "Udveg": { class: "chog-bad", meaning: "Inauspicious" },
+        "Rog": { class: "chog-bad", meaning: "Inauspicious" },
+        "Kaal": { class: "chog-bad", meaning: "Inauspicious" }
+    };
+
+    const daySequences = [
+        ["Udveg", "Chal", "Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg"], 
+        ["Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Chal", "Labh", "Amrit"], 
+        ["Rog", "Udveg", "Chal", "Labh", "Amrit", "Kaal", "Shubh", "Rog"],   
+        ["Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Chal", "Labh"],  
+        ["Shubh", "Rog", "Udveg", "Chal", "Labh", "Amrit", "Kaal", "Shubh"], 
+        ["Chal", "Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Chal"],  
+        ["Kaal", "Shubh", "Rog", "Udveg", "Chal", "Labh", "Amrit", "Kaal"]   
+    ];
+
+    const nightSequences = [
+        ["Shubh", "Amrit", "Chal", "Rog", "Kaal", "Labh", "Udveg", "Shubh"], 
+        ["Chal", "Rog", "Kaal", "Labh", "Udveg", "Shubh", "Amrit", "Chal"],  
+        ["Kaal", "Labh", "Udveg", "Shubh", "Amrit", "Chal", "Rog", "Kaal"],  
+        ["Udveg", "Shubh", "Amrit", "Chal", "Rog", "Kaal", "Labh", "Udveg"], 
+        ["Amrit", "Chal", "Rog", "Kaal", "Labh", "Udveg", "Shubh", "Amrit"], 
+        ["Rog", "Kaal", "Labh", "Udveg", "Shubh", "Amrit", "Chal", "Rog"],   
+        ["Labh", "Udveg", "Shubh", "Amrit", "Chal", "Rog", "Kaal", "Labh"]   
+    ];
+
+    function formatTime(dateObj) {
+        let hours = dateObj.getHours();
+        let minutes = dateObj.getMinutes();
+        let ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; 
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        return `${hours}:${minutes} ${ampm}`;
+    }
+
+    function generateTimeSlots(startTimeMs, totalDurationMs) {
+        let slots = [];
+        let segmentDuration = totalDurationMs / 8;
+        for (let i = 0; i < 8; i++) {
+            let segmentStart = new Date(startTimeMs + (i * segmentDuration));
+            let segmentEnd = new Date(startTimeMs + ((i + 1) * segmentDuration));
+            slots.push(`${formatTime(segmentStart)} - ${formatTime(segmentEnd)}`);
+        }
+        return slots;
+    }
+
+    function renderChogTable(tableId, sequence, timeSlots) {
+        const tbody = document.querySelector(`#${tableId} tbody`);
+        tbody.innerHTML = ''; 
+        for (let i = 0; i < 8; i++) {
+            const choghadiyaName = sequence[i];
+            const info = choghadiyaInfo[choghadiyaName];
+            const tr = document.createElement('tr');
+            tr.className = info.class;
+            tr.innerHTML = `<td>${timeSlots[i]}</td><td>${choghadiyaName} <span class="chog-meaning">(${info.meaning})</span></td>`;
+            tbody.appendChild(tr);
         }
     }
 
-    function generatePDF() {
-        const element = document.getElementById('reportArea');
-        
-        element.classList.add('pdf-export-mode');
-        document.getElementById('pdfHeader').style.display = 'block';
-        document.getElementById('pdfNameDisplay').innerText = `Report for: ${currentData.name}`;
-        document.getElementById('pdfNameDisplay').style.display = 'block';
+    async function getCoordinates(city) {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`);
+        const data = await res.json();
+        if (data.length === 0) throw new Error("City not found.");
+        return { lat: data[0].lat, lng: data[0].lon, displayName: data[0].display_name };
+    }
 
-        if (currentData.dob) {
-            const dobFormatted = currentData.dob.split('-').reverse().join('-');
-            document.getElementById('pdfDobDisplay').innerText = `Birth Date: ${dobFormatted}`;
-            document.getElementById('pdfDobDisplay').style.display = 'block';
+    async function getSunTimes(lat, lng, dateStr) {
+        const res = await fetch(`https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lng}&date=${dateStr}&formatted=0`);
+        const data = await res.json();
+        return data.results;
+    }
+
+    async function calculateChoghadiya() {
+        const city = document.getElementById('cityInput').value.trim();
+        const dateStr = document.getElementById('chogDateInput').value;
+        const status = document.getElementById('statusMsg');
+
+        if (!city || !dateStr) { status.innerText = "Please enter both City and Date."; return; }
+
+        status.innerText = "Fetching coordinates and calculating...";
+        document.querySelector('#dayTable tbody').innerHTML = '';
+        document.querySelector('#nightTable tbody').innerHTML = '';
+        document.getElementById('resultCardChog').style.display = 'none';
+        document.getElementById('actionBtnsChog').style.display = 'none';
+
+        try {
+            const coords = await getCoordinates(city);
+            const selectedDate = new Date(dateStr);
+            const dayOfWeek = selectedDate.getDay();
+            
+            const nextDate = new Date(selectedDate);
+            nextDate.setDate(nextDate.getDate() + 1);
+            const nextDateStr = nextDate.toISOString().split('T')[0];
+
+            const todaySun = await getSunTimes(coords.lat, coords.lng, dateStr);
+            const tomorrowSun = await getSunTimes(coords.lat, coords.lng, nextDateStr);
+
+            const sunriseTime = new Date(todaySun.sunrise).getTime();
+            const sunsetTime = new Date(todaySun.sunset).getTime();
+            const nextSunriseTime = new Date(tomorrowSun.sunrise).getTime();
+
+            const dayDurationMs = sunsetTime - sunriseTime;
+            const nightDurationMs = nextSunriseTime - sunsetTime;
+
+            const daySlots = generateTimeSlots(sunriseTime, dayDurationMs);
+            const nightSlots = generateTimeSlots(sunsetTime, nightDurationMs);
+
+            renderChogTable('dayTable', daySequences[dayOfWeek], daySlots);
+            renderChogTable('nightTable', nightSequences[dayOfWeek], nightSlots);
+
+            const cleanCityName = coords.displayName.split(',')[0];
+            currentChogData.city = cleanCityName;
+            currentChogData.date = dateStr.split('-').reverse().join('-');
+            
+            status.innerText = `Showing exact timings for: ${cleanCityName}`;
+            document.getElementById('resultCardChog').style.display = 'block';
+            document.getElementById('actionBtnsChog').style.display = 'grid';
+
+        } catch (error) {
+            status.innerText = `Error: ${error.message}`;
+            console.error(error);
+        }
+    }
+
+    // --- SHARED EXPORT LOGIC ---
+    function generatePDF(type) {
+        let element, filename, opt;
+        
+        if (type === 'num') {
+            element = document.getElementById('reportAreaNum');
+            element.classList.add('pdf-export-mode');
+            document.getElementById('pdfHeader').style.display = 'block';
+            document.getElementById('pdfNameDisplay').innerText = `Report for: ${currentData.name}`;
+            document.getElementById('pdfNameDisplay').style.display = 'block';
+
+            if (currentData.dob) {
+                const dobFormatted = currentData.dob.split('-').reverse().join('-');
+                document.getElementById('pdfDobDisplay').innerText = `Birth Date: ${dobFormatted}`;
+                document.getElementById('pdfDobDisplay').style.display = 'block';
+            }
+            filename = `${currentData.name.replace(/\s+/g, '_')}_Numerology.pdf`;
+
+        } else if (type === 'chog') {
+            element = document.getElementById('reportAreaChog');
+            element.classList.add('pdf-export-mode');
+            document.getElementById('pdfChogHeader').style.display = 'block';
+            document.getElementById('pdfChogLocation').innerText = `${currentChogData.city} | ${currentChogData.date}`;
+            document.getElementById('pdfChogLocation').style.display = 'block';
+            filename = `Choghadiya_${currentChogData.city}_${currentChogData.date}.pdf`;
         }
 
-        const opt = {
-            margin:       0.2, // Small margin to prevent clipping
-            filename:     `${currentData.name.replace(/\s+/g, '_')}_Numerology.pdf`,
+        opt = {
+            margin:       0.2,
+            filename:     filename,
             image:        { type: 'jpeg', quality: 1.0 },
             html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false, scrollY: 0 },
             jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
@@ -427,9 +644,14 @@
         setTimeout(() => {
             html2pdf().set(opt).from(element).save().then(() => {
                 element.classList.remove('pdf-export-mode');
-                document.getElementById('pdfHeader').style.display = 'none';
-                document.getElementById('pdfNameDisplay').style.display = 'none';
-                document.getElementById('pdfDobDisplay').style.display = 'none';
+                if (type === 'num') {
+                    document.getElementById('pdfHeader').style.display = 'none';
+                    document.getElementById('pdfNameDisplay').style.display = 'none';
+                    document.getElementById('pdfDobDisplay').style.display = 'none';
+                } else if (type === 'chog') {
+                    document.getElementById('pdfChogHeader').style.display = 'none';
+                    document.getElementById('pdfChogLocation').style.display = 'none';
+                }
             });
         }, 100);
     }
@@ -437,42 +659,25 @@
     function shareWhatsApp() {
         const langKey = isEnglish ? 'en' : 'hi';
         let text = `*Numerology Report: ${currentData.name}*\n\n`;
-        
-        text += `*NAME NUMBERS*\n`;
-        text += `🔹 Compound Name: ${currentData.compound}\n`;
-        text += `🔹 Name Root: ${currentData.root}\n`;
-        if (rootPredictions[currentData.root]) {
-            text += `📝 Trait: ${rootPredictions[currentData.root][langKey]}\n\n`;
-        }
+        text += `*NAME NUMBERS*\n🔹 Compound Name: ${currentData.compound}\n🔹 Name Root: ${currentData.root}\n`;
+        if (rootPredictions[currentData.root]) { text += `📝 Trait: ${rootPredictions[currentData.root][langKey]}\n\n`; }
         
         if (currentData.dob) {
             const dobFormatted = currentData.dob.split('-').reverse().join('-');
-            text += `*BIRTH DETAILS*\n`;
-            text += `🔹 DOB: ${dobFormatted}\n`;
-            text += `🔹 Psychic (मूलांक): ${currentData.psychic}\n`;
-            text += `🔹 Destiny (भाग्यांक): ${currentData.destiny}\n`;
-            text += `🔹 Personal Year: ${currentData.personalYear}\n\n`;
-            
-            text += `*LUCKY ELEMENTS*\n`;
-            text += `🎨 Color: ${luckyElements[currentData.psychic][isEnglish ? 'en_color' : 'hi_color']}\n`;
-            text += `💎 Gemstone: ${luckyElements[currentData.psychic][isEnglish ? 'en_gem' : 'hi_gem']}\n`;
-            text += `📅 Days: ${luckyElements[currentData.psychic][isEnglish ? 'en_days' : 'hi_days']}\n\n`;
+            text += `*BIRTH DETAILS*\n🔹 DOB: ${dobFormatted}\n🔹 Psychic: ${currentData.psychic}\n🔹 Destiny: ${currentData.destiny}\n🔹 Personal Year: ${currentData.personalYear}\n\n`;
+            text += `*LUCKY ELEMENTS*\n🎨 Color: ${luckyElements[currentData.psychic][isEnglish ? 'en_color' : 'hi_color']}\n💎 Gemstone: ${luckyElements[currentData.psychic][isEnglish ? 'en_gem' : 'hi_gem']}\n📅 Days: ${luckyElements[currentData.psychic][isEnglish ? 'en_days' : 'hi_days']}\n\n`;
         }
-        
-        text += `_Generated via snapixel_`;
-        
-        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
+        text += `_Generated via KL Sharma Numerology_`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-  if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('Service Worker Registered!', reg))
-                .catch(err => console.error('Service Worker Registration Failed!', err));
-        });
-    }
-  
+    // Default Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+        const chogDateInput = document.getElementById('chogDateInput');
+        const today = new Date();
+        chogDateInput.value = new Date(today.getTime() - (today.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+        document.getElementById('cityInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') calculateChoghadiya(); });
+    });
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
