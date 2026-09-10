@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaldean Numerology & Choghadiya Pro</title>
+    <title>Chaldean Numerology & Astrolgy Pro</title>
 
     <!-- PWA & Mobile Meta Tags -->
     <meta name="theme-color" content="#6200ea">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Numerology Pro">
+    <meta name="apple-mobile-web-app-title" content="Astro Pro">
     <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/om.png">
     <link rel="icon" type="image/png" href="https://img.icons8.com/color/192/om.png">
     <link rel="manifest" id="manifestLink" href="manifest.json">
@@ -23,8 +23,8 @@
         .install-btn { display: none; background: #00897b; color: white; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
 
         /* Tab Navigation */
-        .tab-container { display: flex; gap: 8px; margin-bottom: 20px; background: #e0e0e0; padding: 4px; border-radius: 8px; }
-        .tab-btn { flex: 1; padding: 12px; text-align: center; border: none; background: transparent; cursor: pointer; border-radius: 6px; font-weight: bold; color: var(--text-secondary); transition: all 0.2s; font-size: 0.95rem; }
+        .tab-container { display: flex; gap: 4px; margin-bottom: 20px; background: #e0e0e0; padding: 4px; border-radius: 8px; }
+        .tab-btn { flex: 1; padding: 10px 5px; text-align: center; border: none; background: transparent; cursor: pointer; border-radius: 6px; font-weight: bold; color: var(--text-secondary); transition: all 0.2s; font-size: 0.85rem; }
         .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
         .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
@@ -75,6 +75,19 @@
         .chog-neutral { background-color: #fef7e0; color: #b06000; font-weight: 600; }
         .chog-meaning { font-size: 0.8em; font-weight: normal; opacity: 0.8; display: block; margin-top: 2px; }
 
+        /* Panchang/Muhurat Specific Styles */
+        .panchang-header-info { text-align: center; font-size: 0.9rem; line-height: 1.4; color: var(--text-secondary); margin-bottom: 15px; }
+        .sun-times { display: flex; justify-content: space-around; background: #fff8e1; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ffecb3; }
+        .sun-item { text-align: center; font-weight: bold; color: #f57f17; }
+        .sun-item span { display: block; font-size: 0.8rem; color: #795548; font-weight: normal; margin-bottom: 4px; }
+        
+        .p-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #e0e0e0; font-size: 0.95rem; }
+        .p-row:last-child { border-bottom: none; }
+        .p-label { font-weight: bold; color: var(--primary); width: 35%; }
+        .p-value { width: 35%; color: var(--text); font-weight: 500; }
+        .p-time { width: 30%; text-align: right; color: var(--text-secondary); font-size: 0.85rem; }
+        .p-next { display: block; font-size: 0.75rem; color: #9e9e9e; margin-top: 2px; }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* PDF Overrides */
@@ -89,6 +102,7 @@
         .pdf-export-mode .chog-good { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #e6f4ea !important; color: #137333 !important; }
         .pdf-export-mode .chog-bad { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #fce8e6 !important; color: #c5221f !important; }
         .pdf-export-mode .chog-neutral { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #fef7e0 !important; color: #b06000 !important; }
+        .pdf-export-mode .sun-times { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #fff8e1 !important; border: 1px solid #ffecb3 !important; }
     </style>
 </head>
 <body>
@@ -99,6 +113,7 @@
     <div class="tab-container no-print">
         <button class="tab-btn active" onclick="switchTab('num')" id="btnTabNum">Numerology</button>
         <button class="tab-btn" onclick="switchTab('chog')" id="btnTabChog">Choghadiya</button>
+        <button class="tab-btn" onclick="switchTab('panchang')" id="btnTabPanchang">Panchang</button>
     </div>
 
     <!-- ==================== NUMEROLOGY SECTION ==================== -->
@@ -128,7 +143,6 @@
 
         <div id="reportAreaNum">
             <div id="resultCardNum" class="result-card">
-                
                 <h2 id="pdfHeader" style="display:none; text-align:center; color:var(--primary); margin-top:0; padding-top:15px;">Numerology Report</h2>
                 <p id="pdfNameDisplay" style="display:none; text-align:center; font-weight:bold; font-size:1.1rem; margin-top:-5px; margin-bottom:5px;"></p>
                 <p id="pdfDobDisplay" style="display:none; text-align:center; font-size:0.95rem; color:var(--text-secondary); margin-top:0; margin-bottom:15px;"></p>
@@ -243,6 +257,144 @@
         </div>
     </div>
 
+    <!-- ==================== PANCHANG / MUHURAT SECTION ==================== -->
+    <div id="tabPanchang" style="display: none;">
+        <div id="inputSectionPanchang">
+            <div class="header-bar">
+                <h1>Daily Panchang</h1>
+            </div>
+            <p class="subtitle no-print">Detailed Astrological Information</p>
+
+            <div class="input-group no-print">
+                <label for="panchangDateInput">Select Date</label>
+                <input type="date" id="panchangDateInput">
+            </div>
+
+            <button class="btn-main no-print" onclick="showPanchangTemplate()">View Panchang</button>
+            <p style="font-size:0.75rem; text-align:center; color:var(--text-secondary); margin-top:10px;" class="no-print">
+                *Displaying sample template data. Real-time planetary data requires a backend Astrological API integration.
+            </p>
+        </div>
+        
+        <div id="reportAreaPanchang">
+            <div id="resultCardPanchang" class="result-card">
+                <h2 id="pdfPanchangHeader" style="display:none; text-align:center; color:var(--primary); margin-top:0; padding-top:15px;">Daily Panchang</h2>
+                <p id="pdfPanchangDate" style="display:none; text-align:center; font-weight:bold; font-size:1.1rem; margin-top:-5px; margin-bottom:15px; color:var(--text-secondary);"></p>
+
+                <div class="card-body" style="padding-top: 10px;">
+                    
+                    <div class="panchang-header-info">
+                        <strong>Udaipur, Rajasthan, India</strong><br>
+                        <span style="font-size:0.8rem;">24.5858°N, 73.7135°E | Asia/Calcutta</span>
+                    </div>
+
+                    <div class="sun-times">
+                        <div class="sun-item"><span>🌅 सूर्योदय (Sunrise)</span>06:20 AM</div>
+                        <div class="sun-item"><span>🌇 सूर्यास्त (Sunset)</span>06:43 PM</div>
+                    </div>
+
+                    <div class="section-title" style="color: var(--primary);">पंचांग के अंग (5 Limbs)</div>
+                    <div class="p-row">
+                        <div class="p-label">तिथि (Tithi)</div>
+                        <div class="p-value">चतुर्दशी (Chaturdashi)</div>
+                        <div class="p-time">10:32 AM<span class="p-next">Next: अमावस्या (Amavasya)</span></div>
+                    </div>
+                    <div class="p-row">
+                        <div class="p-label">पक्ष (Paksha)</div>
+                        <div class="p-value">कृष्ण पक्ष (Krishna)</div>
+                        <div class="p-time">-</div>
+                    </div>
+                    <div class="p-row">
+                        <div class="p-label">नक्षत्र (Nakshatra)</div>
+                        <div class="p-value">मघा (Magha)</div>
+                        <div class="p-time">02:03 PM<span class="p-next">Next: पूर्व फाल्गुनी (P. Phalguni)</span></div>
+                    </div>
+                    <div class="p-row">
+                        <div class="p-label">योग (Yoga)</div>
+                        <div class="p-value">सिद्ध (Siddha)</div>
+                        <div class="p-time">07:16 PM<span class="p-next">Next: साध्य (Sadhya)</span></div>
+                    </div>
+                    <div class="p-row">
+                        <div class="p-label">करण (Karana)</div>
+                        <div class="p-value">शकुनी (Shakuni)</div>
+                        <div class="p-time">10:32 AM<span class="p-next">Next: चतुष्पद (Chatushpada)</span></div>
+                    </div>
+                    <div class="p-row">
+                        <div class="p-label">वार (Vaar)</div>
+                        <div class="p-value">गुरूवार (Thursday)</div>
+                        <div class="p-time">-</div>
+                    </div>
+
+                    <div class="section-title" style="color: #00897b;">माह एवं राशियां (Months & Signs)</div>
+                    <div class="p-row">
+                        <div class="p-label">अमावस्यांत माह</div>
+                        <div class="p-value">श्रावण (Shravan)</div>
+                        <div class="p-time">-</div>
+                    </div>
+                    <div class="p-row">
+                        <div class="p-label">पूर्णिमांत माह</div>
+                        <div class="p-value">भाद्रपद (Bhadrapad)</div>
+                        <div class="p-time">-</div>
+                    </div>
+                    <div class="p-row">
+                        <div class="p-label">चन्द्र राशि (Moon)</div>
+                        <div class="p-value">सिंह (Leo)</div>
+                        <div class="p-time">-</div>
+                    </div>
+                    <div class="p-row">
+                        <div class="p-label">सूर्य राशि (Sun)</div>
+                        <div class="p-value">सिंह (Leo)</div>
+                        <div class="p-time">-</div>
+                    </div>
+                    <div class="p-row">
+                        <div class="p-label">ऋतु / अयन</div>
+                        <div class="p-value">शरद / दक्षिणायन</div>
+                        <div class="p-time">-</div>
+                    </div>
+
+                    <div class="section-title" style="color: #d35400;">संवत् (Eras & Years)</div>
+                    <div class="p-row">
+                        <div class="p-label">विक्रम संवत</div>
+                        <div class="p-value">2083</div>
+                        <div class="p-time">-</div>
+                    </div>
+                    <div class="p-row">
+                        <div class="p-label">शक संवत</div>
+                        <div class="p-value">1948</div>
+                        <div class="p-time">-</div>
+                    </div>
+                    <div class="p-row">
+                        <div class="p-label">संवत्सर (नाम)</div>
+                        <div class="p-value">पराभव / रौद्र</div>
+                        <div class="p-time">-</div>
+                    </div>
+
+                    <div class="section-title" style="color: var(--primary); text-align:center;">पद, चरण (Pad/Charan Timings)</div>
+                    <div class="p-row">
+                        <div class="p-label" style="text-align:right;">3 मू</div>
+                        <div class="p-value" style="text-align:center;">मघा</div>
+                        <div class="p-time" style="text-align:left;">08:19 AM</div>
+                    </div>
+                    <div class="p-row">
+                        <div class="p-label" style="text-align:right;">4 मे</div>
+                        <div class="p-value" style="text-align:center;">मघा</div>
+                        <div class="p-time" style="text-align:left;">02:03 PM</div>
+                    </div>
+                    <div class="p-row">
+                        <div class="p-label" style="text-align:right;">1 मो</div>
+                        <div class="p-value" style="text-align:center;">पूर्व फाल्गुनी</div>
+                        <div class="p-time" style="text-align:left;">07:49 PM</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="action-grid no-print" id="actionBtnsPanchang" style="display:none; grid-template-columns: 1fr;">
+            <button class="btn-pdf" onclick="generatePDF('panchang')">📄 Download Panchang PDF</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -260,18 +412,15 @@
         if (!deferredPrompt) return;
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choice) => {
-            if (choice.outcome === 'accepted') {
-                if (pwaBtn) pwaBtn.style.display = 'none';
-            }
+            if (choice.outcome === 'accepted') { if (pwaBtn) pwaBtn.style.display = 'none'; }
             deferredPrompt = null;
         });
     }
 
-    // Auto data-URI fallback for manifest
     (function injectManifest() {
         const manifest = {
-            "name": "Chaldean Numerology & Choghadiya Pro",
-            "short_name": "Numerology Pro",
+            "name": "Astro Pro - Numerology & Panchang",
+            "short_name": "Astro Pro",
             "start_url": "./",
             "display": "standalone",
             "background_color": "#ffffff",
@@ -282,19 +431,16 @@
             ]
         };
         const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-        const manifestURL = URL.createObjectURL(blob);
         const link = document.getElementById('manifestLink');
         if (link && !window.location.protocol.startsWith('http')) {
-            link.setAttribute('href', manifestURL);
+            link.setAttribute('href', URL.createObjectURL(blob));
         }
     })();
 
-    // Service Worker Registration
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('SW Registered!', reg))
-                .catch(err => console.log('SW Registration skipped / not found on sandbox:', err));
+                .catch(err => console.log('SW Registration skipped / not found on sandbox.'));
         });
     }
 
@@ -302,8 +448,11 @@
     function switchTab(tab) {
         document.getElementById('tabNumerology').style.display = tab === 'num' ? 'block' : 'none';
         document.getElementById('tabChoghadiya').style.display = tab === 'chog' ? 'block' : 'none';
+        document.getElementById('tabPanchang').style.display = tab === 'panchang' ? 'block' : 'none';
+        
         document.getElementById('btnTabNum').className = tab === 'num' ? 'tab-btn active' : 'tab-btn';
         document.getElementById('btnTabChog').className = tab === 'chog' ? 'tab-btn active' : 'tab-btn';
+        document.getElementById('btnTabPanchang').className = tab === 'panchang' ? 'tab-btn active' : 'tab-btn';
     }
 
     // --- NUMEROLOGY DATA & LOGIC ---
@@ -673,6 +822,20 @@
         }
     }
 
+    // --- PANCHANG LOGIC ---
+    // Displays the static template from image_ece5e7.png
+    function showPanchangTemplate() {
+        const dateInput = document.getElementById('panchangDateInput').value;
+        if(dateInput) {
+            document.getElementById('pdfPanchangDate').innerText = dateInput.split('-').reverse().join('-');
+        } else {
+            document.getElementById('pdfPanchangDate').innerText = "10-09-2026";
+        }
+        
+        document.getElementById('resultCardPanchang').style.display = 'block';
+        document.getElementById('actionBtnsPanchang').style.display = 'grid';
+    }
+
     // --- SHARED EXPORT LOGIC ---
     function generatePDF(type) {
         let element, filename;
@@ -698,6 +861,12 @@
             document.getElementById('pdfChogLocation').innerText = `${currentChogData.city} | ${currentChogData.date}`;
             document.getElementById('pdfChogLocation').style.display = 'block';
             filename = `Choghadiya_${currentChogData.city}_${currentChogData.date}.pdf`;
+        } else if (type === 'panchang') {
+            element = document.getElementById('reportAreaPanchang');
+            element.classList.add('pdf-export-mode');
+            document.getElementById('pdfPanchangHeader').style.display = 'block';
+            document.getElementById('pdfPanchangDate').style.display = 'block';
+            filename = `Panchang_Report.pdf`;
         }
 
         const opt = {
@@ -718,6 +887,9 @@
                 } else if (type === 'chog') {
                     document.getElementById('pdfChogHeader').style.display = 'none';
                     document.getElementById('pdfChogLocation').style.display = 'none';
+                } else if (type === 'panchang') {
+                    document.getElementById('pdfPanchangHeader').style.display = 'none';
+                    document.getElementById('pdfPanchangDate').style.display = 'none';
                 }
             });
         }, 100);
@@ -734,18 +906,17 @@
             text += `*BIRTH DETAILS*\n🔹 DOB: ${dobFormatted}\n🔹 Psychic: ${currentData.psychic}\n🔹 Destiny: ${currentData.destiny}\n🔹 Personal Year: ${currentData.personalYear}\n\n`;
             text += `*LUCKY ELEMENTS*\n🎨 Color: ${luckyElements[currentData.psychic][isEnglish ? 'en_color' : 'hi_color']}\n💎 Gemstone: ${luckyElements[currentData.psychic][isEnglish ? 'en_gem' : 'hi_gem']}\n📅 Days: ${luckyElements[currentData.psychic][isEnglish ? 'en_days' : 'hi_days']}\n\n`;
         }
-        text += `_Generated via KL Sharma Numerology_`;
-        
-        // This is the line that had the typo in the previous version!
-        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
+        text += `_Generated via Astro Pro Numerology_`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
 
     // Default Init
     document.addEventListener('DOMContentLoaded', () => {
-        const chogDateInput = document.getElementById('chogDateInput');
         const today = new Date();
-        chogDateInput.value = new Date(today.getTime() - (today.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+        const localISOTime = new Date(today.getTime() - (today.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+        document.getElementById('chogDateInput').value = localISOTime;
+        document.getElementById('panchangDateInput').value = localISOTime;
+        
         document.getElementById('cityInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') calculateChoghadiya(); });
     });
 </script>
