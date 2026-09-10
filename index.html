@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaldean Numerology & Astrolgy Pro</title>
+    <title>Astro Pro - Numerology & Panchang</title>
 
     <!-- PWA & Mobile Meta Tags -->
     <meta name="theme-color" content="#6200ea">
@@ -75,11 +75,12 @@
         .chog-neutral { background-color: #fef7e0; color: #b06000; font-weight: 600; }
         .chog-meaning { font-size: 0.8em; font-weight: normal; opacity: 0.8; display: block; margin-top: 2px; }
 
-        /* Panchang Specific Styles */
+        /* Panchang/Muhurat Specific Styles */
         .panchang-header-info { text-align: center; font-size: 0.9rem; line-height: 1.4; color: var(--text-secondary); margin-bottom: 15px; }
         .sun-times { display: flex; justify-content: space-around; background: #fff8e1; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ffecb3; }
         .sun-item { text-align: center; font-weight: bold; color: #f57f17; }
         .sun-item span { display: block; font-size: 0.8rem; color: #795548; font-weight: normal; margin-bottom: 4px; }
+        
         .p-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #e0e0e0; font-size: 0.95rem; }
         .p-row:last-child { border-bottom: none; }
         .p-label { font-weight: bold; color: var(--primary); width: 35%; }
@@ -290,6 +291,8 @@
                         <strong id="panchangLocName" style="font-size: 1.1rem; color: var(--text);">Udaipur, Rajasthan, India</strong><br>
                         <span id="panchangLocCoords" style="font-size:0.8rem;">24.5858°N, 73.7135°E</span><br>
                         <span id="panchangDateDisplay" style="font-size:0.95rem; font-weight:bold; color: var(--primary); display:block; margin-top:6px;"></span>
+                        <!-- Hidden duplicate for PDF rendering to ensure it's captured safely -->
+                        <span id="pdfPanchangDate" style="display:none;"></span>
                     </div>
 
                     <div class="sun-times">
@@ -450,13 +453,13 @@
 
     // --- TAB SWITCHER ---
     function switchTab(tab) {
-        document.getElementById('tabNumerology').style.display = tab === 'num' ? 'block' : 'none';
-        document.getElementById('tabChoghadiya').style.display = tab === 'chog' ? 'block' : 'none';
-        document.getElementById('tabPanchang').style.display = tab === 'panchang' ? 'block' : 'none';
+        if(document.getElementById('tabNumerology')) document.getElementById('tabNumerology').style.display = tab === 'num' ? 'block' : 'none';
+        if(document.getElementById('tabChoghadiya')) document.getElementById('tabChoghadiya').style.display = tab === 'chog' ? 'block' : 'none';
+        if(document.getElementById('tabPanchang')) document.getElementById('tabPanchang').style.display = tab === 'panchang' ? 'block' : 'none';
         
-        document.getElementById('btnTabNum').className = tab === 'num' ? 'tab-btn active' : 'tab-btn';
-        document.getElementById('btnTabChog').className = tab === 'chog' ? 'tab-btn active' : 'tab-btn';
-        document.getElementById('btnTabPanchang').className = tab === 'panchang' ? 'tab-btn active' : 'tab-btn';
+        if(document.getElementById('btnTabNum')) document.getElementById('btnTabNum').className = tab === 'num' ? 'tab-btn active' : 'tab-btn';
+        if(document.getElementById('btnTabChog')) document.getElementById('btnTabChog').className = tab === 'chog' ? 'tab-btn active' : 'tab-btn';
+        if(document.getElementById('btnTabPanchang')) document.getElementById('btnTabPanchang').className = tab === 'panchang' ? 'tab-btn active' : 'tab-btn';
     }
 
     // --- NUMEROLOGY DATA & LOGIC ---
@@ -518,7 +521,7 @@
         34: "इनके जीवन में जरूरत से ज्यादा कठिनाइयां होती हैं। एक तथा बाधाएं है, जिसकी वजह प्रकार की झिझक इनके मन में बरावर बनी रहती ऊंचे से ये दूसरों को प्रभावित नहीं कर पाते। अपने से अधिकारियों आत्महीनता से बात करते हुए घबराते हैं। एक प्रकार कीहुए भी इनके जीवन में छाई रहती है, जिसकी वजह से चाहते ये व्यक्ति सफलता प्राप्त नहीं कर पाते ।",
         35: "ऐसे व्यक्ति किसी न किसी प्रकारसे जीवन जीने में विश्वास करते हैं। इनके जीवन में न तो किसी नये कार्य के प्रति उमंग या उत्साह होता है और न ऐसे व्यक्ति ऊंचा उठने का प्रयत्न ही करते हैं। दूसरों के भरोसे काम छोड़कर ये निश्चित हो जाते हैं ",
         36: "ऐसे व्यक्ति अपनी जबान के पक्के तथा पूर्ण आत्माभिमानी होते हैं। इनके जिम्मे जो भी कार्य होता है, उसे पूरा करके ही ये विश्राम करते हैं। अपने जीवन में अपने प्रयत्नों से ये पूर्ण सफलता प्राप्त करते देखे गए हैं। मस्तिष्क से ये व्यक्ति सुलझे हुए तथा सही रास्ते को अपनाने वाले होते हैं।",
-        37: "यह अंक सहयोग का अंक है। ऐसे व्यक्तियों का भाग्यो- दम तभी संभव है যখন ये किसीके साथ कार्य करें, या किसीके सहअपने योग में कार्य करें । बुद्धि एवं प्रतिभा में ये अत्यन्त चतुर होते हैं तथा मान्य का ये स्वयं निर्माण करते हैं।",
+        37: "यह अंक सहयोग का अंक है। ऐसे व्यक्तियों का भाग्यो- दम तभी संभव है जब ये किसीके साथ कार्य करें, या किसीके सहअपने योग में कार्य करें । बुद्धि एवं प्रतिभा में ये अत्यन्त चतुर होते हैं तथा मान्य का ये स्वयं निर्माण करते हैं।",
         38: "यह अंक अस्थिरता का सूचक है। किसी एक विषय पर वे व्यक्ति लम्बे समत बीच नहीं सकते। टिककर या जमकर बेठना इनके वश की बात नहीं । 'फील्ड वर्क' में ये व्यक्ति ज्यादा सफल हो सकते हैं।",
         39: " यह अंक वीरता वीरता का अंक है। इनका मस्तिष्क अत्यन्त उर्वर होता है, चाहे कितनी बाधाएं इनके सामने आयें से हताश नहीं होते तथा अपने मार्ग से नहीं हटते । अपने प्रयत्नों से ही ये जीवन में पूर्ण सफल होते देखे गए हैं।",
         40: " ये व्यक्ति बाहर से नास्तिक होते हुए भी अन्दर से पूरे धर्म-भीरु तथा ईश्वर में विश्वास रखने वाले होते हैं। एक प्रकार से ये अपने-आपमें ही सिमटे रहते हैं। सांसारिक कार्यों के प्रति ये उदा सीन होते हैं। काफी ठोकरें खाने के बाद ही ये जीवन में सफल होते हैं।",
@@ -567,24 +570,24 @@
     function toggleLang() {
         isEnglish = !isEnglish;
         const btn = document.getElementById('langBtn');
-        btn.innerText = isEnglish ? "HI / EN" : "EN / HI";
+        if(btn) btn.innerText = isEnglish ? "HI / EN" : "EN / HI";
         
-        document.getElementById('nameLabel').innerText = isEnglish ? "Enter Full Name" : "पूरा नाम दर्ज करें (English)";
-        document.getElementById('dobLabel').innerText = isEnglish ? "Enter Birth Date" : "जन्म तिथि (वैकल्पिक)";
-        document.getElementById('calcBtn').innerText = isEnglish ? "Calculate Numerology" : "गणना करें";
-        document.getElementById('l_comp').innerText = isEnglish ? "Compound" : "संयुक्त अंक";
-        document.getElementById('l_nameroot').innerText = isEnglish ? "Name Root" : "नामांक";
-        document.getElementById('l_psychic').innerText = isEnglish ? "Psychic" : "मूलांक";
-        document.getElementById('l_destiny').innerText = isEnglish ? "Destiny" : "भाग्यांक";
-        document.getElementById('l_root_trait').innerText = isEnglish ? "Name Root Trait:" : "नामांक फल:";
-        document.getElementById('l_comp_trait').innerText = isEnglish ? "Compound Trait (Hindi Data):" : "संयुक्त अंक फल:";
-        document.getElementById('l_psy_trait').innerText = isEnglish ? "Psychic Trait:" : "मूलांक फल:";
-        document.getElementById('l_des_trait').innerText = isEnglish ? "Destiny Trait:" : "भाग्यांक फल:";
-        document.getElementById('l_color').innerText = isEnglish ? "Lucky Color" : "शुभ रंग";
-        document.getElementById('l_gem').innerText = isEnglish ? "Gemstone" : "रत्न";
-        document.getElementById('l_days').innerText = isEnglish ? "Lucky Days" : "शुभ दिन";
-        document.getElementById('l_year').innerText = isEnglish ? "Personal Year" : "व्यक्तिगत वर्ष";
-        document.getElementById('l_loshu').innerText = isEnglish ? "Lo Shu Grid Analysis" : "लो शु ग्रिड विश्लेषण";
+        if(document.getElementById('nameLabel')) document.getElementById('nameLabel').innerText = isEnglish ? "Enter Full Name" : "पूरा नाम दर्ज करें (English)";
+        if(document.getElementById('dobLabel')) document.getElementById('dobLabel').innerText = isEnglish ? "Enter Birth Date" : "जन्म तिथि (वैकल्पिक)";
+        if(document.getElementById('calcBtn')) document.getElementById('calcBtn').innerText = isEnglish ? "Calculate Numerology" : "गणना करें";
+        if(document.getElementById('l_comp')) document.getElementById('l_comp').innerText = isEnglish ? "Compound" : "संयुक्त अंक";
+        if(document.getElementById('l_nameroot')) document.getElementById('l_nameroot').innerText = isEnglish ? "Name Root" : "नामांक";
+        if(document.getElementById('l_psychic')) document.getElementById('l_psychic').innerText = isEnglish ? "Psychic" : "मूलांक";
+        if(document.getElementById('l_destiny')) document.getElementById('l_destiny').innerText = isEnglish ? "Destiny" : "भाग्यांक";
+        if(document.getElementById('l_root_trait')) document.getElementById('l_root_trait').innerText = isEnglish ? "Name Root Trait:" : "नामांक फल:";
+        if(document.getElementById('l_comp_trait')) document.getElementById('l_comp_trait').innerText = isEnglish ? "Compound Trait (Hindi Data):" : "संयुक्त अंक फल:";
+        if(document.getElementById('l_psy_trait')) document.getElementById('l_psy_trait').innerText = isEnglish ? "Psychic Trait:" : "मूलांक फल:";
+        if(document.getElementById('l_des_trait')) document.getElementById('l_des_trait').innerText = isEnglish ? "Destiny Trait:" : "भाग्यांक फल:";
+        if(document.getElementById('l_color')) document.getElementById('l_color').innerText = isEnglish ? "Lucky Color" : "शुभ रंग";
+        if(document.getElementById('l_gem')) document.getElementById('l_gem').innerText = isEnglish ? "Gemstone" : "रत्न";
+        if(document.getElementById('l_days')) document.getElementById('l_days').innerText = isEnglish ? "Lucky Days" : "शुभ दिन";
+        if(document.getElementById('l_year')) document.getElementById('l_year').innerText = isEnglish ? "Personal Year" : "व्यक्तिगत वर्ष";
+        if(document.getElementById('l_loshu')) document.getElementById('l_loshu').innerText = isEnglish ? "Lo Shu Grid Analysis" : "लो शु ग्रिड विश्लेषण";
 
         if(currentData.name) { calculateNumerology(true); }
     }
@@ -597,8 +600,7 @@
     function generateLoShu(dateStr) {
         [1,2,3,4,5,6,7,8,9].forEach(n => {
             const el = document.getElementById('ls_'+n);
-            el.innerHTML = '&nbsp;';
-            el.className = 'loshu-empty';
+            if(el) { el.innerHTML = '&nbsp;'; el.className = 'loshu-empty'; }
         });
 
         const digitsStr = dateStr.replace(/\D/g, '');
@@ -607,15 +609,16 @@
 
         for(let n in counts) {
             const el = document.getElementById('ls_'+n);
-            el.innerText = n.repeat(counts[n]);
-            el.className = '';
+            if(el) { el.innerText = n.repeat(counts[n]); el.className = ''; }
         }
     }
 
     function calculateNumerology(isRecalc = false) {
         try {
-            const rawInput = document.getElementById('nameInput').value.toUpperCase().trim();
-            const dobInput = document.getElementById('dobInput').value;
+            const nameEl = document.getElementById('nameInput');
+            if(!nameEl) return;
+            const rawInput = nameEl.value.toUpperCase().trim();
+            const dobInput = document.getElementById('dobInput')?.value || "";
             const sanitizedInput = rawInput.replace(/[^A-Z]/g, '');
             
             if (!isRecalc && !sanitizedInput) { alert("Please enter a valid English name."); return; }
@@ -634,15 +637,15 @@
             currentData.compound = totalScore;
             currentData.root = rootScore;
 
-            document.getElementById('totalNumber').innerText = totalScore;
-            document.getElementById('rootNumber').innerText = rootScore;
-            document.getElementById('calcBreakdown').innerHTML = `${isEnglish?'Calculation':'गणना'}: ${breakdownParts.join('+')} = <strong>${totalScore}</strong>`;
+            if(document.getElementById('totalNumber')) document.getElementById('totalNumber').innerText = totalScore;
+            if(document.getElementById('rootNumber')) document.getElementById('rootNumber').innerText = rootScore;
+            if(document.getElementById('calcBreakdown')) document.getElementById('calcBreakdown').innerHTML = `${isEnglish?'Calculation':'गणना'}: ${breakdownParts.join('+')} = <strong>${totalScore}</strong>`;
             
             const langKey = isEnglish ? 'en' : 'hi';
-            document.getElementById('rootPredictionText').innerText = rootPredictions[rootScore] ? rootPredictions[rootScore][langKey] : "";
+            if(document.getElementById('rootPredictionText')) document.getElementById('rootPredictionText').innerText = rootPredictions[rootScore] ? rootPredictions[rootScore][langKey] : "";
             
             let compoundText = compoundPredictions[totalScore] || (totalScore < 10 ? (isEnglish?"Single digit only.":"एकल अंक") : (isEnglish?"N/A":"उपलब्ध नहीं"));
-            document.getElementById('predictionText').innerText = compoundText;
+            if(document.getElementById('predictionText')) document.getElementById('predictionText').innerText = compoundText;
 
             const dobResultSection = document.getElementById('dobResultSection');
             const dobBadges = document.querySelectorAll('.dob-dep');
@@ -665,32 +668,32 @@
                 currentData.destiny = destinyScore;
                 currentData.personalYear = personalYear;
 
-                document.getElementById('psychicNumber').innerText = psychicScore;
-                document.getElementById('destinyNumber').innerText = destinyScore;
-                document.getElementById('psychicText').innerText = rootPredictions[psychicScore][langKey];
-                document.getElementById('destinyText').innerText = rootPredictions[destinyScore][langKey];
+                if(document.getElementById('psychicNumber')) document.getElementById('psychicNumber').innerText = psychicScore;
+                if(document.getElementById('destinyNumber')) document.getElementById('destinyNumber').innerText = destinyScore;
+                if(document.getElementById('psychicText')) document.getElementById('psychicText').innerText = rootPredictions[psychicScore][langKey];
+                if(document.getElementById('destinyText')) document.getElementById('destinyText').innerText = rootPredictions[destinyScore][langKey];
                 
                 const elKeyColor = isEnglish ? 'en_color' : 'hi_color';
                 const elKeyGem = isEnglish ? 'en_gem' : 'hi_gem';
                 const elKeyDay = isEnglish ? 'en_days' : 'hi_days';
                 
-                document.getElementById('luckyColor').innerText = luckyElements[psychicScore][elKeyColor];
-                document.getElementById('luckyGem').innerText = luckyElements[psychicScore][elKeyGem];
-                document.getElementById('luckyDays').innerText = luckyElements[psychicScore][elKeyDay];
-                document.getElementById('personalYear').innerText = personalYear;
+                if(document.getElementById('luckyColor')) document.getElementById('luckyColor').innerText = luckyElements[psychicScore][elKeyColor];
+                if(document.getElementById('luckyGem')) document.getElementById('luckyGem').innerText = luckyElements[psychicScore][elKeyGem];
+                if(document.getElementById('luckyDays')) document.getElementById('luckyDays').innerText = luckyElements[psychicScore][elKeyDay];
+                if(document.getElementById('personalYear')) document.getElementById('personalYear').innerText = personalYear;
                 
                 generateLoShu(dobInput);
 
-                dobResultSection.style.display = 'block';
+                if(dobResultSection) dobResultSection.style.display = 'block';
                 dobBadges.forEach(b => b.style.display = 'flex');
             } else {
                 currentData.dob = null;
-                dobResultSection.style.display = 'none';
+                if(dobResultSection) dobResultSection.style.display = 'none';
                 dobBadges.forEach(b => b.style.display = 'none');
             }
 
-            document.getElementById('resultCardNum').style.display = 'block';
-            document.getElementById('actionBtnsNum').style.display = 'grid';
+            if(document.getElementById('resultCardNum')) document.getElementById('resultCardNum').style.display = 'block';
+            if(document.getElementById('actionBtnsNum')) document.getElementById('actionBtnsNum').style.display = 'grid';
 
         } catch (error) { alert("App Crash: " + error.message); }
     }
@@ -750,6 +753,7 @@
 
     function renderChogTable(tableId, sequence, timeSlots) {
         const tbody = document.querySelector(`#${tableId} tbody`);
+        if(!tbody) return;
         tbody.innerHTML = ''; 
         for (let i = 0; i < 8; i++) {
             const choghadiyaName = sequence[i];
@@ -775,17 +779,23 @@
     }
 
     async function calculateChoghadiya() {
-        const city = document.getElementById('cityInput').value.trim();
-        const dateStr = document.getElementById('chogDateInput').value;
+        const cityEl = document.getElementById('cityInput');
+        const dateEl = document.getElementById('chogDateInput');
+        if(!cityEl || !dateEl) return;
+        
+        const city = cityEl.value.trim();
+        const dateStr = dateEl.value;
         const status = document.getElementById('statusMsg');
 
-        if (!city || !dateStr) { status.innerText = "Please enter both City and Date."; return; }
+        if (!city || !dateStr) { if(status) status.innerText = "Please enter both City and Date."; return; }
 
-        status.innerText = "Fetching coordinates and calculating...";
-        document.querySelector('#dayTable tbody').innerHTML = '';
-        document.querySelector('#nightTable tbody').innerHTML = '';
-        document.getElementById('resultCardChog').style.display = 'none';
-        document.getElementById('actionBtnsChog').style.display = 'none';
+        if(status) status.innerText = "Fetching coordinates and calculating...";
+        const dayTbody = document.querySelector('#dayTable tbody');
+        const nightTbody = document.querySelector('#nightTable tbody');
+        if(dayTbody) dayTbody.innerHTML = '';
+        if(nightTbody) nightTbody.innerHTML = '';
+        if(document.getElementById('resultCardChog')) document.getElementById('resultCardChog').style.display = 'none';
+        if(document.getElementById('actionBtnsChog')) document.getElementById('actionBtnsChog').style.display = 'none';
 
         try {
             const coords = await getCoordinates(city);
@@ -816,12 +826,12 @@
             currentChogData.city = cleanCityName;
             currentChogData.date = dateStr.split('-').reverse().join('-');
             
-            status.innerText = `Showing exact timings for: ${cleanCityName}`;
-            document.getElementById('resultCardChog').style.display = 'block';
-            document.getElementById('actionBtnsChog').style.display = 'grid';
+            if(status) status.innerText = `Showing exact timings for: ${cleanCityName}`;
+            if(document.getElementById('resultCardChog')) document.getElementById('resultCardChog').style.display = 'block';
+            if(document.getElementById('actionBtnsChog')) document.getElementById('actionBtnsChog').style.display = 'grid';
 
         } catch (error) {
-            status.innerText = `Error: ${error.message}`;
+            if(status) status.innerText = `Error: ${error.message}`;
             console.error(error);
         }
     }
@@ -829,8 +839,12 @@
     // --- PANCHANG LOGIC ---
     async function showPanchangTemplate() {
         try {
-            const dateInput = document.getElementById('panchangDateInput').value;
-            const cityInput = document.getElementById('panchangCityInput').value.trim() || 'Udaipur';
+            const dateEl = document.getElementById('panchangDateInput');
+            const cityEl = document.getElementById('panchangCityInput');
+            if(!dateEl || !cityEl) return;
+
+            const dateInput = dateEl.value;
+            const cityInput = cityEl.value.trim() || 'Udaipur';
             
             let displayDate = "10-09-2026";
             if(dateInput) {
@@ -838,24 +852,26 @@
             }
 
             // Immediately show UI as loading so button click is responsive
-            document.getElementById('resultCardPanchang').style.display = 'block';
-            document.getElementById('actionBtnsPanchang').style.display = 'grid';
-            document.getElementById('panchangLocName').innerText = "Loading city data...";
-            document.getElementById('panchangLocCoords').innerText = "Please wait...";
+            if(document.getElementById('resultCardPanchang')) document.getElementById('resultCardPanchang').style.display = 'block';
+            if(document.getElementById('actionBtnsPanchang')) document.getElementById('actionBtnsPanchang').style.display = 'grid';
+            if(document.getElementById('panchangLocName')) document.getElementById('panchangLocName').innerText = "Loading city data...";
+            if(document.getElementById('panchangLocCoords')) document.getElementById('panchangLocCoords').innerText = "Please wait...";
             
             // Set Dates
-            document.getElementById('panchangDateDisplay').innerText = `Date: ${displayDate}`;
-            document.getElementById('pdfPanchangDate').innerText = `Date: ${displayDate}`;
+            if(document.getElementById('panchangDateDisplay')) document.getElementById('panchangDateDisplay').innerText = `Date: ${displayDate}`;
+            // Optional check for PDF title
+            const pdfDateEl = document.getElementById('pdfPanchangDate');
+            if(pdfDateEl) pdfDateEl.innerText = `Date: ${displayDate}`;
 
             // Fetch coordinates for the header
             try {
                 const coords = await getCoordinates(cityInput);
-                document.getElementById('panchangLocName').innerText = coords.displayName.split(',').slice(0, 3).join(', ');
-                document.getElementById('panchangLocCoords').innerText = `${parseFloat(coords.lat).toFixed(4)}°N, ${parseFloat(coords.lng).toFixed(4)}°E`;
+                if(document.getElementById('panchangLocName')) document.getElementById('panchangLocName').innerText = coords.displayName.split(',').slice(0, 3).join(', ');
+                if(document.getElementById('panchangLocCoords')) document.getElementById('panchangLocCoords').innerText = `${parseFloat(coords.lat).toFixed(4)}°N, ${parseFloat(coords.lng).toFixed(4)}°E`;
             } catch (e) {
                 console.error("Location fetch failed", e);
-                document.getElementById('panchangLocName').innerText = cityInput;
-                document.getElementById('panchangLocCoords').innerText = "Coordinates Unavailable";
+                if(document.getElementById('panchangLocName')) document.getElementById('panchangLocName').innerText = cityInput;
+                if(document.getElementById('panchangLocCoords')) document.getElementById('panchangLocCoords').innerText = "Coordinates Unavailable";
             }
         } catch (error) {
             alert("App Error: " + error.message);
@@ -868,32 +884,40 @@
         
         if (type === 'num') {
             element = document.getElementById('reportAreaNum');
-            element.classList.add('pdf-export-mode');
-            document.getElementById('pdfHeader').style.display = 'block';
-            document.getElementById('pdfNameDisplay').innerText = `Report for: ${currentData.name}`;
-            document.getElementById('pdfNameDisplay').style.display = 'block';
+            if(element) element.classList.add('pdf-export-mode');
+            if(document.getElementById('pdfHeader')) document.getElementById('pdfHeader').style.display = 'block';
+            if(document.getElementById('pdfNameDisplay')) {
+                document.getElementById('pdfNameDisplay').innerText = `Report for: ${currentData.name}`;
+                document.getElementById('pdfNameDisplay').style.display = 'block';
+            }
 
             if (currentData.dob) {
                 const dobFormatted = currentData.dob.split('-').reverse().join('-');
-                document.getElementById('pdfDobDisplay').innerText = `Birth Date: ${dobFormatted}`;
-                document.getElementById('pdfDobDisplay').style.display = 'block';
+                if(document.getElementById('pdfDobDisplay')) {
+                    document.getElementById('pdfDobDisplay').innerText = `Birth Date: ${dobFormatted}`;
+                    document.getElementById('pdfDobDisplay').style.display = 'block';
+                }
             }
-            filename = `${currentData.name.replace(/\s+/g, '_')}_Numerology.pdf`;
+            filename = `${(currentData.name || 'User').replace(/\s+/g, '_')}_Numerology.pdf`;
 
         } else if (type === 'chog') {
             element = document.getElementById('reportAreaChog');
-            element.classList.add('pdf-export-mode');
-            document.getElementById('pdfChogHeader').style.display = 'block';
-            document.getElementById('pdfChogLocation').innerText = `${currentChogData.city} | ${currentChogData.date}`;
-            document.getElementById('pdfChogLocation').style.display = 'block';
+            if(element) element.classList.add('pdf-export-mode');
+            if(document.getElementById('pdfChogHeader')) document.getElementById('pdfChogHeader').style.display = 'block';
+            if(document.getElementById('pdfChogLocation')) {
+                document.getElementById('pdfChogLocation').innerText = `${currentChogData.city} | ${currentChogData.date}`;
+                document.getElementById('pdfChogLocation').style.display = 'block';
+            }
             filename = `Choghadiya_${currentChogData.city}_${currentChogData.date}.pdf`;
         } else if (type === 'panchang') {
             element = document.getElementById('reportAreaPanchang');
-            element.classList.add('pdf-export-mode');
-            document.getElementById('pdfPanchangHeader').style.display = 'block';
-            document.getElementById('pdfPanchangDate').style.display = 'block';
+            if(element) element.classList.add('pdf-export-mode');
+            if(document.getElementById('pdfPanchangHeader')) document.getElementById('pdfPanchangHeader').style.display = 'block';
+            if(document.getElementById('pdfPanchangDate')) document.getElementById('pdfPanchangDate').style.display = 'block';
             filename = `Panchang_Report.pdf`;
         }
+
+        if(!element) return;
 
         const opt = {
             margin:       0.2,
@@ -907,15 +931,15 @@
             html2pdf().set(opt).from(element).save().then(() => {
                 element.classList.remove('pdf-export-mode');
                 if (type === 'num') {
-                    document.getElementById('pdfHeader').style.display = 'none';
-                    document.getElementById('pdfNameDisplay').style.display = 'none';
-                    document.getElementById('pdfDobDisplay').style.display = 'none';
+                    if(document.getElementById('pdfHeader')) document.getElementById('pdfHeader').style.display = 'none';
+                    if(document.getElementById('pdfNameDisplay')) document.getElementById('pdfNameDisplay').style.display = 'none';
+                    if(document.getElementById('pdfDobDisplay')) document.getElementById('pdfDobDisplay').style.display = 'none';
                 } else if (type === 'chog') {
-                    document.getElementById('pdfChogHeader').style.display = 'none';
-                    document.getElementById('pdfChogLocation').style.display = 'none';
+                    if(document.getElementById('pdfChogHeader')) document.getElementById('pdfChogHeader').style.display = 'none';
+                    if(document.getElementById('pdfChogLocation')) document.getElementById('pdfChogLocation').style.display = 'none';
                 } else if (type === 'panchang') {
-                    document.getElementById('pdfPanchangHeader').style.display = 'none';
-                    document.getElementById('pdfPanchangDate').style.display = 'none';
+                    if(document.getElementById('pdfPanchangHeader')) document.getElementById('pdfPanchangHeader').style.display = 'none';
+                    if(document.getElementById('pdfPanchangDate')) document.getElementById('pdfPanchangDate').style.display = 'none';
                 }
             });
         }, 100);
@@ -933,23 +957,23 @@
             text += `*LUCKY ELEMENTS*\n🎨 Color: ${luckyElements[currentData.psychic][isEnglish ? 'en_color' : 'hi_color']}\n💎 Gemstone: ${luckyElements[currentData.psychic][isEnglish ? 'en_gem' : 'hi_gem']}\n📅 Days: ${luckyElements[currentData.psychic][isEnglish ? 'en_days' : 'hi_days']}\n\n`;
         }
         text += `_Generated via Astro Pro Numerology_`;
-        
-        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
 
     // Default Init
     document.addEventListener('DOMContentLoaded', () => {
         const today = new Date();
         const localISOTime = new Date(today.getTime() - (today.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-        document.getElementById('chogDateInput').value = localISOTime;
-        document.getElementById('panchangDateInput').value = localISOTime;
         
-        document.getElementById('cityInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') calculateChoghadiya(); });
-        document.getElementById('panchangCityInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') showPanchangTemplate(); });
+        if(document.getElementById('chogDateInput')) document.getElementById('chogDateInput').value = localISOTime;
+        if(document.getElementById('panchangDateInput')) document.getElementById('panchangDateInput').value = localISOTime;
+        
+        if(document.getElementById('cityInput')) document.getElementById('cityInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') calculateChoghadiya(); });
+        if(document.getElementById('panchangCityInput')) document.getElementById('panchangCityInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') showPanchangTemplate(); });
     });
 </script>
 
+<!-- PDF Exporter -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
 </html>
