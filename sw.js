@@ -7,8 +7,8 @@ const ASSETS_TO_CACHE = [
   './manifest.json',
   'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js',
   'https://cdn.jsdelivr.net/npm/@ishubhamx/panchangam-js@latest/+esm',
-  'https://snapixel.github.io/numerology/icon-192.png,
-  'https://snapixel.github.io/numerology/icon-512.png'
+  './icon-192.png,
+  './icon-512.png'
 ];
 
 // Install: Cache each asset individually to prevent install rejection on single error
