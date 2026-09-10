@@ -10,9 +10,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Astro Pro">
-    <link rel="apple-touch-icon" href="./icon-192.png">
-    <link rel="icon" type="image/png" href="./icon-192.png">
-    <link rel="manifest" id="manifestLink" href="./manifest.json">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/om.png">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/192/om.png">
+    <link rel="manifest" id="manifestLink" href="manifest.json">
 
     <style>
         :root { --primary: #6200ea; --surface: #ffffff; --background: #f3f4f6; --text: #333333; --text-secondary: #666666; --border-radius: 12px; }
@@ -75,7 +75,7 @@
         .chog-neutral { background-color: #fef7e0; color: #b06000; font-weight: 600; }
         .chog-meaning { font-size: 0.8em; font-weight: normal; opacity: 0.8; display: block; margin-top: 2px; }
 
-        /* Panchang Detailed Styles */
+        /* Detailed Panchang Styles */
         .panchang-header-info { text-align: center; font-size: 0.9rem; line-height: 1.4; color: var(--text-secondary); margin-bottom: 15px; }
         .sun-times { display: flex; justify-content: space-around; background: #fff8e1; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ffecb3; }
         .sun-item { text-align: center; font-weight: bold; color: #d35400; }
@@ -87,17 +87,19 @@
         .pan-top-title { font-size: 1.05rem; font-weight: bold; color: #d35400; }
         .pan-top-subtitle { font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px; }
 
-        .p-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #e0e0e0; font-size: 0.9rem; align-items: center; }
+        .p-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #e0e0e0; font-size: 0.95rem; align-items: center; }
         .p-row:last-child { border-bottom: none; }
         .p-label { font-weight: bold; color: var(--primary); width: 30%; }
         .p-value { width: 40%; color: var(--text); font-weight: 500; }
-        .p-time { width: 30%; text-align: right; color: var(--text-secondary); font-size: 0.8rem; }
-        .p-next { display: block; font-size: 0.7rem; color: #9e9e9e; margin-top: 2px; }
+        .p-time { width: 30%; text-align: right; }
+        .p-time-val { color: #388e3c; font-weight: 600; font-size: 0.85rem; display: block; text-align: right; }
+        .p-next { display: block; font-size: 0.75rem; color: #8d6e63; margin-top: 2px; text-align: right; }
         
-        .p-charan-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem; }
-        .p-c-col1 { width: 20%; color: #d35400; font-weight: bold; text-align: right; padding-right: 10px; }
-        .p-c-col2 { width: 50%; text-align: center; font-weight: 500; }
-        .p-c-col3 { width: 30%; color: #2e7d32; text-align: right; font-size: 0.85rem; }
+        .p-charan-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; }
+        .p-charan-row:last-child { border-bottom: none; }
+        .p-c-col1 { width: 30%; color: #d35400; font-weight: bold; text-align: right; padding-right: 15px; }
+        .p-c-col2 { width: 40%; text-align: left; font-weight: 500; }
+        .p-c-col3 { width: 30%; color: #2e7d32; text-align: right; font-size: 0.85rem; font-weight: bold; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -299,6 +301,7 @@
                     <div class="panchang-header-info">
                         <strong id="panchangLocName" style="font-size: 1.1rem; color: var(--text);">Loading...</strong><br>
                         <span id="panchangLocCoords" style="font-size:0.8rem;">Please wait</span><br>
+                        <span id="pdfPanchangDate" style="display:none;"></span>
                     </div>
 
                     <div class="sun-times">
@@ -318,32 +321,44 @@
                     <div class="p-row">
                         <div class="p-label">तिथि</div>
                         <div class="p-value" id="pan_tithi">-</div>
-                        <div class="p-time">--:--<span class="p-next">Next: (API Req)</span></div>
+                        <div class="p-time">
+                            <span class="p-time-val" id="pan_tithi_time">-</span>
+                            <span class="p-next" id="pan_tithi_next">-</span>
+                        </div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">पक्ष</div>
                         <div class="p-value" id="pan_paksha">-</div>
-                        <div class="p-time">-</div>
+                        <div class="p-time"></div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">नक्षत्र</div>
                         <div class="p-value" id="pan_nakshatra">-</div>
-                        <div class="p-time">--:--<span class="p-next">Next: (API Req)</span></div>
+                        <div class="p-time">
+                            <span class="p-time-val" id="pan_nakshatra_time">-</span>
+                            <span class="p-next" id="pan_nakshatra_next">-</span>
+                        </div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">योग</div>
                         <div class="p-value" id="pan_yoga">-</div>
-                        <div class="p-time">--:--<span class="p-next">Next: (API Req)</span></div>
+                        <div class="p-time">
+                            <span class="p-time-val" id="pan_yoga_time">-</span>
+                            <span class="p-next" id="pan_yoga_next">-</span>
+                        </div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">करण</div>
                         <div class="p-value" id="pan_karana">-</div>
-                        <div class="p-time">--:--<span class="p-next">Next: (API Req)</span></div>
+                        <div class="p-time">
+                            <span class="p-time-val" id="pan_karana_time">-</span>
+                            <span class="p-next" id="pan_karana_next">-</span>
+                        </div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">वार</div>
                         <div class="p-value" id="pan_vaar">-</div>
-                        <div class="p-time">-</div>
+                        <div class="p-time"></div>
                     </div>
 
                     <div class="section-title" style="color: #00897b;">माह एवं राशियां (Months & Signs)</div>
@@ -379,43 +394,25 @@
                     <div class="section-title" style="color: #d35400;">संवत् (Eras & Years)</div>
                     <div class="p-row">
                         <div class="p-label">विक्रम संवत</div>
-                        <div class="p-value"><span id="pan_vikram">-</span> संवत</div>
+                        <div class="p-value" id="pan_vikram">-</div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">गुजराती संवत</div>
-                        <div class="p-value"><span id="pan_gujarati">-</span> संवत</div>
+                        <div class="p-value" id="pan_gujarati">-</div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">शक संवत</div>
-                        <div class="p-value"><span id="pan_shaka">-</span> संवत</div>
+                        <div class="p-value" id="pan_shaka">-</div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">कलि संवत</div>
-                        <div class="p-value"><span id="pan_kali">-</span> गत कलि संवत</div>
+                        <div class="p-value" id="pan_kali">-</div>
                     </div>
 
-                    <div class="section-title" style="color: var(--primary); text-align:center;">पद, चरण (Pad/Charan)</div>
-                    <div class="p-charan-row">
-                        <div class="p-c-col1">1 मू</div>
-                        <div class="p-c-col2" id="pan_pad1">-</div>
-                        <div class="p-c-col3">--:--</div>
+                    <div class="section-title" style="color: var(--primary); text-align:center;">पद, चरण (Pad/Charan Transitions)</div>
+                    <div id="pan_charan_container">
+                        <!-- Dynamically filled by JS -->
                     </div>
-                    <div class="p-charan-row">
-                        <div class="p-c-col1">2 मे</div>
-                        <div class="p-c-col2" id="pan_pad2">-</div>
-                        <div class="p-c-col3">--:--</div>
-                    </div>
-                    <div class="p-charan-row">
-                        <div class="p-c-col1">3 मो</div>
-                        <div class="p-c-col2" id="pan_pad3">-</div>
-                        <div class="p-c-col3">--:--</div>
-                    </div>
-                    <div class="p-charan-row">
-                        <div class="p-c-col1">4 टा</div>
-                        <div class="p-c-col2" id="pan_pad4">-</div>
-                        <div class="p-c-col3">--:--</div>
-                    </div>
-                    <p style="font-size: 0.7rem; text-align:center; color: #999; margin-top: 15px;">*Exact end times and charan calculations require a premium astrological API backend.</p>
 
                 </div>
             </div>
@@ -448,30 +445,9 @@
         });
     }
 
-    (function injectManifest() {
-        const manifest = {
-            "name": "Astro Pro - Numerology & Panchang",
-            "short_name": "Astro Pro",
-            "start_url": "./",
-            "display": "standalone",
-            "background_color": "#ffffff",
-            "theme_color": "#6200ea",
-            "icons": [
-                { "src": "https://img.icons8.com/color/192/om.png", "sizes": "192x192", "type": "image/png" },
-                { "src": "https://img.icons8.com/color/512/om.png", "sizes": "512x512", "type": "image/png" }
-            ]
-        };
-        const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-        const link = document.getElementById('manifestLink');
-        if (link && !window.location.protocol.startsWith('http')) {
-            link.setAttribute('href', URL.createObjectURL(blob));
-        }
-    })();
-
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .catch(err => console.log('SW Registration skipped / not found on sandbox.'));
+            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW skipped.'));
         });
     }
 
@@ -487,6 +463,17 @@
 
     const vaarNames = ["रविवार", "सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार"];
 
+    // Pad/Charan Syllables for all 27 Nakshatras
+    const padaSyllables = [
+        ["चू", "चे", "चो", "ला"], ["ली", "लू", "ले", "लो"], ["अ", "ई", "उ", "ए"], ["ओ", "वा", "वी", "वू"],
+        ["वे", "वो", "का", "की"], ["कू", "घ", "ङ", "छ"], ["के", "को", "हा", "ही"], ["हू", "हे", "हो", "डा"],
+        ["डी", "डू", "डे", "डो"], ["मा", "मी", "मू", "मे"], ["मो", "टा", "टी", "टू"], ["टे", "टो", "पा", "पी"],
+        ["पू", "ष", "ण", "ठ"], ["पे", "पो", "रा", "री"], ["रू", "रे", "रो", "ता"], ["ती", "तू", "ते", "तो"],
+        ["ना", "नी", "नू", "ने"], ["नो", "या", "यी", "यू"], ["ये", "यो", "भा", "भी"], ["भू", "धा", "फा", "ढा"],
+        ["भे", "भो", "जा", "जी"], ["खी", "खू", "खे", "खो"], ["गा", "गी", "गू", "गे"], ["गो", "सा", "सी", "सू"],
+        ["से", "सो", "दा", "दी"], ["दू", "थ", "झ", "ञ"], ["दे", "दो", "चा", "ची"]
+    ];
+
     // --- TAB SWITCHER ---
     function switchTab(tab) {
         if(document.getElementById('tabNumerology')) document.getElementById('tabNumerology').style.display = tab === 'num' ? 'block' : 'none';
@@ -498,7 +485,7 @@
         if(document.getElementById('btnTabPanchang')) document.getElementById('btnTabPanchang').className = tab === 'panchang' ? 'tab-btn active' : 'tab-btn';
     }
 
-    // --- NUMEROLOGY LOGIC ---
+    // --- NUMEROLOGY DATA & LOGIC ---
     let isEnglish = false; 
     let currentData = {}; 
     const currentDate = new Date();
@@ -775,6 +762,12 @@
         minutes = minutes < 10 ? '0' + minutes : minutes;
         return `${hours}:${minutes} ${ampm}`;
     }
+    
+    function formatTime24(dateObj) {
+        let hours = dateObj.getHours().toString().padStart(2, '0');
+        let minutes = dateObj.getMinutes().toString().padStart(2, '0');
+        return `${hours}:${minutes}`;
+    }
 
     function generateTimeSlots(startTimeMs, totalDurationMs) {
         let slots = [];
@@ -891,21 +884,18 @@
                 displayDate = dateInput.split('-').reverse().join('-');
             }
 
-            // Immediately show UI as loading
             if(document.getElementById('resultCardPanchang')) document.getElementById('resultCardPanchang').style.display = 'block';
             if(document.getElementById('actionBtnsPanchang')) document.getElementById('actionBtnsPanchang').style.display = 'grid';
             if(document.getElementById('panchangLocName')) document.getElementById('panchangLocName').innerText = "Loading astronomical data...";
             
-            // Set Dates
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             const formattedLongDate = targetDate.toLocaleDateString('hi-IN', options);
             if(document.getElementById('pan_top_date')) document.getElementById('pan_top_date').innerText = formattedLongDate;
 
-            // Fetch coordinates
             const coords = await getCoordinates(cityInput);
             if(document.getElementById('panchangLocName')) document.getElementById('panchangLocName').innerText = coords.displayName.split(',').slice(0, 3).join(', ');
+            if(document.getElementById('panchangLocCoords')) document.getElementById('panchangLocCoords').innerText = `${parseFloat(coords.lat).toFixed(4)}°N, ${parseFloat(coords.lng).toFixed(4)}°E`;
 
-            // Fetch Sunrise/Sunset
             const sunData = await getSunTimes(coords.lat, coords.lng, dateInput);
             const sunriseTime = new Date(sunData.sunrise);
             const sunsetTime = new Date(sunData.sunset);
@@ -913,13 +903,11 @@
             if(document.getElementById('pan_sunrise')) document.getElementById('pan_sunrise').innerText = formatTime(sunriseTime);
             if(document.getElementById('pan_sunset')) document.getElementById('pan_sunset').innerText = formatTime(sunsetTime);
 
-            // Execute Live Panchang Engine Calculations
             if(window.getPanchangam && window.Observer) {
                 const observer = new window.Observer(parseFloat(coords.lat), parseFloat(coords.lng), 0);
                 const tzOffsetMinutes = -(new Date().getTimezoneOffset());
                 const p = window.getPanchangam(targetDate, observer, { timezoneOffset: tzOffsetMinutes });
 
-                // Core 5 Limbs
                 const tName = window.tithiNames[p.tithi];
                 const pName = p.paksha === 'Shukla' ? 'शुक्ल पक्ष' : 'कृष्ण पक्ष';
                 const mName = p.masa.name;
@@ -927,37 +915,73 @@
 
                 if(document.getElementById('pan_top_title')) document.getElementById('pan_top_title').innerText = `${tName}, ${pName}, ${mName}`;
                 
+                // End Times and Next Elements
                 if(document.getElementById('pan_tithi')) document.getElementById('pan_tithi').innerText = tName;
+                if(document.getElementById('pan_tithi_time')) document.getElementById('pan_tithi_time').innerText = p.tithiEndTime ? formatTime(p.tithiEndTime) : "";
+                if(document.getElementById('pan_tithi_next')) document.getElementById('pan_tithi_next').innerText = (window.tithiNames[(p.tithi + 1) % 30] || "") + " ↑";
+
                 if(document.getElementById('pan_paksha')) document.getElementById('pan_paksha').innerText = pName;
+                
                 if(document.getElementById('pan_nakshatra')) document.getElementById('pan_nakshatra').innerText = nName;
+                if(document.getElementById('pan_nakshatra_time')) document.getElementById('pan_nakshatra_time').innerText = p.nakshatraEndTime ? formatTime(p.nakshatraEndTime) : "";
+                if(document.getElementById('pan_nakshatra_next')) document.getElementById('pan_nakshatra_next').innerText = (window.nakshatraNames[(p.nakshatra + 1) % 27] || "") + " ↑";
+
                 if(document.getElementById('pan_yoga')) document.getElementById('pan_yoga').innerText = window.yogaNames[p.yoga];
+                if(document.getElementById('pan_yoga_time')) document.getElementById('pan_yoga_time').innerText = p.yogaEndTime ? formatTime(p.yogaEndTime) : "";
+                if(document.getElementById('pan_yoga_next')) document.getElementById('pan_yoga_next').innerText = (window.yogaNames[(p.yoga + 1) % 27] || "") + " ↑";
+
                 if(document.getElementById('pan_karana')) document.getElementById('pan_karana').innerText = window.karanaNames[p.karana];
+                if(document.getElementById('pan_karana_time')) document.getElementById('pan_karana_time').innerText = p.karanaEndTime ? formatTime(p.karanaEndTime) : "";
+                if(document.getElementById('pan_karana_next')) document.getElementById('pan_karana_next').innerText = (window.karanaNames[(p.karana + 1) % 60] || "") + " ↑";
+
                 if(document.getElementById('pan_vaar')) document.getElementById('pan_vaar').innerText = vaarNames[targetDate.getDay()];
                 
-                // Rashi & Masa
-                if(document.getElementById('pan_moon_rashi')) document.getElementById('pan_moon_rashi').innerText = p.planetaryPositions.moon.rashiName || "Unknown";
-                if(document.getElementById('pan_sun_rashi')) document.getElementById('pan_sun_rashi').innerText = p.planetaryPositions.sun.rashiName || "Unknown";
+                if(document.getElementById('pan_moon_rashi')) document.getElementById('pan_moon_rashi').innerText = p.planetaryPositions.moon.rashiName || "-";
+                if(document.getElementById('pan_sun_rashi')) document.getElementById('pan_sun_rashi').innerText = p.planetaryPositions.sun.rashiName || "-";
                 if(document.getElementById('pan_masa_amav')) document.getElementById('pan_masa_amav').innerText = mName;
                 if(document.getElementById('pan_masa_purn')) document.getElementById('pan_masa_purn').innerText = mName;
                 if(document.getElementById('pan_ritu')) document.getElementById('pan_ritu').innerText = p.ritu;
 
                 // Samvat Math
                 const cYear = targetDate.getFullYear();
-                if(document.getElementById('pan_vikram')) document.getElementById('pan_vikram').innerText = cYear + 57;
-                if(document.getElementById('pan_gujarati')) document.getElementById('pan_gujarati').innerText = cYear + 57;
-                if(document.getElementById('pan_shaka')) document.getElementById('pan_shaka').innerText = cYear - 78;
-                if(document.getElementById('pan_kali')) document.getElementById('pan_kali').innerText = cYear + 3101;
-                if(document.getElementById('pan_samvatsar')) document.getElementById('pan_samvatsar').innerText = "पराभव / रौद्र";
+                if(document.getElementById('pan_vikram')) document.getElementById('pan_vikram').innerText = (cYear + 57);
+                if(document.getElementById('pan_gujarati')) document.getElementById('pan_gujarati').innerText = (cYear + 57);
+                if(document.getElementById('pan_shaka')) document.getElementById('pan_shaka').innerText = (cYear - 78);
+                if(document.getElementById('pan_kali')) document.getElementById('pan_kali').innerText = (cYear + 3101);
+                if(document.getElementById('pan_samvatsar')) document.getElementById('pan_samvatsar').innerText = p.samvatsara || "पराभव / रौद्र";
 
-                // Map Nakshatra to Pad visual placeholders
-                if(document.getElementById('pan_pad1')) document.getElementById('pan_pad1').innerText = nName;
-                if(document.getElementById('pan_pad2')) document.getElementById('pan_pad2').innerText = nName;
-                
-                // Approximate Next Nakshatra for visual layout
-                const nextNakIdx = (p.nakshatra + 1) % 27;
-                const nextNName = window.nakshatraNames[nextNakIdx];
-                if(document.getElementById('pan_pad3')) document.getElementById('pan_pad3').innerText = nextNName;
-                if(document.getElementById('pan_pad4')) document.getElementById('pan_pad4').innerText = nextNName;
+                // Generate Charan / Pada accurately via mathematical interpolation
+                let padaList = [];
+                if (p.nakshatras && p.nakshatras.length > 0) {
+                    p.nakshatras.forEach(nak => {
+                        let sTime = nak.startTime.getTime();
+                        let eTime = nak.endTime.getTime();
+                        let dur = eTime - sTime;
+                        let syllables = padaSyllables[nak.index] || ["-","-","-","-"];
+                        
+                        for(let i=0; i<4; i++) {
+                            let pTime = new Date(sTime + dur * ((i+1)/4));
+                            if(pTime >= sunriseTime) { 
+                                padaList.push({ pada: i+1, syllable: syllables[i], nakName: window.nakshatraNames[nak.index], time: pTime });
+                            }
+                        }
+                    });
+                }
+
+                const charanContainer = document.getElementById('pan_charan_container');
+                if(charanContainer) {
+                    charanContainer.innerHTML = '';
+                    padaList.slice(0, 4).forEach(pada => {
+                        const row = document.createElement('div');
+                        row.className = 'p-charan-row';
+                        row.innerHTML = `
+                            <div class="p-c-col1">${pada.pada} ${pada.syllable}</div>
+                            <div class="p-c-col2">${pada.nakName}</div>
+                            <div class="p-c-col3">${formatTime24(pada.time)}</div>
+                        `;
+                        charanContainer.appendChild(row);
+                    });
+                }
 
             } else {
                  if(document.getElementById('pan_top_title')) document.getElementById('pan_top_title').innerText = "Astrological engine downloading...";
@@ -1004,7 +1028,6 @@
             element = document.getElementById('reportAreaPanchang');
             if(element) element.classList.add('pdf-export-mode');
             if(document.getElementById('pdfPanchangHeader')) document.getElementById('pdfPanchangHeader').style.display = 'block';
-            if(document.getElementById('pdfPanchangDate')) document.getElementById('pdfPanchangDate').style.display = 'block';
             filename = `Panchang_Report.pdf`;
         }
 
@@ -1030,7 +1053,6 @@
                     if(document.getElementById('pdfChogLocation')) document.getElementById('pdfChogLocation').style.display = 'none';
                 } else if (type === 'panchang') {
                     if(document.getElementById('pdfPanchangHeader')) document.getElementById('pdfPanchangHeader').style.display = 'none';
-                    if(document.getElementById('pdfPanchangDate')) document.getElementById('pdfPanchangDate').style.display = 'none';
                 }
             });
         }, 100);
@@ -1047,7 +1069,7 @@
             text += `*BIRTH DETAILS*\n🔹 DOB: ${dobFormatted}\n🔹 Psychic: ${currentData.psychic}\n🔹 Destiny: ${currentData.destiny}\n🔹 Personal Year: ${currentData.personalYear}\n\n`;
             text += `*LUCKY ELEMENTS*\n🎨 Color: ${luckyElements[currentData.psychic][isEnglish ? 'en_color' : 'hi_color']}\n💎 Gemstone: ${luckyElements[currentData.psychic][isEnglish ? 'en_gem' : 'hi_gem']}\n📅 Days: ${luckyElements[currentData.psychic][isEnglish ? 'en_days' : 'hi_days']}\n\n`;
         }
-        text += `_Generated via Astro Pro Numerology_`;
+        text += `_Generated via Astro Pro_`;
         window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
 
