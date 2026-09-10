@@ -1,0 +1,21 @@
+{
+  "name": "Astro Pro - Numerology & Panchang",
+  "short_name": "Astro Pro",
+  "description": "Advanced Chaldean Numerology Calculator, Lo Shu Grid, Subha Choghadiya Timings, and Live Astrological Panchang.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6200ea",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "./icon-512.png"",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
