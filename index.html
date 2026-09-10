@@ -75,18 +75,15 @@
         .chog-neutral { background-color: #fef7e0; color: #b06000; font-weight: 600; }
         .chog-meaning { font-size: 0.8em; font-weight: normal; opacity: 0.8; display: block; margin-top: 2px; }
 
-        /* Panchang/Muhurat Specific Styles */
+        /* Panchang Specific Styles */
         .panchang-header-info { text-align: center; font-size: 0.9rem; line-height: 1.4; color: var(--text-secondary); margin-bottom: 15px; }
         .sun-times { display: flex; justify-content: space-around; background: #fff8e1; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ffecb3; }
         .sun-item { text-align: center; font-weight: bold; color: #f57f17; }
         .sun-item span { display: block; font-size: 0.8rem; color: #795548; font-weight: normal; margin-bottom: 4px; }
-        
         .p-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #e0e0e0; font-size: 0.95rem; }
         .p-row:last-child { border-bottom: none; }
-        .p-label { font-weight: bold; color: var(--primary); width: 35%; }
-        .p-value { width: 35%; color: var(--text); font-weight: 500; }
-        .p-time { width: 30%; text-align: right; color: var(--text-secondary); font-size: 0.85rem; }
-        .p-next { display: block; font-size: 0.75rem; color: #9e9e9e; margin-top: 2px; }
+        .p-label { font-weight: bold; color: var(--primary); width: 40%; }
+        .p-value { width: 60%; color: var(--text); font-weight: 500; text-align: right; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -261,9 +258,9 @@
     <div id="tabPanchang" style="display: none;">
         <div id="inputSectionPanchang">
             <div class="header-bar">
-                <h1>Daily Panchang</h1>
+                <h1>Live Astrological Panchang</h1>
             </div>
-            <p class="subtitle no-print">Detailed Astrological Information</p>
+            <p class="subtitle no-print">Calculates planetary data instantly in-browser.</p>
 
             <div class="input-group no-print">
                 <label for="panchangCityInput">Enter City</label>
@@ -275,10 +272,7 @@
                 <input type="date" id="panchangDateInput">
             </div>
 
-            <button class="btn-main no-print" onclick="showPanchangTemplate()">View Panchang</button>
-            <p style="font-size:0.75rem; text-align:center; color:var(--text-secondary); margin-top:10px;" class="no-print">
-                *Displaying sample template data. Real-time planetary data requires a backend Astrological API integration.
-            </p>
+            <button class="btn-main no-print" onclick="calculateLivePanchang()">Calculate Panchang</button>
         </div>
         
         <div id="reportAreaPanchang">
@@ -288,111 +282,52 @@
                 <div class="card-body" style="padding-top: 10px;">
                     
                     <div class="panchang-header-info">
-                        <strong id="panchangLocName" style="font-size: 1.1rem; color: var(--text);">Udaipur, Rajasthan, India</strong><br>
-                        <span id="panchangLocCoords" style="font-size:0.8rem;">24.5858°N, 73.7135°E</span><br>
+                        <strong id="panchangLocName" style="font-size: 1.1rem; color: var(--text);">Loading...</strong><br>
+                        <span id="panchangLocCoords" style="font-size:0.8rem;">Please wait</span><br>
                         <span id="panchangDateDisplay" style="font-size:0.95rem; font-weight:bold; color: var(--primary); display:block; margin-top:6px;"></span>
-                        <!-- Hidden duplicate for PDF rendering to ensure it's captured safely -->
                         <span id="pdfPanchangDate" style="display:none;"></span>
                     </div>
 
                     <div class="sun-times">
-                        <div class="sun-item"><span>🌅 सूर्योदय (Sunrise)</span>06:20 AM</div>
-                        <div class="sun-item"><span>🌇 सूर्यास्त (Sunset)</span>06:43 PM</div>
+                        <div class="sun-item"><span>🌅 सूर्योदय (Sunrise)</span><span id="pan_sunrise">-</span></div>
+                        <div class="sun-item"><span>🌇 सूर्यास्त (Sunset)</span><span id="pan_sunset">-</span></div>
                     </div>
 
                     <div class="section-title" style="color: var(--primary);">पंचांग के अंग (5 Limbs)</div>
                     <div class="p-row">
                         <div class="p-label">तिथि (Tithi)</div>
-                        <div class="p-value">चतुर्दशी (Chaturdashi)</div>
-                        <div class="p-time">10:32 AM<span class="p-next">Next: अमावस्या (Amavasya)</span></div>
+                        <div class="p-value" id="pan_tithi">-</div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">पक्ष (Paksha)</div>
-                        <div class="p-value">कृष्ण पक्ष (Krishna)</div>
-                        <div class="p-time">-</div>
+                        <div class="p-value" id="pan_paksha">-</div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">नक्षत्र (Nakshatra)</div>
-                        <div class="p-value">मघा (Magha)</div>
-                        <div class="p-time">02:03 PM<span class="p-next">Next: पूर्व फाल्गुनी (P. Phalguni)</span></div>
+                        <div class="p-value" id="pan_nakshatra">-</div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">योग (Yoga)</div>
-                        <div class="p-value">सिद्ध (Siddha)</div>
-                        <div class="p-time">07:16 PM<span class="p-next">Next: साध्य (Sadhya)</span></div>
+                        <div class="p-value" id="pan_yoga">-</div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">करण (Karana)</div>
-                        <div class="p-value">शकुनी (Shakuni)</div>
-                        <div class="p-time">10:32 AM<span class="p-next">Next: चतुष्पद (Chatushpada)</span></div>
-                    </div>
-                    <div class="p-row">
-                        <div class="p-label">वार (Vaar)</div>
-                        <div class="p-value">गुरूवार (Thursday)</div>
-                        <div class="p-time">-</div>
+                        <div class="p-value" id="pan_karana">-</div>
                     </div>
 
                     <div class="section-title" style="color: #00897b;">माह एवं राशियां (Months & Signs)</div>
                     <div class="p-row">
-                        <div class="p-label">अमावस्यांत माह</div>
-                        <div class="p-value">श्रावण (Shravan)</div>
-                        <div class="p-time">-</div>
+                        <div class="p-label">माह (Month)</div>
+                        <div class="p-value" id="pan_masa">-</div>
                     </div>
                     <div class="p-row">
-                        <div class="p-label">पूर्णिमांत माह</div>
-                        <div class="p-value">भाद्रपद (Bhadrapad)</div>
-                        <div class="p-time">-</div>
+                        <div class="p-label">चन्द्र राशि (Moon Sign)</div>
+                        <div class="p-value" id="pan_moon_rashi">-</div>
                     </div>
                     <div class="p-row">
-                        <div class="p-label">चन्द्र राशि (Moon)</div>
-                        <div class="p-value">सिंह (Leo)</div>
-                        <div class="p-time">-</div>
+                        <div class="p-label">ऋतु (Season)</div>
+                        <div class="p-value" id="pan_ritu">-</div>
                     </div>
-                    <div class="p-row">
-                        <div class="p-label">सूर्य राशि (Sun)</div>
-                        <div class="p-value">सिंह (Leo)</div>
-                        <div class="p-time">-</div>
-                    </div>
-                    <div class="p-row">
-                        <div class="p-label">ऋतु / अयन</div>
-                        <div class="p-value">शरद / दक्षिणायन</div>
-                        <div class="p-time">-</div>
-                    </div>
-
-                    <div class="section-title" style="color: #d35400;">संवत् (Eras & Years)</div>
-                    <div class="p-row">
-                        <div class="p-label">विक्रम संवत</div>
-                        <div class="p-value">2083</div>
-                        <div class="p-time">-</div>
-                    </div>
-                    <div class="p-row">
-                        <div class="p-label">शक संवत</div>
-                        <div class="p-value">1948</div>
-                        <div class="p-time">-</div>
-                    </div>
-                    <div class="p-row">
-                        <div class="p-label">संवत्सर (नाम)</div>
-                        <div class="p-value">पराभव / रौद्र</div>
-                        <div class="p-time">-</div>
-                    </div>
-
-                    <div class="section-title" style="color: var(--primary); text-align:center;">पद, चरण (Pad/Charan Timings)</div>
-                    <div class="p-row">
-                        <div class="p-label" style="text-align:right;">3 मू</div>
-                        <div class="p-value" style="text-align:center;">मघा</div>
-                        <div class="p-time" style="text-align:left;">08:19 AM</div>
-                    </div>
-                    <div class="p-row">
-                        <div class="p-label" style="text-align:right;">4 मे</div>
-                        <div class="p-value" style="text-align:center;">मघा</div>
-                        <div class="p-time" style="text-align:left;">02:03 PM</div>
-                    </div>
-                    <div class="p-row">
-                        <div class="p-label" style="text-align:right;">1 मो</div>
-                        <div class="p-value" style="text-align:center;">पूर्व फाल्गुनी</div>
-                        <div class="p-time" style="text-align:left;">07:49 PM</div>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -450,6 +385,16 @@
                 .catch(err => console.log('SW Registration skipped / not found on sandbox.'));
         });
     }
+
+    // --- PANCHANG ASTROLOGICAL ENGINE INJECTION ---
+    import('https://cdn.jsdelivr.net/npm/@ishubhamx/panchangam-js@latest/+esm').then(module => {
+        window.getPanchangam = module.getPanchangam;
+        window.Observer = module.Observer;
+        window.tithiNames = module.tithiNames;
+        window.nakshatraNames = module.nakshatraNames;
+        window.yogaNames = module.yogaNames;
+        window.karanaNames = module.karanaNames;
+    }).catch(e => console.error("Astrological Engine failed to load.", e));
 
     // --- TAB SWITCHER ---
     function switchTab(tab) {
@@ -837,7 +782,7 @@
     }
 
     // --- PANCHANG LOGIC ---
-    async function showPanchangTemplate() {
+    async function calculateLivePanchang() {
         try {
             const dateEl = document.getElementById('panchangDateInput');
             const cityEl = document.getElementById('panchangCityInput');
@@ -846,34 +791,67 @@
             const dateInput = dateEl.value;
             const cityInput = cityEl.value.trim() || 'Udaipur';
             
-            let displayDate = "10-09-2026";
+            let targetDate = new Date();
+            let displayDate = targetDate.toISOString().split('T')[0].split('-').reverse().join('-');
+            
             if(dateInput) {
+                targetDate = new Date(dateInput);
+                // Adjust to midday to avoid timezone edge cases jumping the day
+                targetDate.setHours(12, 0, 0); 
                 displayDate = dateInput.split('-').reverse().join('-');
             }
 
-            // Immediately show UI as loading so button click is responsive
+            // Show UI as loading
             if(document.getElementById('resultCardPanchang')) document.getElementById('resultCardPanchang').style.display = 'block';
             if(document.getElementById('actionBtnsPanchang')) document.getElementById('actionBtnsPanchang').style.display = 'grid';
-            if(document.getElementById('panchangLocName')) document.getElementById('panchangLocName').innerText = "Loading city data...";
+            if(document.getElementById('panchangLocName')) document.getElementById('panchangLocName').innerText = "Loading astronomical data...";
             if(document.getElementById('panchangLocCoords')) document.getElementById('panchangLocCoords').innerText = "Please wait...";
             
-            // Set Dates
+            // Set Dates in UI
             if(document.getElementById('panchangDateDisplay')) document.getElementById('panchangDateDisplay').innerText = `Date: ${displayDate}`;
-            // Optional check for PDF title
             const pdfDateEl = document.getElementById('pdfPanchangDate');
             if(pdfDateEl) pdfDateEl.innerText = `Date: ${displayDate}`;
 
-            // Fetch coordinates for the header
-            try {
-                const coords = await getCoordinates(cityInput);
-                if(document.getElementById('panchangLocName')) document.getElementById('panchangLocName').innerText = coords.displayName.split(',').slice(0, 3).join(', ');
-                if(document.getElementById('panchangLocCoords')) document.getElementById('panchangLocCoords').innerText = `${parseFloat(coords.lat).toFixed(4)}°N, ${parseFloat(coords.lng).toFixed(4)}°E`;
-            } catch (e) {
-                console.error("Location fetch failed", e);
-                if(document.getElementById('panchangLocName')) document.getElementById('panchangLocName').innerText = cityInput;
-                if(document.getElementById('panchangLocCoords')) document.getElementById('panchangLocCoords').innerText = "Coordinates Unavailable";
+            // Fetch coordinates 
+            const coords = await getCoordinates(cityInput);
+            if(document.getElementById('panchangLocName')) document.getElementById('panchangLocName').innerText = coords.displayName.split(',').slice(0, 3).join(', ');
+            if(document.getElementById('panchangLocCoords')) document.getElementById('panchangLocCoords').innerText = `${parseFloat(coords.lat).toFixed(4)}°N, ${parseFloat(coords.lng).toFixed(4)}°E`;
+
+            // Fetch Sunrise/Sunset
+            const sunData = await getSunTimes(coords.lat, coords.lng, dateInput);
+            const sunriseTime = new Date(sunData.sunrise);
+            const sunsetTime = new Date(sunData.sunset);
+
+            if(document.getElementById('pan_sunrise')) document.getElementById('pan_sunrise').innerText = formatTime(sunriseTime);
+            if(document.getElementById('pan_sunset')) document.getElementById('pan_sunset').innerText = formatTime(sunsetTime);
+
+            // Execute Live Panchang Engine Calculations
+            if(window.getPanchangam && window.Observer) {
+                const observer = new window.Observer(parseFloat(coords.lat), parseFloat(coords.lng), 0);
+                
+                // Calculate offset in minutes for the location
+                const tzOffsetMinutes = -(new Date().getTimezoneOffset());
+                
+                // Engine calculates for exact sunrise of that location
+                const p = window.getPanchangam(targetDate, observer, { timezoneOffset: tzOffsetMinutes });
+
+                if(document.getElementById('pan_tithi')) document.getElementById('pan_tithi').innerText = window.tithiNames[p.tithi];
+                if(document.getElementById('pan_paksha')) document.getElementById('pan_paksha').innerText = p.paksha;
+                if(document.getElementById('pan_nakshatra')) document.getElementById('pan_nakshatra').innerText = window.nakshatraNames[p.nakshatra];
+                if(document.getElementById('pan_yoga')) document.getElementById('pan_yoga').innerText = window.yogaNames[p.yoga];
+                if(document.getElementById('pan_karana')) document.getElementById('pan_karana').innerText = window.karanaNames[p.karana];
+                
+                // Rashi & Masa
+                if(document.getElementById('pan_moon_rashi')) document.getElementById('pan_moon_rashi').innerText = p.planetaryPositions.moon.rashiName || "Unknown";
+                if(document.getElementById('pan_masa')) document.getElementById('pan_masa').innerText = p.masa.name;
+                if(document.getElementById('pan_ritu')) document.getElementById('pan_ritu').innerText = p.ritu;
+
+            } else {
+                 if(document.getElementById('panchangLocCoords')) document.getElementById('panchangLocCoords').innerText = "Astrological engine is still downloading...";
             }
+
         } catch (error) {
+            console.error(error);
             alert("App Error: " + error.message);
         }
     }
@@ -969,7 +947,7 @@
         if(document.getElementById('panchangDateInput')) document.getElementById('panchangDateInput').value = localISOTime;
         
         if(document.getElementById('cityInput')) document.getElementById('cityInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') calculateChoghadiya(); });
-        if(document.getElementById('panchangCityInput')) document.getElementById('panchangCityInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') showPanchangTemplate(); });
+        if(document.getElementById('panchangCityInput')) document.getElementById('panchangCityInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') calculateLivePanchang(); });
     });
 </script>
 
