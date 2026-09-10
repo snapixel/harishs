@@ -266,6 +266,11 @@
             <p class="subtitle no-print">Detailed Astrological Information</p>
 
             <div class="input-group no-print">
+                <label for="panchangCityInput">Enter City</label>
+                <input type="text" id="panchangCityInput" placeholder="e.g., Udaipur" value="Udaipur">
+            </div>
+
+            <div class="input-group no-print">
                 <label for="panchangDateInput">Select Date</label>
                 <input type="date" id="panchangDateInput">
             </div>
@@ -279,13 +284,13 @@
         <div id="reportAreaPanchang">
             <div id="resultCardPanchang" class="result-card">
                 <h2 id="pdfPanchangHeader" style="display:none; text-align:center; color:var(--primary); margin-top:0; padding-top:15px;">Daily Panchang</h2>
-                <p id="pdfPanchangDate" style="display:none; text-align:center; font-weight:bold; font-size:1.1rem; margin-top:-5px; margin-bottom:15px; color:var(--text-secondary);"></p>
 
                 <div class="card-body" style="padding-top: 10px;">
                     
                     <div class="panchang-header-info">
-                        <strong>Udaipur, Rajasthan, India</strong><br>
-                        <span style="font-size:0.8rem;">24.5858°N, 73.7135°E | Asia/Calcutta</span>
+                        <strong id="panchangLocName" style="font-size: 1.1rem; color: var(--text);">Udaipur, Rajasthan, India</strong><br>
+                        <span id="panchangLocCoords" style="font-size:0.8rem;">24.5858°N, 73.7135°E</span><br>
+                        <span id="panchangDateDisplay" style="font-size:0.95rem; font-weight:bold; color: var(--primary); display:block; margin-top:6px;"></span>
                     </div>
 
                     <div class="sun-times">
@@ -823,14 +828,29 @@
     }
 
     // --- PANCHANG LOGIC ---
-    // Displays the static template from image_ece5e7.png
-    function showPanchangTemplate() {
+    async function showPanchangTemplate() {
         const dateInput = document.getElementById('panchangDateInput').value;
+        const cityInput = document.getElementById('panchangCityInput').value.trim() || 'Udaipur';
+        
+        let displayDate = "10-09-2026";
         if(dateInput) {
-            document.getElementById('pdfPanchangDate').innerText = dateInput.split('-').reverse().join('-');
-        } else {
-            document.getElementById('pdfPanchangDate').innerText = "10-09-2026";
+            displayDate = dateInput.split('-').reverse().join('-');
         }
+
+        try {
+            // Fetch live coordinates based on user input
+            const coords = await getCoordinates(cityInput);
+            document.getElementById('panchangLocName').innerText = coords.displayName.split(',').slice(0, 3).join(', ');
+            document.getElementById('panchangLocCoords').innerText = `${parseFloat(coords.lat).toFixed(4)}°N, ${parseFloat(coords.lng).toFixed(4)}°E`;
+        } catch (e) {
+            console.error("Location fetch failed", e);
+            document.getElementById('panchangLocName').innerText = cityInput;
+            document.getElementById('panchangLocCoords').innerText = "Coordinates Unavailable";
+        }
+
+        // Apply dynamically selected date to UI and PDF
+        document.getElementById('panchangDateDisplay').innerText = `Date: ${displayDate}`;
+        document.getElementById('pdfPanchangDate').innerText = `Date: ${displayDate}`;
         
         document.getElementById('resultCardPanchang').style.display = 'block';
         document.getElementById('actionBtnsPanchang').style.display = 'grid';
@@ -918,6 +938,7 @@
         document.getElementById('panchangDateInput').value = localISOTime;
         
         document.getElementById('cityInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') calculateChoghadiya(); });
+        document.getElementById('panchangCityInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') showPanchangTemplate(); });
     });
 </script>
 
