@@ -75,12 +75,11 @@
         .chog-neutral { background-color: #fef7e0; color: #b06000; font-weight: 600; }
         .chog-meaning { font-size: 0.8em; font-weight: normal; opacity: 0.8; display: block; margin-top: 2px; }
 
-        /* Panchang/Muhurat Specific Styles */
+        /* Panchang Specific Styles */
         .panchang-header-info { text-align: center; font-size: 0.9rem; line-height: 1.4; color: var(--text-secondary); margin-bottom: 15px; }
         .sun-times { display: flex; justify-content: space-around; background: #fff8e1; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ffecb3; }
         .sun-item { text-align: center; font-weight: bold; color: #f57f17; }
         .sun-item span { display: block; font-size: 0.8rem; color: #795548; font-weight: normal; margin-bottom: 4px; }
-        
         .p-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #e0e0e0; font-size: 0.95rem; }
         .p-row:last-child { border-bottom: none; }
         .p-label { font-weight: bold; color: var(--primary); width: 35%; }
@@ -519,7 +518,7 @@
         34: "इनके जीवन में जरूरत से ज्यादा कठिनाइयां होती हैं। एक तथा बाधाएं है, जिसकी वजह प्रकार की झिझक इनके मन में बरावर बनी रहती ऊंचे से ये दूसरों को प्रभावित नहीं कर पाते। अपने से अधिकारियों आत्महीनता से बात करते हुए घबराते हैं। एक प्रकार कीहुए भी इनके जीवन में छाई रहती है, जिसकी वजह से चाहते ये व्यक्ति सफलता प्राप्त नहीं कर पाते ।",
         35: "ऐसे व्यक्ति किसी न किसी प्रकारसे जीवन जीने में विश्वास करते हैं। इनके जीवन में न तो किसी नये कार्य के प्रति उमंग या उत्साह होता है और न ऐसे व्यक्ति ऊंचा उठने का प्रयत्न ही करते हैं। दूसरों के भरोसे काम छोड़कर ये निश्चित हो जाते हैं ",
         36: "ऐसे व्यक्ति अपनी जबान के पक्के तथा पूर्ण आत्माभिमानी होते हैं। इनके जिम्मे जो भी कार्य होता है, उसे पूरा करके ही ये विश्राम करते हैं। अपने जीवन में अपने प्रयत्नों से ये पूर्ण सफलता प्राप्त करते देखे गए हैं। मस्तिष्क से ये व्यक्ति सुलझे हुए तथा सही रास्ते को अपनाने वाले होते हैं।",
-        37: "यह अंक सहयोग का अंक है। ऐसे व्यक्तियों का भाग्यो- दम तभी संभव है जब ये किसीके साथ कार्य करें, या किसीके सहअपने योग में कार्य करें । बुद्धि एवं प्रतिभा में ये अत्यन्त चतुर होते हैं तथा मान्य का ये स्वयं निर्माण करते हैं।",
+        37: "यह अंक सहयोग का अंक है। ऐसे व्यक्तियों का भाग्यो- दम तभी संभव है যখন ये किसीके साथ कार्य करें, या किसीके सहअपने योग में कार्य करें । बुद्धि एवं प्रतिभा में ये अत्यन्त चतुर होते हैं तथा मान्य का ये स्वयं निर्माण करते हैं।",
         38: "यह अंक अस्थिरता का सूचक है। किसी एक विषय पर वे व्यक्ति लम्बे समत बीच नहीं सकते। टिककर या जमकर बेठना इनके वश की बात नहीं । 'फील्ड वर्क' में ये व्यक्ति ज्यादा सफल हो सकते हैं।",
         39: " यह अंक वीरता वीरता का अंक है। इनका मस्तिष्क अत्यन्त उर्वर होता है, चाहे कितनी बाधाएं इनके सामने आयें से हताश नहीं होते तथा अपने मार्ग से नहीं हटते । अपने प्रयत्नों से ही ये जीवन में पूर्ण सफल होते देखे गए हैं।",
         40: " ये व्यक्ति बाहर से नास्तिक होते हुए भी अन्दर से पूरे धर्म-भीरु तथा ईश्वर में विश्वास रखने वाले होते हैं। एक प्रकार से ये अपने-आपमें ही सिमटे रहते हैं। सांसारिक कार्यों के प्रति ये उदा सीन होते हैं। काफी ठोकरें खाने के बाद ही ये जीवन में सफल होते हैं।",
@@ -829,31 +828,38 @@
 
     // --- PANCHANG LOGIC ---
     async function showPanchangTemplate() {
-        const dateInput = document.getElementById('panchangDateInput').value;
-        const cityInput = document.getElementById('panchangCityInput').value.trim() || 'Udaipur';
-        
-        let displayDate = "10-09-2026";
-        if(dateInput) {
-            displayDate = dateInput.split('-').reverse().join('-');
-        }
-
         try {
-            // Fetch live coordinates based on user input
-            const coords = await getCoordinates(cityInput);
-            document.getElementById('panchangLocName').innerText = coords.displayName.split(',').slice(0, 3).join(', ');
-            document.getElementById('panchangLocCoords').innerText = `${parseFloat(coords.lat).toFixed(4)}°N, ${parseFloat(coords.lng).toFixed(4)}°E`;
-        } catch (e) {
-            console.error("Location fetch failed", e);
-            document.getElementById('panchangLocName').innerText = cityInput;
-            document.getElementById('panchangLocCoords').innerText = "Coordinates Unavailable";
-        }
+            const dateInput = document.getElementById('panchangDateInput').value;
+            const cityInput = document.getElementById('panchangCityInput').value.trim() || 'Udaipur';
+            
+            let displayDate = "10-09-2026";
+            if(dateInput) {
+                displayDate = dateInput.split('-').reverse().join('-');
+            }
 
-        // Apply dynamically selected date to UI and PDF
-        document.getElementById('panchangDateDisplay').innerText = `Date: ${displayDate}`;
-        document.getElementById('pdfPanchangDate').innerText = `Date: ${displayDate}`;
-        
-        document.getElementById('resultCardPanchang').style.display = 'block';
-        document.getElementById('actionBtnsPanchang').style.display = 'grid';
+            // Immediately show UI as loading so button click is responsive
+            document.getElementById('resultCardPanchang').style.display = 'block';
+            document.getElementById('actionBtnsPanchang').style.display = 'grid';
+            document.getElementById('panchangLocName').innerText = "Loading city data...";
+            document.getElementById('panchangLocCoords').innerText = "Please wait...";
+            
+            // Set Dates
+            document.getElementById('panchangDateDisplay').innerText = `Date: ${displayDate}`;
+            document.getElementById('pdfPanchangDate').innerText = `Date: ${displayDate}`;
+
+            // Fetch coordinates for the header
+            try {
+                const coords = await getCoordinates(cityInput);
+                document.getElementById('panchangLocName').innerText = coords.displayName.split(',').slice(0, 3).join(', ');
+                document.getElementById('panchangLocCoords').innerText = `${parseFloat(coords.lat).toFixed(4)}°N, ${parseFloat(coords.lng).toFixed(4)}°E`;
+            } catch (e) {
+                console.error("Location fetch failed", e);
+                document.getElementById('panchangLocName').innerText = cityInput;
+                document.getElementById('panchangLocCoords').innerText = "Coordinates Unavailable";
+            }
+        } catch (error) {
+            alert("App Error: " + error.message);
+        }
     }
 
     // --- SHARED EXPORT LOGIC ---
@@ -927,7 +933,9 @@
             text += `*LUCKY ELEMENTS*\n🎨 Color: ${luckyElements[currentData.psychic][isEnglish ? 'en_color' : 'hi_color']}\n💎 Gemstone: ${luckyElements[currentData.psychic][isEnglish ? 'en_gem' : 'hi_gem']}\n📅 Days: ${luckyElements[currentData.psychic][isEnglish ? 'en_days' : 'hi_days']}\n\n`;
         }
         text += `_Generated via Astro Pro Numerology_`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        
+        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
     }
 
     // Default Init
