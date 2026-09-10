@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Astro Pro - Numerology & Panchang</title>
 
-    <!-- PWA & Mobile Meta Tags -->
+  <!-- PWA & Mobile Meta Tags -->
     <meta name="theme-color" content="#6200ea">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Astro Pro">
-    <link rel="apple-touch-icon" href="./icon-192.png">
-    <link rel="icon" type="image/png" href="./icon-192.png">
-    <link rel="manifest" id="manifestLink" href="./manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="manifest" href="manifest.json">
 
     <style>
         :root { --primary: #6200ea; --surface: #ffffff; --background: #f3f4f6; --text: #333333; --text-secondary: #666666; --border-radius: 12px; }
@@ -427,7 +427,7 @@
 </div>
 
 <script>
-    // --- PWA LOGIC ---
+// --- PWA LOGIC ---
     let deferredPrompt;
     const pwaBtn = document.getElementById('pwaInstallBtn');
 
@@ -448,7 +448,9 @@
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW skipped.'));
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('SW Registered'))
+                .catch(err => console.log('SW Error:', err));
         });
     }
 
