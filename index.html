@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Astro Pro">
-    <link rel="apple-touch-icon" href="./icon-192.png">
-    <link rel="icon" type="image/png" href="./icon-192.png">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/om.png">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color/192/om.png">
     <link rel="manifest" id="manifestLink" href="manifest.json">
 
     <style>
@@ -301,6 +301,7 @@
                     <div class="panchang-header-info">
                         <strong id="panchangLocName" style="font-size: 1.1rem; color: var(--text);">Loading...</strong><br>
                         <span id="panchangLocCoords" style="font-size:0.8rem;">Please wait</span><br>
+                        <span id="panchangDateDisplay" style="font-size:0.95rem; font-weight:bold; color: var(--primary); display:block; margin-top:6px;"></span>
                         <span id="pdfPanchangDate" style="display:none;"></span>
                     </div>
 
@@ -394,19 +395,19 @@
                     <div class="section-title" style="color: #d35400;">संवत् (Eras & Years)</div>
                     <div class="p-row">
                         <div class="p-label">विक्रम संवत</div>
-                        <div class="p-value" id="pan_vikram">-</div>
+                        <div class="p-value"><span id="pan_vikram">-</span> संवत</div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">गुजराती संवत</div>
-                        <div class="p-value" id="pan_gujarati">-</div>
+                        <div class="p-value"><span id="pan_gujarati">-</span> संवत</div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">शक संवत</div>
-                        <div class="p-value" id="pan_shaka">-</div>
+                        <div class="p-value"><span id="pan_shaka">-</span> संवत</div>
                     </div>
                     <div class="p-row">
                         <div class="p-label">कलि संवत</div>
-                        <div class="p-value" id="pan_kali">-</div>
+                        <div class="p-value"><span id="pan_kali">-</span> गत कलि संवत</div>
                     </div>
 
                     <div class="section-title" style="color: var(--primary); text-align:center;">पद, चरण (Pad/Charan Transitions)</div>
@@ -462,6 +463,20 @@
     }).catch(e => console.error("Astrological Engine failed to load.", e));
 
     const vaarNames = ["रविवार", "सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार"];
+
+    // Explicit Karana Mapping Array (To bypass "undefined" bug in external library)
+    const fallbackKaranas = [
+        "नाग (Naga)", // 0
+        "किंस्तुघ्न (Kintughna)", "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", // 1-8
+        "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", // 9-15
+        "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", // 16-22
+        "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", // 23-29
+        "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", // 30-36
+        "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", // 37-43
+        "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", // 44-50
+        "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", // 51-57
+        "शकुनि (Shakuni)", "चतुष्पाद (Chatushpada)", "नाग (Naga)" // 58, 59, 60
+    ];
 
     // Pad/Charan Syllables for all 27 Nakshatras
     const padaSyllables = [
@@ -884,6 +899,7 @@
                 displayDate = dateInput.split('-').reverse().join('-');
             }
 
+            // Immediately show UI as loading
             if(document.getElementById('resultCardPanchang')) document.getElementById('resultCardPanchang').style.display = 'block';
             if(document.getElementById('actionBtnsPanchang')) document.getElementById('actionBtnsPanchang').style.display = 'grid';
             if(document.getElementById('panchangLocName')) document.getElementById('panchangLocName').innerText = "Loading astronomical data...";
@@ -930,9 +946,17 @@
                 if(document.getElementById('pan_yoga_time')) document.getElementById('pan_yoga_time').innerText = p.yogaEndTime ? formatTime(p.yogaEndTime) : "";
                 if(document.getElementById('pan_yoga_next')) document.getElementById('pan_yoga_next').innerText = (window.yogaNames[(p.yoga + 1) % 27] || "") + " ↑";
 
-                if(document.getElementById('pan_karana')) document.getElementById('pan_karana').innerText = window.karanaNames[p.karana];
+                // Map Karana safely avoiding undefined error
+                const kIndex = typeof p.karana === 'object' ? p.karana.id : p.karana;
+                let kName = fallbackKaranas[kIndex] || "अज्ञात (Unknown)";
+                
+                let nextKIndex = (kIndex + 1) % 60;
+                if(nextKIndex === 0 && kIndex > 0) nextKIndex = 60;
+                let nextKName = fallbackKaranas[nextKIndex] || "";
+
+                if(document.getElementById('pan_karana')) document.getElementById('pan_karana').innerText = kName;
                 if(document.getElementById('pan_karana_time')) document.getElementById('pan_karana_time').innerText = p.karanaEndTime ? formatTime(p.karanaEndTime) : "";
-                if(document.getElementById('pan_karana_next')) document.getElementById('pan_karana_next').innerText = (window.karanaNames[(p.karana + 1) % 60] || "") + " ↑";
+                if(document.getElementById('pan_karana_next')) document.getElementById('pan_karana_next').innerText = nextKName + " ↑";
 
                 if(document.getElementById('pan_vaar')) document.getElementById('pan_vaar').innerText = vaarNames[targetDate.getDay()];
                 
@@ -1028,6 +1052,7 @@
             element = document.getElementById('reportAreaPanchang');
             if(element) element.classList.add('pdf-export-mode');
             if(document.getElementById('pdfPanchangHeader')) document.getElementById('pdfPanchangHeader').style.display = 'block';
+            if(document.getElementById('pdfPanchangDate')) document.getElementById('pdfPanchangDate').style.display = 'block';
             filename = `Panchang_Report.pdf`;
         }
 
@@ -1053,6 +1078,7 @@
                     if(document.getElementById('pdfChogLocation')) document.getElementById('pdfChogLocation').style.display = 'none';
                 } else if (type === 'panchang') {
                     if(document.getElementById('pdfPanchangHeader')) document.getElementById('pdfPanchangHeader').style.display = 'none';
+                    if(document.getElementById('pdfPanchangDate')) document.getElementById('pdfPanchangDate').style.display = 'none';
                 }
             });
         }, 100);
