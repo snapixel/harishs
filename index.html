@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="robots" content="noindex, nofollow, noarchive">
     <title>Astro Pro - Numerology, Choghadiya, Panchang & Stoop Paddhati</title>
 
     <!-- PWA Meta Tags -->
@@ -533,6 +532,14 @@
         }
         .loshu-cell-sub { font-size: 0.58rem; font-weight: 500; opacity: 0.7; margin-top: 2px; }
 
+        /* Guide Box */
+        .guide-box { margin-top: 20px; background: #fff8e1; border: 1px solid #ffecb3; border-radius: var(--border-radius); overflow: hidden; }
+        .guide-header { padding: 12px 16px; background: #ffe082; color: #d35400; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; }
+        .guide-content { padding: 16px; font-size: 0.85rem; color: #5d4037; line-height: 1.6; display: none; }
+        .guide-content h4 { color: #d35400; margin-top: 16px; margin-bottom: 8px; font-size: 0.95rem; }
+        .guide-content ul { padding-left: 20px; margin-top: 0; }
+        .guide-content li { margin-bottom: 6px; }
+
         /* Choghadiya Live Card */
         .live-chog-banner {
             background: linear-gradient(135deg, #2b0857 0%, #4c1d95 100%);
@@ -911,6 +918,12 @@
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* PDF Overrides */
+        .pdf-export-mode, .pdf-export-mode * { animation: none !important; transition: none !important; opacity: 1 !important; }
+        .pdf-export-mode { padding: 0 !important; margin: 0 !important; background: white !important; }
+        .pdf-export-mode .result-report-card { border: none !important; box-shadow: none !important; display: block !important; }
+        .pdf-export-mode .loshu-matrix-card { background: #0f0c20 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     </style>
 </head>
 <body>
@@ -1149,6 +1162,10 @@
                 <div class="legend-item neutral"><strong>चल:</strong> सामान्य व यात्रा कार्यों हेतु।</div>
                 <div class="legend-item bad"><strong>उद्वेग, रोग, काल:</strong> नए कार्य हेतु वर्जित।</div>
             </div>
+            
+            <div class="report-actions-grid no-print" style="grid-template-columns: 1fr;">
+                <button class="btn-download-pdf" onclick="generatePDF('chog')">PDF डाउनलोड करें</button>
+            </div>
         </div>
     </section>
 
@@ -1249,17 +1266,21 @@
                 </div>
                 <div id="panPadaRows"></div>
             </div>
+            
+            <div class="report-actions-grid no-print" style="grid-template-columns: 1fr;">
+                <button class="btn-download-pdf" style="background:#b45309;" onclick="generatePDF('panchang')">PDF डाउनलोड करें</button>
+            </div>
         </div>
     </section>
 
-    <!-- ==================== TAB 4: STOOP PADDHATI (NEW) ==================== -->
+    <!-- ==================== TAB 4: STOOP PADDHATI ==================== -->
     <section id="tabStoop" class="page-content" style="display:none;">
         <div class="hero-banner stoop">
             <div class="hero-pill-tag">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 22 22 22 12 2"></polygon></svg>
-                Ancient Pyramid Divination • स्तूप प्रश्न प्रणाली
+                Ancient Pyramid Divination
             </div>
-            <h2 class="hero-title" id="stoopHeroTitle">स्तूप पद्धति प्रश्न कुंडली</h2>
+            <h2 class="hero-title" id="stoopHeroTitle">स्तूप पद्धति प्रश्न प्रणाली</h2>
             <p class="hero-subtitle" id="stoopHeroSubtitle">अंक गणित, शब्द-संयोजन व स्तूप (पिरामिड) ऊर्जा द्वारा भविष्य प्रश्न का अचूक समाधान।</p>
         </div>
 
@@ -1297,7 +1318,7 @@
         <div id="reportAreaStoop" class="result-report-card">
             <div class="report-header-text">
                 <div class="report-tag" style="color:#b33939;">प्राचीन अंक स्तूपांक निर्णय</div>
-                <div class="report-name-title" id="stoopQuestionDisplay" style="font-size:1.15rem; font-family:'Plus Jakarta Sans';">-</div>
+                <div class="report-name-title" id="stoopQuestionDisplay" style="font-size:1.15rem; font-family:'Plus Jakarta Sans', sans-serif;">-</div>
                 <div class="system-pill" id="stoopModeDisplay">पद्धति: शब्द-अक्षर गणना</div>
             </div>
 
@@ -1365,185 +1386,269 @@
 
 </div>
 
-<!-- Scripts -->
+<!-- Script Engine: Contains ALL tabs functions -->
 <script>
-    // --- STOOP PADDHATI LOGIC & DATA ---
-    let stoopMode = 'word'; // 'word' or 'chaldean'
-    let currentStoopResult = {};
+    // ==========================================
+    // 1. PWA & SYSTEM INIT
+    // ==========================================
+    let deferredPrompt;
+    const pwaBtn = document.getElementById('pwaInstallBtn');
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (pwaBtn) pwaBtn.style.display = 'inline-block';
+    });
+    function installPWA() {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choice) => {
+            if (choice.outcome === 'accepted' && pwaBtn) pwaBtn.style.display = 'none';
+            deferredPrompt = null;
+        });
+    }
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Registration skipped.'));
+        });
+    }
+    
+    import('https://cdn.jsdelivr.net/npm/@ishubhamx/panchangam-js@latest/+esm').then(module => {
+        window.getPanchangam = module.getPanchangam;
+        window.Observer = module.Observer;
+        window.tithiNames = module.tithiNames;
+        window.nakshatraNames = module.nakshatraNames;
+        window.yogaNames = module.yogaNames;
+        window.karanaNames = module.karanaNames;
+    }).catch(e => console.error("Engine script load issue.", e));
 
-    const stoopMeanings = {
-        1: {
-            title: "पूर्ण सफलता (Complete Success)",
-            status: "success",
-            badge: "अति शुभ संकेत",
-            desc: "यह अंक पूर्ण सफलता का सूचक है। शीघ्र ही आपको कोई ऐसा व्यक्ति मिलेगा जो कि आपकी कार्य-सिद्धि में सहायक होगा और उसके सहयोग से आप अगले कुछ ही समय में सफलता प्राप्त कर सकेंगे।"
-        },
-        2: {
-            title: "अनिश्चितता (Uncertainty & Delays)",
-            status: "warning",
-            badge: "धैर्य रखें",
-            desc: "यह अंक अनिश्चितता का सूचक है। संभवतः आगे के कुछ समय में बाधाएं आएंगी और प्रयत्न करने पर भी आप-अपने इस कार्य में सफलता प्राप्त नहीं कर सकेंगे। अभी नए कदम टालें।"
-        },
-        3: {
-            title: "व्यय व सहयोग (Expense & Eventual Gain)",
-            status: "success",
-            badge: "सहयोग से सिद्धि",
-            desc: "यद्यपि आप कार्य की सफलता के लिए प्रयत्नशील हैं परन्तु निकट भविष्य में ही व्यय ज्यादा होगा और किसी व्यक्ति के सहयोग से ही आप-अपने उद्देश्य में सफलता प्राप्त कर सकेंगे। आपके प्रयत्न निश्चय ही आपको सफलता देंगे।"
-        },
-        4: {
-            title: "बाधाएं व अड़चनें (Obstacles & Resistance)",
-            status: "danger",
-            badge: "कठिन परीक्षा",
-            desc: "आपके इस कार्य की पूर्णता में जरूरत से ज्यादा बाधाएं तथा अड़चनें हैं। जितनी ही ज्यादा आप इन बाधाओं को हटाने का प्रयत्न करेंगे उतनी ही ज्यादा नई-नई समस्याएं आपके सामने पैदा होती रहेंगी। कार्य की सफलता अनिश्चित है।"
-        },
-        5: {
-            title: "पूर्ण सफलता व विजय (Complete Victory)",
-            status: "success",
-            badge: "विजय योग",
-            desc: "यह अंक पूर्ण सफलता का सूचक है। कार्य-सिद्धि यात्रा के माध्यम से ही हो सकेगी। आपको चाहिए कि आप इससे सम्बन्धित अधिकारियों से पत्र-व्यवहार करें या व्यक्तिगत रूप से मिलें तथा अपने प्रयत्नों में तेजी लावें। निश्चय ही विजय आपकी है।"
-        },
-        6: {
-            title: "अनुकूल समय व सिद्धि (Favorable Period)",
-            status: "success",
-            badge: "अनुकूल काल",
-            desc: "समय आपके अनुकूल चल रहा है। किसी मित्र या महिला के सहयोग से आप-अपने उद्देश्यों में सफलता प्राप्त कर सकेंगे। कार्य की पूर्णता से शीघ्र ही आपको प्रसन्नता प्राप्त होगी।"
-        },
-        7: {
-            title: "बाधाओं के बाद सफलता (Triumph After Trial)",
-            status: "warning",
-            badge: "यश व कीर्ति",
-            desc: "यह अंक कार्य-सफलता का सूचक है। यद्यपि अभी कुछ दिनों तक आपको बाधाओं का सामना करना पड़ेगा, परन्तु ये बाधाएं जल्दी ही समाप्त हो जाएंगी और आप सफलता प्राप्त कर सकेंगे। इस कार्य की सफलता से समाज में आपको यश तथा सम्मान भी मिलेगा।"
-        },
-        8: {
-            title: "संघर्ष और विरोध (Conflict & Uncertainty)",
-            status: "danger",
-            badge: "सावधानी अपेक्षित",
-            desc: "कार्य में सफलता निश्चित नहीं है। आपके विरोधी तेज हैं और उनके प्रयत्न आपसे ज्यादा बढ़े-चढ़े हैं। आपके बारे में गलत भ्रम बन गया है, जिसकी वजह से आपकी सफलता संदिग्ध हो गई है। कार्य-पूर्णता में काफी बाधाएं, धन-हानि तथा परेशानियां दिखाई पड़ रही हैं।"
-        },
-        9: {
-            title: "शत्रु पराजय व लक्ष्य प्राप्ति (Final Victory)",
-            status: "success",
-            badge: "सर्वार्थ सिद्धि",
-            desc: "शीघ्र ही शत्रु परास्त होंगे, तथा आपका जो लक्ष्य है उस लक्ष्य में आप पूर्णता प्राप्त कर सकेंगे। आप देखेंगे कि अभी तक जितनी परेशानियां आपके चारों ओर आ रही थीं वे परेशानियां दूर हो गई हैं और आप-अपने लक्ष्य की ओर तीव्रता के साथ बढ़ रहे हैं। सफलता आपके सामने ही है।"
+    // ==========================================
+    // 2. SHARED UTILITIES & TAB NAVIGATION
+    // ==========================================
+    function switchTab(tab) {
+        const tabs = ['tabNumerology', 'tabChoghadiya', 'tabPanchang', 'tabStoop'];
+        const navs = { 'num': 'navNum', 'chog': 'navChog', 'panchang': 'navPanchang', 'stoop': 'navStoop' };
+        
+        tabs.forEach(t => {
+            const el = document.getElementById(t);
+            if (el) el.style.display = 'none';
+        });
+        Object.keys(navs).forEach(k => {
+            const nav = document.getElementById(navs[k]);
+            if (nav) {
+                nav.className = 'nav-item';
+                if (k === 'stoop') nav.classList.remove('stoop-active');
+            }
+        });
+
+        const activeTab = document.getElementById(tab === 'num' ? 'tabNumerology' : tab === 'chog' ? 'tabChoghadiya' : tab === 'panchang' ? 'tabPanchang' : 'tabStoop');
+        if (activeTab) activeTab.style.display = 'block';
+
+        const activeNav = document.getElementById(navs[tab]);
+        if (activeNav) {
+            activeNav.className = 'nav-item active';
+            if (tab === 'stoop') activeNav.classList.add('stoop-active');
         }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        if (tab === 'chog') calculateChoghadiya();
+        if (tab === 'panchang') calculateLivePanchang();
+    }
+
+    function toggleGuide() {
+        const box = document.getElementById('guideBox');
+        const arrow = document.getElementById('guideArrowIcon');
+        if (box.style.display === 'none') {
+            box.style.display = 'block';
+            arrow.innerText = '˄';
+        } else {
+            box.style.display = 'none';
+            arrow.innerText = '⌵';
+        }
+    }
+
+    function toggleMenuDrawer() {
+        alert("Astro Pro v4.0\nChaldean Numerology, Choghadiya, Panchang & Stoop Paddhati.\nDeveloped for Mobile Web & PWA.");
+    }
+
+    function stepDate(context, deltaDays) {
+        const elId = context === 'chog' ? 'chogDateInput' : 'panchangDateInput';
+        const el = document.getElementById(elId);
+        const cur = new Date(el.value || new Date());
+        cur.setDate(cur.getDate() + deltaDays);
+        el.value = cur.toISOString().split('T')[0];
+        if (context === 'chog') calculateChoghadiya();
+        else calculateLivePanchang();
+    }
+
+    function setToday(context) {
+        const elId = context === 'chog' ? 'chogDateInput' : 'panchangDateInput';
+        document.getElementById(elId).value = new Date().toISOString().split('T')[0];
+        if (context === 'chog') calculateChoghadiya();
+        else calculateLivePanchang();
+    }
+
+    async function getCoordinates(city) {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&email=astropro@web.app`);
+        const data = await res.json();
+        if (data.length === 0) throw new Error("Location not found.");
+        return { lat: data[0].lat, lng: data[0].lon, displayName: data[0].display_name };
+    }
+
+    async function getSunTimes(lat, lng, dateStr) {
+        const res = await fetch(`https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lng}&date=${dateStr}&formatted=0`);
+        const data = await res.json();
+        return data.results;
+    }
+
+    function formatTime12(dateObj) {
+        let hours = dateObj.getHours();
+        let minutes = dateObj.getMinutes();
+        let ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        return `${hours}:${minutes}${ampm}`;
+    }
+
+    function formatTime24(dateObj) {
+        return `${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
+    }
+
+    function calculateRoot(num) {
+        while (num > 9) {
+            num = num.toString().split('').reduce((sum, d) => sum + parseInt(d, 10), 0);
+        }
+        return num;
+    }
+
+    // ==========================================
+    // 3. NUMEROLOGY ENGINE (TAB 1)
+    // ==========================================
+    let isEnglish = false;
+    let currentData = {};
+    const currentDate = new Date();
+
+    const chaldeanMap = { 'A':1, 'I':1, 'J':1, 'Q':1, 'Y':1, 'B':2, 'K':2, 'R':2, 'C':3, 'G':3, 'L':3, 'S':3, 'D':4, 'M':4, 'T':4, 'E':5, 'H':5, 'N':5, 'X':5, 'U':6, 'V':6, 'W':6, 'O':7, 'Z':7, 'F':8, 'P':8 };
+
+    const planetaryLords = {
+        1: { hi: "सूर्य (Sun)", en: "Sun" }, 2: { hi: "चन्द्रमा (Moon)", en: "Moon" }, 3: { hi: "बृहस्पति (Jupiter)", en: "Jupiter" },
+        4: { hi: "राहु (Rahu)", en: "Rahu" }, 5: { hi: "बुध (Mercury)", en: "Mercury" }, 6: { hi: "शुक्र (Venus)", en: "Venus" },
+        7: { hi: "केतु (Ketu)", en: "Ketu" }, 8: { hi: "शनि (Saturn)", en: "Saturn" }, 9: { hi: "मंगल (Mars)", en: "Mars" }
     };
 
-    function setStoopMode(mode) {
-        stoopMode = mode;
-        document.getElementById('modeWord').className = mode === 'word' ? 'mode-btn active' : 'mode-btn';
-        document.getElementById('modeChaldean').className = mode === 'chaldean' ? 'mode-btn active' : 'mode-btn';
-        document.getElementById('stoopModeDisplay').innerText = mode === 'word' ? 'पद्धति: शब्द-अक्षर गणना विधि' : 'पद्धति: कैल्डियन अंक मान विधि';
-        calculateStoop();
-    }
+    const luckyElements = {
+        1: { hi_color: "लाल, पीला", en_color: "Red, Yellow", hi_gem: "माणिक्य", en_gem: "Ruby", hi_days: "रविवार, सोमवार", en_days: "Sun, Mon" },
+        2: { hi_color: "सफेद, हल्का हरा", en_color: "White, Light Green", hi_gem: "मोती", en_gem: "Pearl", hi_days: "सोमवार, शुक्रवार", en_days: "Mon, Fri" },
+        3: { hi_color: "पीला, बैंगनी", en_color: "Yellow, Purple", hi_gem: "पुखराज", en_gem: "Yellow Sapphire", hi_days: "गुरुवार, मंगलवार", en_days: "Thu, Tue" },
+        4: { hi_color: "नीला, खाकी", en_color: "Blue, Khaki", hi_gem: "गोमेद", en_gem: "Hessonite", hi_days: "रविवार, सोमवार", en_days: "Sun, Mon" },
+        5: { hi_color: "हरा, हल्का शेड", en_color: "Green, Light Shades", hi_gem: "पन्ना", en_gem: "Emerald", hi_days: "बुधवार, शुक्रवार", en_days: "Wed, Fri" },
+        6: { hi_color: "सफेद, हल्का नीला", en_color: "White, Light Blue", hi_gem: "हीरा", en_gem: "Diamond", hi_days: "शुक्रवार, मंगलवार", en_days: "Fri, Tue" },
+        7: { hi_color: "हल्का हरा, सफेद", en_color: "Light Green, White", hi_gem: "लहसुनिया", en_gem: "Cat's Eye", hi_days: "रविवार, सोमवार", en_days: "Sun, Mon" },
+        8: { hi_color: "काला, गहरा नीला", en_color: "Black, Dark Blue", hi_gem: "नीलम", en_gem: "Blue Sapphire", hi_days: "शनिवार, शुक्रवार", en_days: "Sat, Fri" },
+        9: { hi_color: "लाल, गुलाबी", en_color: "Red, Pink", hi_gem: "मूंगा", en_gem: "Red Coral", hi_days: "मंगलवार, गुरुवार", en_days: "Tue, Thu" }
+    };
 
-    function setStoopQuestion(q) {
-        document.getElementById('stoopInput').value = q;
-        calculateStoop();
-    }
+    const rootPredictions = {
+        1: { hi: "सूर्य का अंक: नेतृत्व, स्वतंत्रता, दृढ़ इच्छाशक्ति, महत्वाकांक्षा का प्रतीक।", en: "Sun Number: Symbolizes leadership, independence, strong will, and ambition." },
+        2: { hi: "चन्द्रमा का अंक: सौम्यता, भावुकता, कल्पनाशीलता और सहयोग का सूचक।", en: "Moon Number: Indicates gentleness, emotional depth, imagination, and cooperation." },
+        3: { hi: "बृहस्पति (गुरु): ज्ञान, बुद्धि, दूरदर्शिता, विद्या, आध्यात्मिकता।", en: "Jupiter Number: Represents knowledge, wisdom, foresight, spirituality." },
+        4: { hi: "राहु का अंक: आकस्मिक परिवर्तन, संघर्ष, अनूठी सोच, मौलिक विचार।", en: "Rahu Number: Symbolizes sudden changes, struggle, unique thinking, and originality." },
+        5: { hi: "बुध का अंक: तीव्र बुद्धि, बहुमुखी प्रतिभा, वाकपटुता, व्यापारिक दक्षता।", en: "Mercury Number: Indicates sharp intellect, versatility, eloquence." },
+        6: { hi: "शुक्र का अंक: प्रेम, सौंदर्य, आकर्षण, भौतिक सुख-सुविधाओं और कला।", en: "Venus Number: Represents love, beauty, attraction, luxury, and artistic flair." },
+        7: { hi: "केतु का अंक: रहस्य, शोध, दार्शनिक दृष्टिकोण, एकांतप्रियता।", en: "Ketu Number: Symbolizes mystery, research, philosophical outlook." },
+        8: { hi: "शनि का अंक: कठिन परिश्रम, अनुशासन, धैर्य, संघर्ष तथा स्थायी सफलता।", en: "Saturn Number: Indicates hard work, discipline, patience, struggle." },
+        9: { hi: "मंगल का अंक: अदम्य साहस, ऊर्जा, पराक्रम, नेतृत्व और आक्रामकता।", en: "Mars Number: Represents indomitable courage, energy, valor, leadership." }
+    };
 
-    function calculateStoop() {
-        const text = document.getElementById('stoopInput').value.trim();
-        if (!text) {
-            alert('कृपया अपना प्रश्न या नाम दर्ज करें!');
-            return;
-        }
+    const compoundPredictions = {
+        10: "यह अंक दृढ़ संकल्प, अटूट आत्मविश्वास और धीरज का प्रतीक है। सामान्य परिवार में जन्म लेने के बावजूद सफलता के उच्च शिखरों तक पहुंचते हैं।",
+        11: "इस अंक वाले लोग चंचल और कमजोर इरादों वाले होते हैं। जल्द ही निराश हो जाते हैं, जिसके कारण कामयाबी मुश्किल से मिलती है।",
+        12: "यह अंक त्याग को दर्शाता है। इनके दोस्त और रिश्तेदार हमेशा इनसे फायदा उठाते हैं और धोखा दे जाते हैं। मानसिक तनाव बना रहता है।",
+        13: "विचार लगातार बदलते रहते हैं। किसी भी काम की शुरुआत बड़े जोश से करते हैं, लेकिन जल्द ही उत्साह फीका पड़ जाता है।",
+        14: "बेहद भाग्यशाली अंक। जीवन में कई बार अचानक धन प्राप्ति होती है। अकेले रहने के बजाय सामाजिक कामों में सक्रिय भाग लेते हैं।",
+        15: "कला और संगीत में गहरी रुचि रखते हैं। यह एक रहस्यमयी अंक है; इनके मन में क्या चल रहा है, अंदाजा लगाना मुश्किल होता है।",
+        16: "जीवन हमेशा अनिश्चितता से घिरा रहता है। अप्रत्याशित घटनाएं होती हैं। जितनी तेजी से तरक्की, उतनी तेजी से पतन भी संभव है।",
+        17: "बेहद संघर्षशील होते हैं और लक्ष्य पाकर ही दम लेते हैं। उदार, धैर्यवान और माफ करने वाले होते हैं, जिससे यश मिलता है।",
+        18: "संघर्ष और हार को दर्शाता है। जीवन अक्सर विवादों और परेशानियों में उलझा रहता है। पारिवारिक जीवन शुभ नहीं माना जाता।",
+        19: "न्याय का प्रतीक। ये लोग जीवन भर अपनी न्यायप्रियता के लिए जाने जाते हैं। अनुशासन और अच्छे संस्कारों का सख्ती से पालन करते हैं।",
+        20: "तरक्की का प्रतीक है। एक साधारण परिवार में जन्म लेने के बावजूद काफी ऊंचाइयों को छूते हैं। धन और मान-सम्मान की कमी नहीं होती।",
+        21: "बेहद शुभ और कामयाबी का प्रतीक। लगातार तरक्की की सीढ़ियां चढ़ते हैं और धन व मान-सम्मान के लिए बहुत मशहूर होते हैं।",
+        22: "यह भावनाओं का अंक है। ख्यालों की दुनिया में जीते हैं। कड़वी सच्चाइयों का सामना करना मुश्किल होता है, 'स्वप्नदर्शी' कहलाते हैं।",
+        23: "खुद से कोई फैसला नहीं ले पाते। दूसरे जो रास्ता दिखाते हैं, उसी पर चलते हैं। विकास के रास्ते में रुकावट आती रहती है।",
+        24: "मुनाफे का अंक। जीवन में हमेशा सतर्क और तरक्की के प्रति सावधान रहते हैं। विपरीत लिंग के प्रति आकर्षण काफी अधिक होता है।",
+        25: "मिले-जुले परिणाम देता है। सफलता मिलती है, लेकिन रुकावटों के बाद। लगातार बाधाओं के कारण पूरी तरह से कामयाब नहीं हो पाते।",
+        26: "बेहद चालाक और केवल अपने फायदों पर नजर रखने वाले होते हैं। आसानी से भरोसा नहीं किया जा सकता, धोखा दे सकते हैं।",
+        27: "बेहद समझदार, चतुर और अपने काम में चुस्त। अपनी अक्लमंदी से समाज में सम्मानजनक मुकाम पाते हैं। एक सफल कर्मयोगी।",
+        28: "यह 'इंद्र' का अंक है। शुभ-अशुभ दोनों प्रभाव। बेहद मेहनती होते हैं, लेकिन मनचाही सफलता नहीं पा पाते। मुश्किलें बनी रहती हैं।",
+        29: "दुविधा और अनिश्चितता को दर्शाता है। काम शुरू करने से पहले बहुत सोचते हैं। दिखावे में बहुत पैसा और समय बर्बाद करते हैं।",
+        30: "प्रतिभा (टैलेंट) का अंक। बुद्धिमानी के कारण अलग पहचान होती है। खुद पर पूरा भरोसा होता है। दौलत से ज्यादा ज्ञान को अहमियत।",
+        31: "अंतर्मुखी (Introvert) स्वभाव। भीड़-भाड़ से दूर अकेले रहना पसंद। सांसारिक सफलता के मामले में अक्सर पिछड़ जाते हैं।",
+        32: "बौद्धिक रूप से बेहद सक्षम। गंभीरता से काम करें तो शानदार कामयाबी मिलती है, लेकिन आलस के कारण सफलता दूर रह जाती है।",
+        33: "जबर्दस्त आत्मविश्वास का प्रतीक। जो ठान लेते हैं, उसे हर हाल में पूरा करते हैं। असीम धैर्य और जीवन-शक्ति कामयाबी का राज है।",
+        34: "मन में हमेशा झिझक रहती है। वरिष्ठ अधिकारियों से बात करने में घबराते हैं। हीन भावना के कारण सफलता हासिल नहीं कर पाते।",
+        35: "किसी तरह जिंदगी काटने में यकीन रखते हैं। नया करने का जोश नहीं होता। दूसरों के भरोसे अपना काम छोड़कर बेफिक्र हो जाते हैं।",
+        36: "जुबान के पक्के और स्वाभिमानी। जिम्मेदारी पूरा करके ही चैन की सांस लेते हैं। मेहनत से भारी सफलता पाते हैं, मानसिक रूप से सुलझे हुए।",
+        37: "साझेदारी और सहयोग का अंक। किस्मत तभी चमकती है जब किसी के साथ मिलकर काम करते हैं। मेहनत से अपनी किस्मत खुद लिखते हैं।",
+        38: "चंचलता और अस्थिरता। किसी एक काम या विषय पर ज्यादा देर टिक नहीं सकते। 'फील्ड वर्क' या भाग-दौड़ वाले कामों में ज्यादा कामयाब।",
+        39: "बहादुरी का प्रतीक। दिमाग बहुत तेज चलता है। रुकावटें आएं तो भी रास्ता नहीं बदलते। अपनी मेहनत के बलबूते पर शानदार सफलता।",
+        40: "नास्तिक दिखें, लेकिन अंदर से धार्मिक होते हैं। अपनी ही दुनिया में खोए रहते हैं। काफी धक्के खाने के बाद ही सफलता नसीब होती है।",
+        41: "साधारण परिवार में जन्म लेने के बावजूद ऊंचाइयों तक पहुंचते हैं। मेहनत से लक्ष्य हासिल कर लेते हैं। काबिलियत तारीफ के लायक होती है।",
+        42: "दूसरों पर निर्भर माने जाते हैं। टैलेंट की कमी नहीं होती, लेकिन सही इस्तेमाल नहीं कर पाते। दूसरों के सहारे ही आगे बढ़ते हैं।",
+        43: "रुकावटों का अंक है। अक्सर नाकामी का सामना करना पड़ता है। कोई भी काम बिना बाधा के पूरा नहीं होता। विवाद और कलह लगे रहते हैं।",
+        44: "दूसरों की मदद के बिना कोई काम नहीं कर पाते। दुर्भाग्य से, जब भी किसी का सहारा लेते हैं, इन्हें धोखा ही मिलता है।",
+        45: "ऊंचे ख्वाब देखने वाले और पूरी तरह सफल होते हैं। हालात के हिसाब से खुद को ढालने की गजब की खूबी होती है। जवानी में ही लक्ष्य हासिल।",
+        46: "किस्मत चमकाने वाला अंक। जीवन में जो भी होता है, वह अचानक होता है। अपना हर काम खास अंदाज में करते हैं, समाज में तारीफ होती है।",
+        47: "अनिश्चितता का अंक। जीवन में कब क्या हो जाए, कहा नहीं जा सकता। तेज दिमाग के बावजूद अक्सर गरीबी और साधारण जीवन जीते हैं।",
+        48: "अक्लमंदी, टैलेंट और सादगी। रहन-सहन सादा होता है, लेकिन समाज को कुछ ऐसा देकर जाते हैं जिससे नाम पीढ़ियों तक अमर हो जाता है।",
+        49: "काफी अंतर्मुखी होते हैं। समाज के संघर्षों से जल्दी हार मान लेते हैं। लोगों से कम मिलते हैं और दोस्तों की गिनती न के बराबर होती है।",
+        50: "गजब की कल्पना-शक्ति। दयालु, भावुक और ख्यालों की दुनिया में रहते हैं। जीवन की कड़वी सच्चाइयों से दूर। मानसिक अशांति बनी रहती है।",
+        51: "पूर्ण विजय का अंक। जीवन में संघर्ष कम आता है, लेकिन जब आता है तो दिमाग तेजी से काम करता है। दुश्मनों पर जीत हासिल करते हैं।",
+        52: "हार और परेशानियों का प्रतीक। जीवन में सुकून के पल बहुत कम होते हैं। जिंदगी हमेशा उथल-पुथल और मुश्किलों से भरी रहती है।",
+        53: "एक रहस्यमयी अंक। सोचते कुछ और हैं और बोलते कुछ और हैं। चेहरे के भावों से मन की बात पढ़ना नामुमकिन। बेहतरीन गुप्तचर बन सकते हैं।",
+        54: "नेतृत्व क्षमता का अंक। समाज और देश का मार्गदर्शन करने की काबिलियत होती है। तुरंत फैसले लेने की क्षमता से मंजिल पा लेते हैं।",
+        55: "विद्वान होने का प्रतीक। बातचीत में माहिर और अपनी तर्कों से विरोधियों को चुप करा देते हैं। बोलने की कला से खूब नाम कमाते हैं।",
+        56: "रुकावटों को दर्शाता है। योजनाएं अक्सर गलत और अव्यवस्थित होती हैं, सफलता नहीं मिलती। मित्र भी कमजोर और अदूरदर्शी होते हैं।",
+        57: "आत्मविश्वास से भरे, हंसमुख और खुशियां बांटने वाले। व्यापार या पेशे में शानदार कामयाबी मिलती है। लगातार आगे बढ़ना मूलमंत्र है।",
+        58: "जिंदगी एक खुली किताब की तरह होती है। मन में न छल-कपट होता है, न हीन भावना। जीवन में हर तरह से सफल होते हैं।",
+        59: "जितने उतार-चढ़ाव ये देखते हैं, उतने शायद ही किसी ने देखे हों। चरित्र में कमजोर हो सकते हैं। पैसा कमाना ही इनका मकसद होता है।",
+        60: "मुस्कुराते रहना और माहौल को खुशनुमा बनाए रखना खासियत है। चिकित्सा, देश सेवा और समाज सुधार के कामों में बहुत सफल होते हैं।",
+        61: "खुद पर नियंत्रण रखने वाले और कम बोलने वाले। शुरुआत में संघर्ष करना पड़े, लेकिन जल्द ही कामयाबी के शिखर पर पहुंच जाते हैं।",
+        62: "सैन्य नेतृत्व के क्षेत्र में बहुत शुभ। काम करने की रफ्तार तूफान जैसी होती है और खुद पर अटूट विश्वास होता है।",
+        63: "परोपकार का अंक। दूसरों की मदद करना और धार्मिक कामों में लगे रहना स्वभाव है। समाज में बहुत इज्जत और मान-सम्मान मिलता है।",
+        64: "मानसिक तनाव और जीवन में अस्थिरता का प्रतीक। ऐसे लोगों का गृहस्थ जीवन बहुत सुखद या शांत नहीं माना जाता।",
+        65: "दुर्घटनाओं को दर्शाने वाला अंक। लगातार कोई न कोई अप्रिय घटना होती रहती है। पूरा जीवन संघर्ष करते हुए बीतता है।",
+        66: "पूर्ण सफलता का सूचक। जिस फील्ड में जाते हैं, पूरी कामयाबी हासिल करते हैं। लक्ष्यों को लेकर हमेशा सचेत रहते हैं।",
+        67: "स्वभाव से सीधे, सात्विक और स्पष्ट वक्ता होते हैं। सामाजिक रूप से बहुत सम्मान और प्रसिद्धि मिलती है।",
+        68: "हमेशा घबराए और परेशान रहते हैं। जिंदगी में उथल-पुथल मची रहती है। इसे धोखे और छल-कपट का अंक भी माना जाता है।",
+        69: "यश और कीर्ति का अंक। अच्छे कामों से खूब पैसा और नाम कमाते हैं। जीवन बहुत सुखी, समृद्ध और शानो-शौकत वाला होता है।",
+        70: "सौभाग्य का अंक। जिस काम में हाथ डालते हैं, पूरी कामयाबी मिलती है। बुढ़ापा बेहद सुखद और शांतिपूर्ण गुजरता है।",
+        71: "बाधाओं का प्रतीक। रास्ते में लगातार अड़चन आती है, चैन से नहीं बैठ पाते। मन में हमेशा अनजाना डर बना रहता है।",
+        72: "कड़ी मेहनत का अंक। लंबे संघर्ष के बाद ही कामयाबी मिलती है। इतनी मेहनत के बावजूद चेहरे पर निराशा के भाव नहीं दिखते।",
+        73: "साधारण अंक। जरूरत से ज्यादा मेहनत करते हैं, लेकिन सफलता मुश्किल से नसीब होती है। रुकावटों के कारण हौसला टूट जाता है।",
+        74: "सफलता और श्रेष्ठता का प्रतीक। आम परिवार में जन्म लेकर भी बहुत ऊंचे मुकाम हासिल करते हैं। मुश्किल हालात से लड़कर जीतते हैं।",
+        75: "भौतिक सुख-सुविधाओं का अंक। ऐशो-आराम पसंद करने वाले और भगवान में कम आस्था रखने वाले होते हैं। पैसों की तंगी बनी रहती है।",
+        76: "दुर्भाग्य को दर्शाने वाला अंक। कड़ी मेहनत के बावजूद मनचाही सफलता नहीं मिलती। जिंदगी में कोई समस्या हमेशा साथ चलती है।",
+        77: "वैराग्य या विरक्ति का अंक। स्वार्थ की भावना बहुत ज्यादा होती है। हर काम में अपना फायदा देखते हैं, सम्मान नहीं मिलता।",
+        78: "धन और दौलत का प्रतीक। अचानक पैसा मिलने के मौके आते हैं। जिस व्यापार में दूसरे असफल होते हैं, उसमें ये सफलता पाते हैं।",
+        79: "परमार्थ और दूसरों का भला करने का प्रतीक। अपना नुकसान सहकर भी दूसरों की मदद करते हैं। सार्वजनिक कामों में आगे रहते हैं।",
+        80: "पूरी तरह से कामयाबी का परिचायक। मेहनत से ऊंचाइयों को छूते हैं। धर्म, अर्थ, काम और मोक्ष में बेहद सफल और संतुष्ट रहते हैं।"
+    };
 
-        const words = text.split(/\s+/);
-        let baseRow = [];
+    const guideContentHI = `
+        <div style="font-size:0.88rem; line-height:1.6; color:#4a2c11;">
+            <p><strong>अंक ज्योतिष में 1 से 9 तक के अंक 'मूल अंक' कहलाते हैं, जबकि 10 से 80 की संख्याएं 'यौगिक अंक' (Compound Numbers) कहलाती हैं।</strong></p>
+            <h4 style="color:#d35400; margin:14That sounds incredibly frustrating! When your clicks stop registering, it makes navigating your device almost impossible.
 
-        if (stoopMode === 'word') {
-            // Method 1: Traditional length method
-            baseRow.push(calculateRoot(words.length));
-            for (let word of words) {
-                let clean = word.replace(/[^a-zA-Z0-9]/g, '');
-                if (clean.length > 0) {
-                    baseRow.push(calculateRoot(clean.length));
-                }
-            }
-        } else {
-            // Method 2: Chaldean numerical value per word
-            baseRow.push(calculateRoot(words.length));
-            for (let word of words) {
-                let clean = word.toUpperCase().replace(/[^A-Z]/g, '');
-                let wordSum = 0;
-                for (let char of clean) {
-                    if (chaldeanMap[char]) wordSum += chaldeanMap[char];
-                }
-                if (wordSum > 0) {
-                    baseRow.push(calculateRoot(wordSum));
-                }
-            }
-        }
+To give you the most accurate fix, I need a bit more context since the solution varies wildly depending on the hardware. 
 
-        if (baseRow.length < 2) {
-            alert("कृपया कम से कम दो शब्दों का प्रश्न दर्ज करें (Please write a longer question).");
-            return;
-        }
+**What kind of device are you using (Windows PC, Mac, laptop, or a smartphone/tablet), and are you using a physical mouse, a trackpad, or a touchscreen?**
 
-        let pyramid = [baseRow];
+In the meantime, assuming you are on a computer and need to navigate or troubleshoot without being able to click, here are a few quick things you can try using just your keyboard:
 
-        // Pyramid generation loop
-        while (pyramid[pyramid.length - 1].length > 1) {
-            let current = pyramid[pyramid.length - 1];
-            let next = [];
-            for (let i = 0; i < current.length - 1; i++) {
-                next.push(calculateRoot(current[i] + current[i + 1]));
-            }
-            pyramid.push(next);
-        }
+*   **Restart your computer:** A simple reboot often fixes temporary driver glitches. 
+    *   *Windows:* Press the `Windows` key, use the `Tab` and arrow keys to navigate to the power icon, and hit `Enter`. Alternatively, press `Ctrl + Alt + Delete` and use the `Tab` key to find the power button in the bottom right corner.
+    *   *Mac:* Press `Control + Command + Power button` to force a restart.
+*   **Check the connection:** If you are using an external mouse, unplug it and plug it back into a different USB port. If it is a wireless Bluetooth mouse, try turning the physical switch on the bottom off and on again, or replace the batteries.
+*   **Clean the surface:** If you are using a laptop trackpad or a touchscreen, gently wipe it down with a dry microfiber cloth. Dirt, crumbs, or moisture can sometimes register as a continuous "ghost" click, which prevents your actual clicks from working.
 
-        // Render graphical pyramid
-        const graphContainer = document.getElementById('stoopPyramidGraph');
-        graphContainer.innerHTML = '';
-
-        for (let r = 0; r < pyramid.length; r++) {
-            const tier = document.createElement('div');
-            tier.className = 'pyramid-tier';
-            const isSummit = (r === pyramid.length - 1);
-
-            pyramid[r].forEach(num => {
-                const brick = document.createElement('div');
-                brick.className = `pyramid-brick ${isSummit ? 'summit' : ''}`;
-                brick.innerText = num;
-                tier.appendChild(brick);
-            });
-            graphContainer.appendChild(tier);
-        }
-
-        const apexDigit = pyramid[pyramid.length - 1][0];
-        const verdict = stoopMeanings[apexDigit] || stoopMeanings[1];
-
-        currentStoopResult = {
-            question: text,
-            apexDigit: apexDigit,
-            verdict: verdict
-        };
-
-        document.getElementById('stoopQuestionDisplay').innerText = `"${text}"`;
-        document.getElementById('stoopFinalDigit').innerText = apexDigit;
-        document.getElementById('stoopHeadline').innerText = verdict.title;
-        document.getElementById('stoopMeaningDesc').innerText = verdict.desc;
-
-        const badge = document.getElementById('stoopBadge');
-        badge.className = `summit-badge ${verdict.status}`;
-        badge.innerText = verdict.badge;
-
-        document.getElementById('reportAreaStoop').style.display = 'block';
-    }
-
-    // Default Init
-    document.addEventListener('DOMContentLoaded', () => {
-        const todayStr = new Date().toISOString().split('T')[0];
-        document.getElementById('chogDateInput').value = todayStr;
-        document.getElementById('panchangDateInput').value = todayStr;
-        document.getElementById('guideContent').innerHTML = guideContentHI;
-
-        calculateChoghadiya();
-        calculateStoop();
-    });
-</script>
-
-<!-- PDF Exporter -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-</body>
-</html>
+What specific device and mouse setup are we troubleshooting today?
