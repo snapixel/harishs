@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>स्तूप पद्धति (Stoop Paddhati Calculator)</title>
+    
+    <!-- HTML2PDF Library for Export Functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #d35400; /* Astro-themed deep orange/red */
+            --primary-hover: #b33939;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #6c757d;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0 0 20px 0;
+            line-height: 1.6;
+        }
+
+        .nav-header {
+            background-color: var(--primary-color); 
+            padding: 15px 20px; 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-header a {
+            color: white; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 95%;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 1.8rem;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #444;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px; 
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(211, 84, 0, 0.1);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fffaf7;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h3 {
+            margin-top: 0;
+            color: #444;
+            font-size: 1.2rem;
+        }
+
+        .pyramid-container {
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            letter-spacing: 6px;
+            line-height: 2;
+            margin: 20px 0;
+            background: #ffffff;
+            padding: 20px 15px;
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            overflow-x: auto; 
+            white-space: nowrap;
+        }
+
+        .final-stoop {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+
+        .interpretation {
+            margin-top: 20px;
+            padding: 18px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        .interpretation em {
+            color: var(--text-muted);
+            display: block;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+            .pyramid-container {
+                font-size: 1rem;
+                letter-spacing: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Header -->
+<div class="nav-header">
+    <a href="index.html">&#8592; मुख्य पृष्ठ (Home)</a>
+    <span style="font-weight: 600; font-size: 18px;">Astro Pro</span>
+</div>
+
+<div class="container">
+    <h1>स्तूप पद्धति</h1>
+    <p class="subtitle">अंक गणित एवं भविष्य फल की प्राचीन पद्धति / Ancient System of Numerology</p>
+    
+    <div class="form-group">
+        <label for="userInput">प्रश्न या नाम दर्ज करें / Enter your question or name:</label>
+        <input type="text" id="userInput" placeholder="e.g. Shall I pass in my Examination">
+    </div>
+    
+    <button onclick="calculateStoop()">स्तूप बनाएं और फल जानें / Generate Stoop & Result</button>
+
+    <div class="result-box" id="resultBox">
+        <h3>गठन और पिरामिड (स्तूप):</h3>
+        <div class="pyramid-container" id="pyramidOutput"></div>
+        
+        <div class="interpretation" id="interpretationOutput"></div>
+        
+        <!-- Download PDF Button -->
+        <button id="downloadBtn" onclick="downloadPDF()" style="margin-top: 20px; background-color: #2c3e50;">
+            परिणाम डाउनलोड करें / Download Result (PDF)
+        </button>
+    </div>
+</div>
+
+<script>
+    function getSingleDigit(num) {
+        while (num > 9) {
+            num = num.toString().split('').reduce((a, b) => parseInt(a) + parseInt(b), 0);
+        }
+        return num;
+    }
+
+    function calculateStoop() {
+        let text = document.getElementById('userInput').value.trim();
+        if (!text) {
+            alert('कृपया कुछ टेक्स्ट दर्ज करें! / Please enter some text!');
+            return;
+        }
+
+        let words = text.split(/\s+/);
+        let initialNumbers = [];
+
+        initialNumbers.push(getSingleDigit(words.length));
+
+        for (let word of words) {
+            let cleanWord = word.replace(/[^a-zA-Z0-9\u0900-\u097F]/g, '');
+            if (cleanWord.length > 0) {
+                initialNumbers.push(getSingleDigit(cleanWord.length));
+            }
+        }
+
+        let pyramid = [initialNumbers];
+
+        while (pyramid[pyramid.length - 1].length > 1) {
+            let currentRow = pyramid[pyramid.length - 1];
+            let nextRow = [];
+            for (let i = 0; i < currentRow.length - 1; i++) {
+                let sum = currentRow[i] + currentRow[i+1];
+                nextRow.push(getSingleDigit(sum));
+            }
+            pyramid.push(nextRow);
+        }
+
+        let pyramidHTML = '';
+        for (let row of pyramid) {
+            pyramidHTML += row.join(' ') + '<br>';
+        }
+
+        let finalDigit = pyramid[pyramid.length - 1][0];
+        
+        document.getElementById('pyramidOutput').innerHTML = pyramidHTML;
+        
+        let meaning = getStoopMeaning(finalDigit);
+        let interpretationHTML = `<strong>अंतिम स्तूपांक / Final Number: <span class="final-stoop">${finalDigit}</span></strong><br><br>${meaning}`;
+        
+        document.getElementById('interpretationOutput').innerHTML = interpretationHTML;
+        document.getElementById('resultBox').style.display = 'block';
+    }
+
+    function getStoopMeaning(digit) {
+        const meanings = {
+            1: "<strong>अंक 1 (पूर्ण सफलता) / Number 1 (Complete Success):</strong><br>यह अंक पूर्ण सफलता का सूचक है। शीघ्र ही आपको कोई ऐसा व्यक्ति मिलेगा जो कि आपकी कार्य-सिद्धि में सहायक होगा और उसके सहयोग से आप अगले कुछ ही समय में सफलता प्राप्त कर सकेंगे।<br><em>This number indicates complete success. You will soon meet someone who will assist you in accomplishing your task, leading to quick success in the near future.</em>",
+            2: "<strong>अंक 2 (अनिश्चितता) / Number 2 (Uncertainty):</strong><br>यह अंक अनिश्चितता का सूचक है। संभवतः आगे के कुछ समय में बाधाएं आएंगी और प्रयत्न करने पर भी आप-अपने इस कार्य में सफलता प्राप्त नहीं कर सकेंगे।<br><em>This number indicates uncertainty. Obstacles may arise in the near future, making success unlikely despite your efforts.</em>",
+            3: "<strong>अंक 3 (व्यय व सहयोग) / Number 3 (Expenses & Cooperation):</strong><br>यद्यपि आप कार्य की सफलता के लिए प्रयत्नशील हैं परन्तु निकट भविष्य में ही व्यय ज्यादा होगा और किसी व्यक्ति के सहयोग से ही आप-अपने उद्देश्य में सफलता प्राप्त कर सकेंगे। आपके प्रयत्न निश्चय ही आपको सफलता देंगे।<br><em>Although you are striving for success, expenses will be high in the near future. You will achieve your goal only with someone's cooperation, but your efforts will ultimately bring success.</em>",
+            4: "<strong>अंक 4 (बाधाएं व अड़चनें) / Number 4 (Obstacles & Hurdles):</strong><br>आपके इस कार्य की पूर्णता में जरूरत से ज्यादा बाधाएं तथा अड़चनें हैं। जितनी ही ज्यादा आप इन बाधाओं को हटाने का प्रयत्न करेंगे उतनी ही ज्यादा नई-नई समस्याएं आपके सामने पैदा होती रहेंगी। कार्य की सफलता अनिश्चित है।<br><em>There are excessive obstacles in completing this task. The more you try to remove them, the more new problems will arise. Success is highly uncertain.</em>",
+            5: "<strong>अंक 5 (पूर्ण सफलता व विजय) / Number 5 (Complete Success & Victory):</strong><br>यह अंक पूर्ण सफलता का सूचक है। कार्य-सिद्धि यात्रा के माध्यम से ही हो सकेगी। आपको चाहिए कि आप इससे सम्बन्धित अधिकारियों से पत्र-व्यवहार करें या व्यक्तिगत रूप से मिलें तथा अपने प्रयत्नों में तेजी लावें। निश्चय ही विजय आपकी है।<br><em>This number indicates complete success. Task completion may involve travel. You should contact relevant officials or meet them personally to accelerate your efforts. Victory is certainly yours.</em>",
+            6: "<strong>अंक 6 (अनुकूल समय) / Number 6 (Favorable Time):</strong><br>समय आपके अनुकूल चल रहा है। किसी मित्र या महिला के सहयोग से आप-अपने उद्देश्यों में सफलता प्राप्त कर सकेंगे। कार्य की पूर्णता से शीघ्र ही आपको प्रसन्नता प्राप्त होगी।<br><em>The time is favorable for you. With the help of a friend or a woman, you will achieve your objectives. The completion of the task will soon bring you happiness.</em>",
+            7: "<strong>अंक 7 (बाधाओं के बाद सफलता) / Number 7 (Success After Obstacles):</strong><br>यह अंक कार्य-सफलता का सूचक है। यद्यपि अभी कुछ दिनों तक आपको बाधाओं का सामना करना पड़ेगा, परन्तु ये बाधाएं जल्दी ही समाप्त हो जाएंगी और आप सफलता प्राप्त कर सकेंगे। इस कार्य की सफलता से समाज में आपको यश तथा सम्मान भी मिलेगा।<br><em>This number indicates success. Although you will face obstacles for a few days, they will soon disappear. This success will also bring you fame and respect in society.</em>",
+            8: "<strong>अंक 8 (संघर्ष और विरोध) / Number 8 (Struggle & Opposition):</strong><br>कार्य में सफलता निश्चित नहीं है। आपके विरोधी तेज हैं और उनके प्रयत्न आपसे ज्यादा बढ़े-चढ़े हैं। आपके बारे में गलत भ्रम बन गया है, जिसकी वजह से आपकी सफलता संदिग्ध हो गई है। कार्य-पूर्णता में काफी बाधाएं, धन-हानि तथा परेशानियां दिखाई पड़ रही हैं।<br><em>Success is not certain. Your opponents are strong and their efforts exceed yours. Misconceptions have formed about you, making success doubtful. Expect severe obstacles, financial loss, and troubles.</em>",
+            9: "<strong>अंक 9 (शत्रु पराजय व लक्ष्य प्राप्ति) / Number 9 (Enemy Defeat & Goal Achievement):</strong><br>शीघ्र ही शत्रु परास्त होंगे, तथा आपका जो लक्ष्य है उस लक्ष्य में आप पूर्णता प्राप्त कर सकेंगे। आप देखेंगे कि अभी तक जितनी परेशानियां आपके चारों ओर आ रही थीं वे परेशानियां दूर हो गई हैं और आप-अपने लक्ष्य की ओर तीव्रता के साथ बढ़ रहे हैं। सफलता आपके सामने ही है। किसी भी प्रकार से निराश या हताश होने की जरूरत नहीं है।<br><em>Enemies will soon be defeated, and you will achieve your goals. All surrounding troubles will vanish, and you will move rapidly toward success. Success is right in front of you; there is no need to despair.</em>"
+        };
+        return meanings[digit] || "अज्ञात फल / Unknown Result";
+    }
+
+    function downloadPDF() {
+        const element = document.getElementById('resultBox');
+        const downloadBtn = document.getElementById('downloadBtn');
+        
+        // Hide button during PDF generation so it doesn't appear in the document
+        downloadBtn.style.display = 'none';
+
+        const opt = {
+            margin:       15,
+            filename:     'Stoop_Paddhati_Result.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save().then(() => {
+            // Restore the button after saving
+            downloadBtn.style.display = 'block';
+        });
+    }
+</script>
+
+</body>
+</html>
