@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="robots" content="noindex, nofollow, noarchive">
     <title>Astro Pro - Numerology, Choghadiya, Panchang & Stoop Paddhati</title>
 
     <!-- PWA Meta Tags -->
@@ -749,32 +750,41 @@
         .pada-nak-name { font-weight: 600; color: #1e293b; }
         .pada-time { font-weight: 700; color: #059669; text-align: right; }
 
-        .floating-action-bar {
+        /* Report Buttons */
+        .report-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
             margin-top: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #ffffff;
-            padding: 14px 18px;
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border-light);
         }
-        .floating-bar-text { font-size: 0.78rem; color: var(--text-muted); }
-        .btn-action-small {
+        .btn-download-pdf {
             background: #00897b;
             color: #ffffff;
             border: none;
-            padding: 10px 16px;
-            border-radius: 12px;
-            font-size: 0.8rem;
+            padding: 13px 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.84rem;
             font-weight: 800;
-            cursor: pointer;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 6px;
+            cursor: pointer;
         }
-        .btn-action-small.brown { background: #b45309; }
-        .btn-action-small.red { background: #b33939; }
+        .btn-share-wa {
+            background: #25d366;
+            color: #ffffff;
+            border: none;
+            padding: 13px 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.84rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+        }
 
         /* ================= STOOP PADDHATI UI ================= */
         .mode-toggle-bar {
@@ -1273,7 +1283,7 @@
         </div>
     </section>
 
-    <!-- ==================== TAB 4: STOOP PADDHATI ==================== -->
+    <!-- ==================== TAB 4: STOOP PADDHATI (NEW) ==================== -->
     <section id="tabStoop" class="page-content" style="display:none;">
         <div class="hero-banner stoop">
             <div class="hero-pill-tag">
@@ -1507,7 +1517,7 @@
         let ampm = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12 || 12;
         minutes = minutes < 10 ? '0' + minutes : minutes;
-        return `${hours}:${minutes}${ampm}`;
+        return `${hours}:${minutes} ${ampm}`;
     }
 
     function formatTime24(dateObj) {
@@ -1636,19 +1646,624 @@
 
     const guideContentHI = `
         <div style="font-size:0.88rem; line-height:1.6; color:#4a2c11;">
-            <p><strong>अंक ज्योतिष में 1 से 9 तक के अंक 'मूल अंक' कहलाते हैं, जबकि 10 से 80 की संख्याएं 'यौगिक अंक' (Compound Numbers) कहलाती हैं।</strong></p>
-            <h4 style="color:#d35400; margin:14That sounds incredibly frustrating! When your clicks stop registering, it makes navigating your device almost impossible.
+            <p><strong>अंक ज्योतिष (विशेषकर कैल्डियन प्रणाली) में 1 से 9 तक के अंक 'मूल अंक' (Root Numbers) कहलाते हैं, जबकि 10 से 80 या उससे आगे की संख्याएं 'यौगिक अंक' (Compound Numbers) कहलाती हैं।</strong></p>
+            <h4 style="color:#d35400; margin:14px 0 6px 0;">1. यौगिक अंकों (10-80) का क्या महत्व है?</h4>
+            <p>कैल्डियन ज्योतिष के अनुसार, मूल अंक (1-9) आपके बाहरी स्वरूप को दर्शाता है। लेकिन यौगिक अंक (Compound Number) आपके आंतरिक स्वरूप, छिपे हुए भाग्य और कर्मों (Karmic Destiny) को दर्शाता है。</p>
+            <h4 style="color:#d35400; margin:14px 0 6px 0;">2. मुख्य श्रेणियां (Series of Numbers)</h4>
+            <ul style="padding-left:18px; margin:0;">
+                <li><strong>मूल अंक 1 श्रृंखला:</strong> (10, 19, 28, 37, 46...) सूर्य की ऊर्जा।</li>
+                <li><strong>मूल अंक 2 श्रृंखला:</strong> (11, 20, 29, 38, 47...) चंद्रमा का प्रभाव।</li>
+                <li><strong>मूल अंक 3 श्रृंखला:</strong> (12, 21, 30, 39, 48...) गुरु का प्रभाव।</li>
+                <li><strong>मूल अंक 4 श्रृंखला:</strong> (13, 22, 31, 40, 49...) राहु का प्रभाव।</li>
+                <li><strong>मूल अंक 5 श्रृंखला:</strong> (14, 23, 32, 41, 50...) बुध का प्रभाव।</li>
+                <li><strong>मूल अंक 6 श्रृंखला:</strong> (15, 24, 33, 42, 51...) शुक्र का प्रभाव।</li>
+                <li><strong>मूल अंक 7 श्रृंखला:</strong> (16, 25, 34, 43, 52...) केतु का प्रभाव।</li>
+                <li><strong>मूल अंक 8 श्रृंखला:</strong> (17, 26, 35, 44, 53...) शनि का प्रभाव।</li>
+                <li><strong>मूल अंक 9 श्रृंखला:</strong> (18, 27, 36, 45, 54...) मंगल का प्रभाव।</li>
+            </ul>
+            <h4 style="color:#d35400; margin:14px 0 6px 0;">3. अति शुभ एवं सतर्कता अंक</h4>
+            <p><strong style="color:#15803d;">अति भाग्यशाली अंक:</strong> 14, 19, 21, 23, 24, 27, 33, 37, 45, 46, 51</p>
+            <p><strong style="color:#be123c;">सतर्कता कार्मिक अंक:</strong> 16 (पतन), 18 (कलह), 26 (धोखा), 29 (अनिश्चितता), 43 व 44 (अवरोध)</p>
+        </div>
+    `;
 
-To give you the most accurate fix, I need a bit more context since the solution varies wildly depending on the hardware. 
+    const guideContentEN = `
+        <div style="font-size:0.88rem; line-height:1.6; color:#4a2c11;">
+            <p><strong>In Chaldean Numerology, numbers 1-9 represent single Root Numbers, while numbers 10-80 are Karmic Compound Numbers.</strong></p>
+            <h4 style="color:#d35400; margin:14px 0 6px 0;">1. Outer vs Inner Persona</h4>
+            <p>Your Root number shows your visible outer personality, whereas the Compound number governs your inner spiritual reality and karmic destiny.</p>
+            <h4 style="color:#d35400; margin:14px 0 6px 0;">2. Series of Numbers</h4>
+            <ul style="padding-left:18px; margin:0;">
+                <li><strong>Series 1 (Sun):</strong> 10, 19, 28, 37, 46...</li>
+                <li><strong>Series 2 (Moon):</strong> 11, 20, 29, 38, 47...</li>
+                <li><strong>Series 3 (Jupiter):</strong> 12, 21, 30, 39, 48...</li>
+                <li><strong>Series 4 (Rahu):</strong> 13, 22, 31, 40, 49...</li>
+                <li><strong>Series 5 (Mercury):</strong> 14, 23, 32, 41, 50...</li>
+                <li><strong>Series 6 (Venus):</strong> 15, 24, 33, 42, 51...</li>
+                <li><strong>Series 7 (Ketu):</strong> 16, 25, 34, 43, 52...</li>
+                <li><strong>Series 8 (Saturn):</strong> 17, 26, 35, 44, 53...</li>
+                <li><strong>Series 9 (Mars):</strong> 18, 27, 36, 45, 54...</li>
+            </ul>
+            <h4 style="color:#d35400; margin:14px 0 6px 0;">3. Highly Powerful vs Warning Numbers</h4>
+            <p><strong style="color:#15803d;">Highly Lucky Numbers:</strong> 14, 19, 21, 23, 24, 27, 33, 37, 45, 46, 51</p>
+            <p><strong style="color:#be123c;">Challenging Karmic Numbers:</strong> 16, 18, 26, 29, 43, 44</p>
+        </div>
+    `;
 
-**What kind of device are you using (Windows PC, Mac, laptop, or a smartphone/tablet), and are you using a physical mouse, a trackpad, or a touchscreen?**
+    function toggleLang() {
+        isEnglish = !isEnglish;
+        document.getElementById('langBtnText').innerText = isEnglish ? "HI" : "EN";
 
-In the meantime, assuming you are on a computer and need to navigate or troubleshoot without being able to click, here are a few quick things you can try using just your keyboard:
+        document.getElementById('numHeroTitle').innerText = isEnglish ? "Name & Birth Numerology" : "नाम एवं जन्म अंक ज्योतिष";
+        document.getElementById('numHeroSubtitle').innerText = isEnglish ? "Ancient Chaldean System, Compound 1-80, Psychic, Destiny & Lo Shu Matrix." : "प्राचीन कैल्डियन प्रणाली, 1-80 यौगिक अंक, मूलांक, भाग्यांक, एवं लो शु ग्रिड का संपूर्ण विश्लेषण।";
+        document.getElementById('guideBtnLabel').innerText = isEnglish ? "Chaldean Mystery Guide" : "कैल्डियन रहस्य गाइड";
+        document.getElementById('lblFullName').innerText = isEnglish ? "ENTER FULL NAME (ENGLISH)" : "पूरा नाम दर्ज करें (ENGLISH)";
+        document.getElementById('lblDOB').innerText = isEnglish ? "BIRTH DATE (OPTIONAL)" : "जन्म तिथि (वैकल्पिक / OPTIONAL)";
+        document.getElementById('btnCalcNum').innerText = isEnglish ? "Calculate Numerology" : "अंक ज्योतिष गणना करें";
 
-*   **Restart your computer:** A simple reboot often fixes temporary driver glitches. 
-    *   *Windows:* Press the `Windows` key, use the `Tab` and arrow keys to navigate to the power icon, and hit `Enter`. Alternatively, press `Ctrl + Alt + Delete` and use the `Tab` key to find the power button in the bottom right corner.
-    *   *Mac:* Press `Control + Command + Power button` to force a restart.
-*   **Check the connection:** If you are using an external mouse, unplug it and plug it back into a different USB port. If it is a wireless Bluetooth mouse, try turning the physical switch on the bottom off and on again, or replace the batteries.
-*   **Clean the surface:** If you are using a laptop trackpad or a touchscreen, gently wipe it down with a dry microfiber cloth. Dirt, crumbs, or moisture can sometimes register as a continuous "ghost" click, which prevents your actual clicks from working.
+        document.getElementById('stTotalTitle').innerText = isEnglish ? "Compound No" : "संयुक्त अंक";
+        document.getElementById('stRootTitle').innerText = isEnglish ? "Name Root" : "नामांक (ROOT)";
+        document.getElementById('stPsyTitle').innerText = isEnglish ? "Psychic" : "मूलांक (PSYCHIC)";
+        document.getElementById('stDesTitle').innerText = isEnglish ? "Destiny" : "भाग्यांक (DESTINY)";
 
-What specific device and mouse setup are we troubleshooting today?
+        document.getElementById('titleRootEffect').innerText = isEnglish ? "Name Root Influence" : "नामांक का प्रभाव";
+        document.getElementById('titleCompEffect').innerText = isEnglish ? "Compound Number Insights" : "संयुक्त अंक का रहस्य एवं फल";
+        document.getElementById('lblLuckyElementsTitle').innerText = isEnglish ? "Lucky Elements & Vibration" : "शुभ तत्व एवं ऊर्जा";
+        document.getElementById('lblColor').innerText = isEnglish ? "Lucky Color" : "शुभ रंग";
+        document.getElementById('lblGem').innerText = isEnglish ? "Gemstone" : "रत्न (Gemstone)";
+        document.getElementById('lblDays').innerText = isEnglish ? "Lucky Days" : "शुभ वार (Days)";
+        document.getElementById('lblYear').innerText = isEnglish ? "Personal Year" : "व्यक्तिगत वर्ष";
+        document.getElementById('lblLoshuTitle').innerText = isEnglish ? "Lo Shu Grid Matrix Analysis" : "लो शु ग्रिड विश्लेषण (LO SHU GRID MATRIX)";
+        document.getElementById('lblLoshuSub').innerText = isEnglish ? "Energy Balance of Birth Date Numbers" : "जन्म तिथि के अंकों की उपस्थिति एवं ऊर्जा संतुलन";
+
+        document.getElementById('botNavNum').innerText = isEnglish ? "Numerology" : "अंक शास्त्र";
+        document.getElementById('botNavChog').innerText = isEnglish ? "Choghadiya" : "चौघड़िया";
+        document.getElementById('botNavPanchang').innerText = isEnglish ? "Panchang" : "पंचांग";
+        document.getElementById('botNavStoop').innerText = isEnglish ? "Pyramid" : "स्तूप प्रश्न";
+
+        document.getElementById('guideContent').innerHTML = isEnglish ? guideContentEN : guideContentHI;
+
+        if (currentData.name) calculateNumerology(true);
+    }
+
+    function calculateNumerology(isRecalc = false) {
+        try {
+            const nameEl = document.getElementById('nameInput');
+            if (!nameEl) return;
+            const rawInput = nameEl.value.toUpperCase().trim();
+            const dobInput = document.getElementById('dobInput')?.value || "";
+            const sanitizedInput = rawInput.replace(/[^A-Z]/g, '');
+
+            if (!isRecalc && !sanitizedInput) {
+                alert("कृपया मान्य अंग्रेजी नाम दर्ज करें (Please enter a valid English name).");
+                return;
+            }
+
+            currentData.name = rawInput;
+
+            let totalScore = 0;
+            let breakdownParts = [];
+            for (let char of sanitizedInput) {
+                if (chaldeanMap[char]) {
+                    totalScore += chaldeanMap[char];
+                    breakdownParts.push(`${char}(${chaldeanMap[char]})`);
+                }
+            }
+
+            let originalTotal = totalScore;
+            let effectiveCompound = totalScore;
+            let reductionMsg = "";
+
+            if (effectiveCompound > 80) {
+                effectiveCompound = effectiveCompound.toString().split('').reduce((s, d) => s + parseInt(d, 10), 0);
+                reductionMsg = isEnglish ? ` ➔ ${effectiveCompound} (Reduced)` : ` ➔ ${effectiveCompound} (घटाया गया)`;
+            }
+
+            const rootScore = calculateRoot(effectiveCompound);
+            currentData.compound = effectiveCompound;
+            currentData.originalTotal = originalTotal;
+            currentData.root = rootScore;
+
+            document.getElementById('stTotalNum').innerText = effectiveCompound;
+            document.getElementById('stTotalSub').innerText = originalTotal > 80 ? `Orig: ${originalTotal}` : `Total ${effectiveCompound}`;
+            document.getElementById('stRootNum').innerText = rootScore;
+            document.getElementById('stRootLord').innerText = planetaryLords[rootScore][isEnglish ? 'en' : 'hi'];
+
+            document.getElementById('calcBreakdown').innerHTML = `<strong>∑ ${isEnglish?'Sum':'नामांक'}:</strong> ${breakdownParts.join(' + ')} = <strong>${originalTotal}</strong>${reductionMsg}`;
+            document.getElementById('repNameDisplay').innerText = rawInput;
+
+            const langKey = isEnglish ? 'en' : 'hi';
+            document.getElementById('rootPredictionText').innerText = rootPredictions[rootScore][langKey];
+
+            let compoundText = "";
+            if (effectiveCompound < 10) {
+                compoundText = isEnglish
+                    ? "Numbers 1 through 9 are known as Root Numbers or Single Digits. Since this name totals a single digit, it means there is no hidden karmic 'compound' influence attached. What you see is what you get. Please refer to the standard planetary meaning of the Root Number above."
+                    : "1 से 9 तक की संख्याओं को मूलांक या एकल अंक कहा जाता है। चूंकि इस नाम का कुल योग एक एकल अंक है, इसका अर्थ है कि इसके साथ कोई छिपा हुआ कार्मिक 'संयुक्त' प्रभाव नहीं है। जो दिखता है वही सच है। कृपया ऊपर दिए गए नामांक (Root Number) के फल को ही पढ़ें।";
+            } else {
+                compoundText = compoundPredictions[effectiveCompound] || (isEnglish ? "N/A" : "उपलब्ध नहीं");
+            }
+            document.getElementById('predictionText').innerText = compoundText;
+
+            const dobSection = document.getElementById('dobResultSection');
+            const dobBadges = document.querySelectorAll('.dob-dep');
+
+            if (dobInput) {
+                currentData.dob = dobInput;
+                const parts = dobInput.split('-');
+
+                const daySum = parts[2].split('').reduce((s, d) => s + parseInt(d, 10), 0);
+                const psychicScore = calculateRoot(daySum);
+
+                const fullDateSum = dobInput.replace(/\D/g, '').split('').reduce((s, d) => s + parseInt(d, 10), 0);
+                const destinyScore = calculateRoot(fullDateSum);
+
+                const currYearSum = currentDate.getFullYear().toString().split('').reduce((s, d) => s + parseInt(d, 10), 0);
+                const pySum = currYearSum + daySum + parts[1].split('').reduce((s, d) => s + parseInt(d, 10), 0);
+                const personalYear = calculateRoot(pySum);
+
+                currentData.psychic = psychicScore;
+                currentData.destiny = destinyScore;
+                currentData.personalYear = personalYear;
+
+                document.getElementById('stPsyNum').innerText = psychicScore;
+                document.getElementById('stPsyLord').innerText = planetaryLords[psychicScore][langKey];
+                document.getElementById('stDesNum').innerText = destinyScore;
+                document.getElementById('stDesLord').innerText = planetaryLords[destinyScore][langKey];
+
+                document.getElementById('repDobDisplay').innerText = `जन्म तिथि: ${parts[2]}/${parts[1]}/${parts[0]}`;
+
+                document.getElementById('luckyColor').innerText = luckyElements[psychicScore][isEnglish ? 'en_color' : 'hi_color'];
+                document.getElementById('luckyGem').innerText = luckyElements[psychicScore][isEnglish ? 'en_gem' : 'hi_gem'];
+                document.getElementById('luckyDays').innerText = luckyElements[psychicScore][isEnglish ? 'en_days' : 'hi_days'];
+                document.getElementById('personalYear').innerText = personalYear;
+
+                document.getElementById('psychicText').innerText = rootPredictions[psychicScore][langKey];
+                document.getElementById('destinyText').innerText = rootPredictions[destinyScore][langKey];
+
+                generateLoShu(dobInput);
+
+                dobSection.style.display = 'block';
+                dobBadges.forEach(el => el.style.display = 'flex');
+            } else {
+                currentData.dob = null;
+                dobSection.style.display = 'none';
+                dobBadges.forEach(el => el.style.display = 'none');
+                document.getElementById('repDobDisplay').innerText = isEnglish ? "Date of Birth: Not Specified" : "जन्म तिथि: दर्ज नहीं";
+            }
+
+            document.getElementById('reportAreaNum').style.display = 'block';
+        } catch (error) {
+            console.error(error);
+            alert("गणना में त्रुटि (Calculation Error): " + error.message);
+        }
+    }
+
+    // ==========================================
+    // 4. CHOGHADIYA LOGIC (TAB 2)
+    // ==========================================
+    let currentChogData = {};
+    const choghadiyaInfo = {
+        "Amrit": { nameHI: "अमृत (Amrit)", statusClass: "good", lord: "चंद्रमा / सूर्य प्रभाव" },
+        "Shubh": { nameHI: "शुभ (Shubh)", statusClass: "good", lord: "गुरु का प्रभाव" },
+        "Labh": { nameHI: "लाभ (Labh)", statusClass: "good", lord: "बुध का प्रभाव" },
+        "Chal": { nameHI: "चल (Chal)", statusClass: "neutral", lord: "शुक्र का प्रभाव" },
+        "Udveg": { nameHI: "उद्वेग (Udveg)", statusClass: "bad", lord: "सूर्य का प्रभाव" },
+        "Rog": { nameHI: "रोग (Rog)", statusClass: "bad", lord: "मंगल का प्रभाव" },
+        "Kaal": { nameHI: "काल (Kaal)", statusClass: "bad", lord: "शनि का प्रभाव" }
+    };
+
+    const daySequences = [
+        ["Udveg", "Chal", "Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg"], // Sun
+        ["Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Chal", "Labh", "Amrit"], // Mon
+        ["Rog", "Udveg", "Chal", "Labh", "Amrit", "Kaal", "Shubh", "Rog"],   // Tue
+        ["Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Chal", "Labh"],  // Wed
+        ["Shubh", "Rog", "Udveg", "Chal", "Labh", "Amrit", "Kaal", "Shubh"], // Thu
+        ["Chal", "Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Chal"],  // Fri
+        ["Kaal", "Shubh", "Rog", "Udveg", "Chal", "Labh", "Amrit", "Kaal"]   // Sat
+    ];
+
+    const nightSequences = [
+        ["Shubh", "Amrit", "Chal", "Rog", "Kaal", "Labh", "Udveg", "Shubh"], // Sun
+        ["Chal", "Rog", "Kaal", "Labh", "Udveg", "Shubh", "Amrit", "Chal"],  // Mon
+        ["Kaal", "Labh", "Udveg", "Shubh", "Amrit", "Chal", "Rog", "Kaal"],  // Tue
+        ["Udveg", "Shubh", "Amrit", "Chal", "Rog", "Kaal", "Labh", "Udveg"], // Wed
+        ["Amrit", "Chal", "Rog", "Kaal", "Labh", "Udveg", "Shubh", "Amrit"], // Thu
+        ["Rog", "Kaal", "Labh", "Udveg", "Shubh", "Amrit", "Chal", "Rog"],   // Fri
+        ["Labh", "Udveg", "Shubh", "Amrit", "Chal", "Rog", "Kaal", "Labh"]   // Sat
+    ];
+
+    function selectCity(cityName) {
+        document.getElementById('cityInput').value = cityName;
+        calculateChoghadiya();
+    }
+
+    async function calculateChoghadiya() {
+        const city = document.getElementById('cityInput').value.trim() || 'Udaipur';
+        const dateStr = document.getElementById('chogDateInput').value;
+        const status = document.getElementById('statusMsg');
+
+        status.innerText = "गणना हो रही है (Calculating)...";
+
+        try {
+            const coords = await getCoordinates(city);
+            const selectedDate = new Date(dateStr);
+            const dayOfWeek = selectedDate.getDay();
+
+            const nextDate = new Date(selectedDate);
+            nextDate.setDate(nextDate.getDate() + 1);
+            const nextDateStr = nextDate.toISOString().split('T')[0];
+
+            const todaySun = await getSunTimes(coords.lat, coords.lng, dateStr);
+            const tomorrowSun = await getSunTimes(coords.lat, coords.lng, nextDateStr);
+
+            const sunrise = new Date(todaySun.sunrise);
+            const sunset = new Date(todaySun.sunset);
+            const nextSunrise = new Date(tomorrowSun.sunrise);
+
+            document.getElementById('chogSunriseDisplay').innerText = formatTime12(sunrise);
+            document.getElementById('chogSunsetDisplay').innerText = formatTime12(sunset);
+            document.getElementById('chogCityTitle').innerText = `${coords.displayName.split(',').slice(0, 3).join(', ').toUpperCase()}`;
+            document.getElementById('chogHorizonSub').innerText = `दिनांक: ${dateStr.split('-').reverse().join('/')} • सूर्योदय: ${formatTime12(sunrise)} • सूर्यास्त: ${formatTime12(sunset)}`;
+
+            const dayDuration = sunset.getTime() - sunrise.getTime();
+            const nightDuration = nextSunrise.getTime() - sunset.getTime();
+
+            const daySeg = dayDuration / 8;
+            const nightSeg = nightDuration / 8;
+
+            const now = new Date().getTime();
+            let currentLiveFound = null;
+
+            function buildRows(containerId, sequence, startMs, segDuration) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+
+                for (let i = 0; i < 8; i++) {
+                    const slotStart = new Date(startMs + (i * segDuration));
+                    const slotEnd = new Date(startMs + ((i + 1) * segDuration));
+                    const cKey = sequence[i];
+                    const info = choghadiyaInfo[cKey];
+
+                    const isCurrentSlot = now >= slotStart.getTime() && now < slotEnd.getTime();
+                    if (isCurrentSlot) {
+                        currentLiveFound = { name: info.nameHI, status: info.statusClass, start: slotStart, end: slotEnd, lord: info.lord };
+                    }
+
+                    const statusPillLabel = info.statusClass === 'good' ? 'शुभ' : (info.statusClass === 'neutral' ? 'सामान्य / चल' : 'अशुभ');
+
+                    const row = document.createElement('div');
+                    row.className = `chog-item-row ${isCurrentSlot ? 'is-current' : ''}`;
+                    row.innerHTML = `
+                        <div class="chog-row-left">
+                            <div class="chog-index-badge">${i + 1}</div>
+                            <div class="chog-name-block">
+                                <strong>${info.nameHI} ${isCurrentSlot ? '<span style="color:#582be8; font-size:0.75rem; font-weight:800;">(LIVE)</span>' : ''}</strong>
+                                <span>${info.lord}</span>
+                            </div>
+                        </div>
+                        <div class="chog-row-right">
+                            <div class="chog-time-text">${formatTime12(slotStart)} - ${formatTime12(slotEnd)}</div>
+                            <span class="status-badge-pill ${info.statusClass}">${statusPillLabel}</span>
+                        </div>
+                    `;
+                    container.appendChild(row);
+                }
+            }
+
+            buildRows('dayChogList', daySequences[dayOfWeek], sunrise.getTime(), daySeg);
+            buildRows('nightChogList', nightSequences[dayOfWeek], sunset.getTime(), nightSeg);
+
+            if (currentLiveFound) {
+                document.getElementById('liveChogName').innerText = currentLiveFound.name;
+                document.getElementById('liveChogDesc').innerText = currentLiveFound.lord;
+                document.getElementById('liveChogTimeSlot').innerText = `${formatTime12(currentLiveFound.start)} – ${formatTime12(currentLiveFound.end)}`;
+                const pill = document.getElementById('livePill');
+                pill.className = `status-badge-pill ${currentLiveFound.status}`;
+                pill.innerText = currentLiveFound.status === 'good' ? 'शुभ मुहूर्त' : (currentLiveFound.status === 'neutral' ? 'चल मुहूर्त' : 'अशुभ काल');
+            } else {
+                document.getElementById('liveChogName').innerText = "चौघड़िया अवलोकन";
+                document.getElementById('liveChogDesc').innerText = "चयनित तिथि के मुहूर्त की गणना";
+                document.getElementById('liveChogTimeSlot').innerText = `${dateStr.split('-').reverse().join('/')}`;
+            }
+
+            status.innerText = "";
+        } catch (e) {
+            status.innerText = "त्रुटि: " + e.message;
+        }
+    }
+
+    // ==========================================
+    // 5. PANCHANG LOGIC (TAB 3)
+    // ==========================================
+    function selectCityPanchang(cityName) {
+        document.getElementById('panchangCityInput').value = cityName;
+        calculateLivePanchang();
+    }
+
+    async function calculateLivePanchang() {
+        const city = document.getElementById('panchangCityInput').value.trim() || 'Udaipur';
+        const dateInput = document.getElementById('panchangDateInput').value;
+
+        let targetDate = new Date();
+        if (dateInput) {
+            targetDate = new Date(dateInput);
+            targetDate.setHours(12, 0, 0);
+        }
+
+        try {
+            document.getElementById('panLocName').innerText = "Loading astronomical data...";
+
+            const coords = await getCoordinates(city);
+            document.getElementById('panLocName').innerText = coords.displayName.split(',').slice(0, 3).join(', ').toUpperCase();
+            document.getElementById('panLocCoords').innerText = `${parseFloat(coords.lat).toFixed(4)}° N, ${parseFloat(coords.lng).toFixed(4)}° E • Asia/Calcutta`;
+
+            const sunData = await getSunTimes(coords.lat, coords.lng, dateInput);
+            const sunrise = new Date(sunData.sunrise);
+            const sunset = new Date(sunData.sunset);
+
+            document.getElementById('panSunriseDisplay').innerText = formatTime12(sunrise);
+            document.getElementById('panSunsetDisplay').innerText = formatTime12(sunset);
+
+            if (window.getPanchangam && window.Observer) {
+                const observer = new window.Observer(parseFloat(coords.lat), parseFloat(coords.lng), 0);
+                const tzOffsetMinutes = -(new Date().getTimezoneOffset());
+                const p = window.getPanchangam(targetDate, observer, { timezoneOffset: tzOffsetMinutes });
+
+                const tName = window.tithiNames[p.tithi];
+                const pName = p.paksha === 'Shukla' ? 'शुक्ल पक्ष (Shukla Paksha)' : 'कृष्ण पक्ष (Krishna Paksha)';
+                const nName = window.nakshatraNames[p.nakshatra];
+                const mName = p.masa?.name || "Bhadrapad";
+
+                document.getElementById('panMoonPhaseTitle').innerText = `${tName}, ${pName}`;
+                document.getElementById('panMoonMasaSub').innerText = `माह: ${mName}`;
+
+                document.getElementById('panTithiName').innerText = tName;
+                document.getElementById('panTithiTime').innerText = p.tithiEndTime ? `${formatTime12(p.tithiEndTime)} तक` : "सूर्योदय पर्यन्त";
+                document.getElementById('panTithiNext').innerText = `अगली: ${window.tithiNames[(p.tithi + 1) % 30]} ↑`;
+
+                document.getElementById('panPakshaName').innerText = pName;
+
+                document.getElementById('panNakshatraName').innerText = nName;
+                document.getElementById('panNakshatraTime').innerText = p.nakshatraEndTime ? `${formatTime12(p.nakshatraEndTime)} तक` : "अहोरात्र";
+                document.getElementById('panNakshatraNext').innerText = `अगला: ${window.nakshatraNames[(p.nakshatra + 1) % 27]} ↑`;
+
+                document.getElementById('panYogaName').innerText = window.yogaNames[p.yoga];
+                document.getElementById('panYogaTime').innerText = p.yogaEndTime ? `${formatTime12(p.yogaEndTime)} तक` : "दिनमान";
+                document.getElementById('panYogaNext').innerText = `अगला: ${window.yogaNames[(p.yoga + 1) % 27]} ↑`;
+
+                const kIndex = typeof p.karana === 'object' ? p.karana.id : p.karana;
+                const kName = fallbackKaranas[kIndex] || "बव (Bava)";
+                document.getElementById('panKaranaName').innerText = kName;
+                document.getElementById('panKaranaTime').innerText = p.karanaEndTime ? `${formatTime12(p.karanaEndTime)} तक` : "कालखंड";
+                document.getElementById('panKaranaNext').innerText = `अगला: ${fallbackKaranas[(kIndex + 1) % 60]} ↑`;
+
+                document.getElementById('panVaarName').innerText = vaarNames[targetDate.getDay()];
+
+                document.getElementById('panMoonSign').innerText = p.planetaryPositions?.moon?.rashiName || "सिंह (Leo)";
+                document.getElementById('panSunSign').innerText = p.planetaryPositions?.sun?.rashiName || "सिंह (Leo)";
+                document.getElementById('panRitu').innerText = p.ritu || "शरद (Sharad)";
+                document.getElementById('panAyana').innerText = "दक्षिणायन (Dakshinayana)";
+
+                const cYear = targetDate.getFullYear();
+                document.getElementById('panVikram').innerText = cYear + 57;
+                document.getElementById('panGujarati').innerText = cYear + 57;
+                document.getElementById('panShaka').innerText = cYear - 78;
+                document.getElementById('panKali').innerText = cYear + 3101;
+
+                const padaRowsContainer = document.getElementById('panPadaRows');
+                padaRowsContainer.innerHTML = '';
+                const syllables = padaSyllables[p.nakshatra] || ["-","-","-","-"];
+                const daySeg = (sunset.getTime() - sunrise.getTime()) / 4;
+
+                for (let i = 0; i < 4; i++) {
+                    const row = document.createElement('div');
+                    row.className = 'pada-table-row';
+                    const padTime = new Date(sunrise.getTime() + ((i + 1) * daySeg));
+                    row.innerHTML = `
+                        <div class="pada-char-badge">${i + 1} &nbsp; ${syllables[i]}</div>
+                        <div class="pada-nak-name">${nName}</div>
+                        <div class="pada-time">${formatTime24(padTime)}</div>
+                    `;
+                    padaRowsContainer.appendChild(row);
+                }
+            } else {
+                document.getElementById('panLocCoords').innerText = "Astrological Engine Loading...";
+            }
+        } catch (e) {
+            console.error("Panchang Error:", e);
+        }
+    }
+
+    // ==========================================
+    // 6. STOOP PADDHATI LOGIC (TAB 4)
+    // ==========================================
+    let stoopMode = 'word'; // 'word' or 'chaldean'
+    let currentStoopResult = {};
+
+    const stoopMeanings = {
+        1: { title: "पूर्ण सफलता", status: "success", badge: "अति शुभ संकेत", desc: "यह अंक पूर्ण सफलता का सूचक है। शीघ्र ही आपको कोई ऐसा व्यक्ति मिलेगा जो कि आपकी कार्य-सिद्धि में सहायक होगा और उसके सहयोग से आप अगले कुछ ही समय में सफलता प्राप्त कर सकेंगे।" },
+        2: { title: "अनिश्चितता", status: "warning", badge: "धैर्य रखें", desc: "यह अंक अनिश्चितता का सूचक है। संभवतः आगे के कुछ समय में बाधाएं आएंगी और प्रयत्न करने पर भी आप-अपने इस कार्य में सफलता प्राप्त नहीं कर सकेंगे। अभी नए कदम टालें।" },
+        3: { title: "व्यय व सहयोग", status: "success", badge: "सहयोग से सिद्धि", desc: "यद्यपि आप कार्य की सफलता के लिए प्रयत्नशील हैं परन्तु निकट भविष्य में ही व्यय ज्यादा होगा और किसी व्यक्ति के सहयोग से ही आप-अपने उद्देश्य में सफलता प्राप्त कर सकेंगे। आपके प्रयत्न निश्चय ही आपको सफलता देंगे।" },
+        4: { title: "बाधाएं व अड़चनें", status: "danger", badge: "कठिन परीक्षा", desc: "आपके इस कार्य की पूर्णता में जरूरत से ज्यादा बाधाएं तथा अड़चनें हैं। जितनी ही ज्यादा आप इन बाधाओं को हटाने का प्रयत्न करेंगे उतनी ही ज्यादा नई-नई समस्याएं आपके सामने पैदा होती रहेंगी। कार्य की सफलता अनिश्चित है।" },
+        5: { title: "पूर्ण सफलता व विजय", status: "success", badge: "विजय योग", desc: "यह अंक पूर्ण सफलता का सूचक है। कार्य-सिद्धि यात्रा के माध्यम से ही हो सकेगी। आपको चाहिए कि आप इससे सम्बन्धित अधिकारियों से पत्र-व्यवहार करें या व्यक्तिगत रूप से मिलें तथा अपने प्रयत्नों में तेजी लावें। निश्चय ही विजय आपकी है।" },
+        6: { title: "अनुकूल समय व सिद्धि", status: "success", badge: "अनुकूल काल", desc: "समय आपके अनुकूल चल रहा है। किसी मित्र या महिला के सहयोग से आप-अपने उद्देश्यों में सफलता प्राप्त कर सकेंगे। कार्य की पूर्णता से शीघ्र ही आपको प्रसन्नता प्राप्त होगी।" },
+        7: { title: "बाधाओं के बाद सफलता", status: "warning", badge: "यश व कीर्ति", desc: "यह अंक कार्य-सफलता का सूचक है। यद्यपि अभी कुछ दिनों तक आपको बाधाओं का सामना करना पड़ेगा, परन्तु ये बाधाएं जल्दी ही समाप्त हो जाएंगी और आप सफलता प्राप्त कर सकेंगे। इस कार्य की सफलता से समाज में आपको यश तथा सम्मान भी मिलेगा।" },
+        8: { title: "संघर्ष और विरोध", status: "danger", badge: "सावधानी अपेक्षित", desc: "कार्य में सफलता निश्चित नहीं है। आपके विरोधी तेज हैं और उनके प्रयत्न आपसे ज्यादा बढ़े-चढ़े हैं। आपके बारे में गलत भ्रम बन गया है, जिसकी वजह से आपकी सफलता संदिग्ध हो गई है। कार्य-पूर्णता में काफी बाधाएं, धन-हानि तथा परेशानियां दिखाई पड़ रही हैं।" },
+        9: { title: "शत्रु पराजय व लक्ष्य प्राप्ति", status: "success", badge: "सर्वार्थ सिद्धि", desc: "शीघ्र ही शत्रु परास्त होंगे, तथा आपका जो लक्ष्य है उस लक्ष्य में आप पूर्णता प्राप्त कर सकेंगे। आप देखेंगे कि अभी तक जितनी परेशानियां आपके चारों ओर आ रही थीं वे परेशानियां दूर हो गई हैं और आप-अपने लक्ष्य की ओर तीव्रता के साथ बढ़ रहे हैं। सफलता आपके सामने ही है।" }
+    };
+
+    function setStoopMode(mode) {
+        stoopMode = mode;
+        document.getElementById('modeWord').className = mode === 'word' ? 'mode-btn active' : 'mode-btn';
+        document.getElementById('modeChaldean').className = mode === 'chaldean' ? 'mode-btn active' : 'mode-btn';
+        document.getElementById('stoopModeDisplay').innerText = mode === 'word' ? 'पद्धति: शब्द-अक्षर गणना विधि' : 'पद्धति: कैल्डियन अंक मान विधि';
+        calculateStoop();
+    }
+
+    function setStoopQuestion(q) {
+        document.getElementById('stoopInput').value = q;
+        calculateStoop();
+    }
+
+    function calculateStoop() {
+        const text = document.getElementById('stoopInput').value.trim();
+        if (!text) {
+            alert('कृपया अपना प्रश्न या नाम दर्ज करें!');
+            return;
+        }
+
+        const words = text.split(/\s+/);
+        let baseRow = [];
+
+        if (stoopMode === 'word') {
+            baseRow.push(calculateRoot(words.length));
+            for (let word of words) {
+                let clean = word.replace(/[^a-zA-Z0-9]/g, '');
+                if (clean.length > 0) {
+                    baseRow.push(calculateRoot(clean.length));
+                }
+            }
+        } else {
+            baseRow.push(calculateRoot(words.length));
+            for (let word of words) {
+                let clean = word.toUpperCase().replace(/[^A-Z]/g, '');
+                let wordSum = 0;
+                for (let char of clean) {
+                    if (chaldeanMap[char]) wordSum += chaldeanMap[char];
+                }
+                if (wordSum > 0) {
+                    baseRow.push(calculateRoot(wordSum));
+                }
+            }
+        }
+
+        if (baseRow.length < 2) {
+            alert("कृपया कम से कम दो शब्दों का प्रश्न दर्ज करें (Please write a longer question).");
+            return;
+        }
+
+        let pyramid = [baseRow];
+        while (pyramid[pyramid.length - 1].length > 1) {
+            let current = pyramid[pyramid.length - 1];
+            let next = [];
+            for (let i = 0; i < current.length - 1; i++) {
+                next.push(calculateRoot(current[i] + current[i + 1]));
+            }
+            pyramid.push(next);
+        }
+
+        const graphContainer = document.getElementById('stoopPyramidGraph');
+        graphContainer.innerHTML = '';
+
+        for (let r = 0; r < pyramid.length; r++) {
+            const tier = document.createElement('div');
+            tier.className = 'pyramid-tier';
+            const isSummit = (r === pyramid.length - 1);
+
+            pyramid[r].forEach(num => {
+                const brick = document.createElement('div');
+                brick.className = `pyramid-brick ${isSummit ? 'summit' : ''}`;
+                brick.innerText = num;
+                tier.appendChild(brick);
+            });
+            graphContainer.appendChild(tier);
+        }
+
+        const apexDigit = pyramid[pyramid.length - 1][0];
+        const verdict = stoopMeanings[apexDigit] || stoopMeanings[1];
+
+        currentStoopResult = { question: text, apexDigit: apexDigit, verdict: verdict };
+
+        document.getElementById('stoopQuestionDisplay').innerText = `"${text}"`;
+        document.getElementById('stoopFinalDigit').innerText = apexDigit;
+        document.getElementById('stoopHeadline').innerText = verdict.title;
+        document.getElementById('stoopMeaningDesc').innerText = verdict.desc;
+
+        const badge = document.getElementById('stoopBadge');
+        badge.className = `summit-badge ${verdict.status}`;
+        badge.innerText = verdict.badge;
+
+        document.getElementById('reportAreaStoop').style.display = 'block';
+    }
+
+    // ==========================================
+    // 7. EXPORT LOGIC (PDF / WHATSAPP)
+    // ==========================================
+    function generatePDF(type) {
+        let element, filename;
+        if (type === 'num') {
+            element = document.getElementById('reportAreaNum');
+            filename = `${(currentData.name || 'User').replace(/\s+/g, '_')}_Numerology.pdf`;
+        } else if (type === 'chog') {
+            element = document.getElementById('reportAreaChog');
+            filename = `Choghadiya_${document.getElementById('chogDateInput').value}.pdf`;
+        } else if (type === 'panchang') {
+            element = document.getElementById('reportAreaPanchang');
+            filename = `Vedic_Panchang_${document.getElementById('panchangDateInput').value}.pdf`;
+        } else if (type === 'stoop') {
+            element = document.getElementById('reportAreaStoop');
+            filename = `Stoop_Prashna_Report.pdf`;
+        }
+
+        element.classList.add('pdf-export-mode');
+        const opt = {
+            margin: 0.25,
+            filename: filename,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save().then(() => {
+            element.classList.remove('pdf-export-mode');
+        });
+    }
+
+    function shareWhatsApp(type) {
+        let text = "";
+        if (type === 'num') {
+            const langKey = isEnglish ? 'en' : 'hi';
+            text = `*🔮 ASTRO PRO NUMEROLOGY REPORT*\n`;
+            text += `👤 *नाम (Name):* ${currentData.name}\n\n`;
+            text += `🔹 *संयुक्त अंक (Compound):* ${currentData.compound}\n`;
+            text += `🔹 *नामांक (Root Number):* ${currentData.root} (${planetaryLords[currentData.root][langKey]})\n`;
+
+            if (currentData.dob) {
+                text += `🔹 *मूलांक (Psychic):* ${currentData.psychic}\n`;
+                text += `🔹 *भाग्यांक (Destiny):* ${currentData.destiny}\n`;
+                text += `🔹 *व्यक्तिगत वर्ष (Personal Year):* ${currentData.personalYear}\n`;
+                text += `🎨 *शुभ रंग:* ${luckyElements[currentData.psychic][isEnglish ? 'en_color' : 'hi_color']}\n`;
+                text += `💎 *भाग्यशाली रत्न:* ${luckyElements[currentData.psychic][isEnglish ? 'en_gem' : 'hi_gem']}\n`;
+            }
+        } else if (type === 'stoop') {
+            text = `*🔺 STOOP PADDHATI PRASHNA*\n`;
+            text += `❓ *प्रश्न:* ${currentStoopResult.question}\n`;
+            text += `👑 *स्तूपांक (Apex):* ${currentStoopResult.apexDigit}\n`;
+            text += `📜 *परिणाम:* ${currentStoopResult.verdict.title}\n`;
+            text += `💡 *मार्गदर्शन:* ${currentStoopResult.verdict.desc}\n`;
+        }
+        text += `\n_Generated via Astro Pro App_`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    // ==========================================
+    // INITIALIZATION
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', () => {
+        const todayStr = new Date().toISOString().split('T')[0];
+        document.getElementById('chogDateInput').value = todayStr;
+        document.getElementById('panchangDateInput').value = todayStr;
+        
+        // Setup initial text
+        document.getElementById('guideContent').innerHTML = guideContentHI;
+
+        calculateChoghadiya();
+        calculateLivePanchang();
+        calculateStoop(); // Init stoop with default text
+    });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</body>
+</html>
