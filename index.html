@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>Astro Pro - Numerology, Choghadiya & Panchang</title>
+    <title>Astro Pro - Numerology, Choghadiya, Panchang & Stoop Paddhati</title>
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#311465">
@@ -18,7 +18,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Rozha+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -27,6 +27,7 @@
             --primary-gradient: linear-gradient(135deg, #1b073f 0%, #3e167e 50%, #582be8 100%);
             --hero-chog-gradient: linear-gradient(135deg, #09334f 0%, #11536b 50%, #157e80 100%);
             --hero-panchang-gradient: linear-gradient(135deg, #2b1105 0%, #5e2609 50%, #9e4712 100%);
+            --hero-stoop-gradient: linear-gradient(135deg, #4a0d0d 0%, #851c1c 50%, #b33939 100%);
             --surface: #ffffff;
             --background: #f4f6fb;
             --text-main: #1e1b2e;
@@ -149,6 +150,8 @@
         .hero-banner.numerology { background: var(--primary-gradient); }
         .hero-banner.choghadiya { background: var(--hero-chog-gradient); }
         .hero-banner.panchang { background: var(--hero-panchang-gradient); }
+        .hero-banner.stoop { background: var(--hero-stoop-gradient); }
+
         .hero-pill-tag {
             display: inline-flex;
             align-items: center;
@@ -189,11 +192,8 @@
             gap: 6px;
             cursor: pointer;
             backdrop-filter: blur(6px);
-            transition: background 0.2s;
         }
-        .hero-action-btn:active { background: rgba(255, 255, 255, 0.28); }
 
-        /* Sun Pill Widget on Choghadiya/Panchang */
         .sun-pill-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -258,7 +258,6 @@
             display: block;
         }
 
-        /* Submit Button */
         .primary-submit-btn {
             width: 100%;
             padding: 16px;
@@ -275,14 +274,13 @@
             gap: 10px;
             cursor: pointer;
             box-shadow: 0 8px 20px rgba(88, 43, 232, 0.35);
-            transition: transform 0.15s, box-shadow 0.15s;
         }
-        .primary-submit-btn:active {
-            transform: scale(0.98);
-            box-shadow: 0 4px 10px rgba(88, 43, 232, 0.25);
+        .primary-submit-btn.red-btn {
+            background: linear-gradient(135deg, #9b1c1c, #b33939);
+            box-shadow: 0 8px 20px rgba(179, 57, 57, 0.35);
         }
 
-        /* Quick Location Chips */
+        /* Chips */
         .chip-scroll-container {
             display: flex;
             gap: 8px;
@@ -310,7 +308,6 @@
             font-weight: 700;
         }
 
-        /* Quick Date Nav */
         .date-nav-bar {
             display: flex;
             justify-content: space-between;
@@ -330,7 +327,7 @@
             gap: 4px;
         }
 
-        /* ================= NUMEROLOGY RESULTS UI ================= */
+        /* Result Report Cards */
         .result-report-card {
             background: #ffffff;
             border-radius: var(--radius-lg);
@@ -362,11 +359,7 @@
             margin: 4px 0;
             text-transform: uppercase;
         }
-        .report-dob-sub {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
+        .report-dob-sub { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; }
         .system-pill {
             display: inline-block;
             background: #f2f4fc;
@@ -389,7 +382,6 @@
             border-radius: var(--radius-md);
             padding: 16px 12px;
             text-align: center;
-            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -431,13 +423,8 @@
         .num-stat-card.orange .stat-number-circle { background: #ea580c; }
         .num-stat-card.red .stat-number-circle { background: #e11d48; }
 
-        .stat-card-sub {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
+        .stat-card-sub { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
 
-        /* Calculation Breakdown Bar */
         .calc-breakdown-card {
             background: #f8fafc;
             border: 1px dashed #cbd5e1;
@@ -450,7 +437,6 @@
             word-break: break-word;
         }
 
-        /* Trait Insight Cards */
         .trait-insight-box {
             background: #f9faff;
             border: 1px solid #e2e8f8;
@@ -462,6 +448,7 @@
         .trait-insight-box.green { border-left-color: #10b981; background: #f5fcf8; border-color: #d1fae5; }
         .trait-insight-box.orange { border-left-color: #f59e0b; background: #fdfbf4; border-color: #fef3c7; }
         .trait-insight-box.red { border-left-color: #f43f5e; background: #fdf5f6; border-color: #ffe4e6; }
+        .trait-insight-box.crimson { border-left-color: #b33939; background: #fcf6f6; border-color: #fad1d1; }
         
         .trait-box-title {
             display: flex;
@@ -478,16 +465,6 @@
             margin: 0;
         }
 
-        /* 4 Grid Lucky Elements */
-        .lucky-grid-section-title {
-            font-size: 0.82rem;
-            font-weight: 800;
-            color: #1e1b2e;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin: 20px 0 10px 0;
-            text-align: center;
-        }
         .lucky-matrix-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -508,19 +485,15 @@
             color: var(--text-muted);
             margin-bottom: 4px;
         }
-        .lucky-item-card strong {
-            font-size: 0.88rem;
-            color: #110e24;
-        }
+        .lucky-item-card strong { font-size: 0.88rem; color: #110e24; }
 
-        /* Lo Shu Grid Matrix (Dark Theme styling matching ref image 2) */
+        /* Lo Shu Grid */
         .loshu-matrix-card {
             background: #0f0c20;
             border-radius: var(--radius-lg);
             padding: 22px;
             color: #ffffff;
             margin-top: 20px;
-            box-shadow: 0 10px 25px rgba(15, 12, 32, 0.4);
             text-align: center;
         }
         .loshu-card-title {
@@ -531,11 +504,7 @@
             margin-bottom: 4px;
             text-transform: uppercase;
         }
-        .loshu-card-sub {
-            font-size: 0.72rem;
-            color: #94a3b8;
-            margin-bottom: 16px;
-        }
+        .loshu-card-sub { font-size: 0.72rem; color: #94a3b8; margin-bottom: 16px; }
         .loshu-grid-3x3 {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -555,7 +524,6 @@
             font-weight: 800;
             color: #4a4270;
             border: 1px solid #28204f;
-            transition: all 0.2s;
         }
         .loshu-cell.active {
             background: linear-gradient(135deg, #6d28d9, #9333ea);
@@ -563,59 +531,15 @@
             box-shadow: 0 4px 12px rgba(147, 51, 234, 0.4);
             border-color: #a855f7;
         }
-        .loshu-cell-sub {
-            font-size: 0.58rem;
-            font-weight: 500;
-            opacity: 0.7;
-            margin-top: 2px;
-        }
+        .loshu-cell-sub { font-size: 0.58rem; font-weight: 500; opacity: 0.7; margin-top: 2px; }
 
-        /* Action Buttons */
-        .report-actions-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 22px;
-        }
-        .btn-download-pdf {
-            background: #00897b;
-            color: #ffffff;
-            border: none;
-            padding: 13px 14px;
-            border-radius: var(--radius-md);
-            font-size: 0.84rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            cursor: pointer;
-        }
-        .btn-share-wa {
-            background: #25d366;
-            color: #ffffff;
-            border: none;
-            padding: 13px 14px;
-            border-radius: var(--radius-md);
-            font-size: 0.84rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            cursor: pointer;
-        }
-
-        /* ================= CHOGHADIYA UI ================= */
-        /* Active Live Card */
+        /* Choghadiya Live Card */
         .live-chog-banner {
             background: linear-gradient(135deg, #2b0857 0%, #4c1d95 100%);
             border-radius: var(--radius-lg);
             padding: 20px;
             color: #ffffff;
             margin-bottom: 22px;
-            box-shadow: 0 10px 24px rgba(76, 29, 149, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.12);
         }
         .live-chog-top {
             display: flex;
@@ -637,7 +561,6 @@
             height: 8px;
             background: #22c55e;
             border-radius: 50%;
-            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
             animation: pulsing 1.6s infinite;
         }
         @keyframes pulsing {
@@ -655,28 +578,18 @@
         .status-badge-pill.bad { background: #ffe4e6; color: #be123c; }
         .status-badge-pill.neutral { background: #fef3c7; color: #b45309; }
 
-        .live-chog-title {
-            font-size: 1.45rem;
-            font-weight: 800;
-            margin: 0 0 4px 0;
-        }
-        .live-chog-desc {
-            font-size: 0.8rem;
-            opacity: 0.85;
-            margin-bottom: 14px;
-        }
+        .live-chog-title { font-size: 1.45rem; font-weight: 800; margin: 0 0 4px 0; }
+        .live-chog-desc { font-size: 0.8rem; opacity: 0.85; margin-bottom: 14px; }
         .live-time-strip {
             background: rgba(0, 0, 0, 0.25);
             padding: 10px 14px;
             border-radius: 12px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             font-size: 0.85rem;
             font-weight: 700;
         }
 
-        /* Choghadiya Table Sections */
         .chog-group-title {
             display: flex;
             align-items: center;
@@ -695,19 +608,12 @@
             align-items: center;
             justify-content: space-between;
             border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-subtle);
-            transition: all 0.2s;
         }
         .chog-item-row.is-current {
             border: 2px solid var(--primary);
             background: #f7f5ff;
-            box-shadow: 0 6px 18px rgba(88, 43, 232, 0.15);
         }
-        .chog-row-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .chog-row-left { display: flex; align-items: center; gap: 12px; }
         .chog-index-badge {
             width: 24px;
             height: 24px;
@@ -720,30 +626,11 @@
             align-items: center;
             justify-content: center;
         }
-        .chog-name-block strong {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: #1e1b2e;
-            display: block;
-        }
-        .chog-name-block span {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-        }
-        .chog-row-right {
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
-        }
-        .chog-time-text {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #334155;
-        }
+        .chog-name-block strong { font-size: 0.95rem; font-weight: 800; color: #1e1b2e; display: block; }
+        .chog-name-block span { font-size: 0.72rem; color: var(--text-muted); }
+        .chog-row-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .chog-time-text { font-size: 0.85rem; font-weight: 700; color: #334155; }
 
-        /* Choghadiya Reference Legend Card */
         .legend-card {
             background: #ffffff;
             border: 1px solid var(--border-light);
@@ -756,47 +643,24 @@
             font-weight: 800;
             color: #1e1b2e;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
             margin-bottom: 12px;
         }
-        .legend-item {
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.76rem;
-            margin-bottom: 6px;
-            line-height: 1.4;
-        }
+        .legend-item { padding: 8px 12px; border-radius: 8px; font-size: 0.76rem; margin-bottom: 6px; }
         .legend-item.good { background: var(--shubh-bg); color: var(--shubh-text); }
         .legend-item.neutral { background: var(--chal-bg); color: var(--chal-text); }
         .legend-item.bad { background: var(--ashubh-bg); color: var(--ashubh-text); }
 
-        /* ================= PANCHANG UI ================= */
+        /* Panchang Section */
         .panchang-loc-card {
             background: #ffffff;
             border: 1px solid var(--border-light);
             border-radius: var(--radius-lg);
             padding: 16px;
             margin-bottom: 18px;
-            box-shadow: var(--shadow-subtle);
         }
-        .panchang-loc-header {
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #d97706;
-            margin-bottom: 4px;
-        }
-        .panchang-loc-name {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: #1e1b2e;
-            margin-bottom: 2px;
-        }
-        .panchang-loc-coords {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
+        .panchang-loc-header { font-size: 0.72rem; font-weight: 700; color: #d97706; text-transform: uppercase; }
+        .panchang-loc-name { font-size: 1.15rem; font-weight: 800; color: #1e1b2e; margin-bottom: 2px; }
+        .panchang-loc-coords { font-size: 0.75rem; color: var(--text-muted); }
         .moon-phase-banner {
             background: #fdfbf7;
             border: 1px solid #fde68a;
@@ -814,16 +678,8 @@
             background: #231b40;
             box-shadow: inset -4px -4px 8px rgba(0,0,0,0.6);
         }
-        .moon-phase-text strong {
-            font-size: 0.9rem;
-            font-weight: 800;
-            color: #78350f;
-            display: block;
-        }
-        .moon-phase-text span {
-            font-size: 0.75rem;
-            color: #92400e;
-        }
+        .moon-phase-text strong { font-size: 0.9rem; font-weight: 800; color: #78350f; display: block; }
+        .moon-phase-text span { font-size: 0.75rem; color: #92400e; }
 
         .panchang-section-header {
             display: flex;
@@ -833,7 +689,6 @@
             font-weight: 800;
             color: #1e1b2e;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
             margin: 22px 0 12px 0;
         }
         .limb-card {
@@ -842,48 +697,26 @@
             border-radius: var(--radius-md);
             padding: 14px 16px;
             margin-bottom: 8px;
-            box-shadow: var(--shadow-subtle);
         }
         .limb-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             font-size: 0.72rem;
             font-weight: 700;
             color: var(--text-muted);
             text-transform: uppercase;
             margin-bottom: 4px;
         }
-        .limb-header span:first-child::before {
-            content: "•";
-            color: #f59e0b;
-            font-weight: bold;
-            margin-right: 5px;
-        }
-        .limb-main-title {
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: #110d26;
-            margin-bottom: 4px;
-        }
-        .limb-time-tag {
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: #059669;
-        }
-        .limb-next-hint {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
+        .limb-header span:first-child::before { content: "• "; color: #f59e0b; font-weight: bold; }
+        .limb-main-title { font-size: 1.05rem; font-weight: 800; color: #110d26; margin-bottom: 4px; }
+        .limb-time-tag { font-size: 0.78rem; font-weight: 700; color: #059669; }
+        .limb-next-hint { font-size: 0.72rem; color: var(--text-muted); }
 
-        /* Pada Transition Table Card */
         .pada-table-card {
             background: #ffffff;
             border: 1px solid var(--border-light);
             border-radius: var(--radius-md);
             overflow: hidden;
-            box-shadow: var(--shadow-subtle);
             margin-bottom: 20px;
         }
         .pada-table-header {
@@ -905,18 +738,10 @@
             align-items: center;
             border-bottom: 1px solid #f1f5f9;
         }
-        .pada-table-row:last-child { border-bottom: none; }
-        .pada-char-badge {
-            font-weight: 800;
-            color: #d97706;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .pada-char-badge { font-weight: 800; color: #d97706; }
         .pada-nak-name { font-weight: 600; color: #1e293b; }
         .pada-time { font-weight: 700; color: #059669; text-align: right; }
 
-        /* Floating PDF Download Bar */
         .floating-action-bar {
             margin-top: 22px;
             display: flex;
@@ -926,13 +751,8 @@
             padding: 14px 18px;
             border-radius: var(--radius-lg);
             border: 1px solid var(--border-light);
-            box-shadow: var(--shadow-subtle);
         }
-        .floating-bar-text {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
+        .floating-bar-text { font-size: 0.78rem; color: var(--text-muted); }
         .btn-action-small {
             background: #00897b;
             color: #ffffff;
@@ -945,11 +765,113 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            white-space: nowrap;
         }
         .btn-action-small.brown { background: #b45309; }
+        .btn-action-small.red { background: #b33939; }
 
-        /* Mobile Bottom Nav */
+        /* ================= STOOP PADDHATI UI ================= */
+        .mode-toggle-bar {
+            display: flex;
+            background: #f1f3f9;
+            padding: 4px;
+            border-radius: 14px;
+            margin-bottom: 16px;
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 8px 10px;
+            border: none;
+            background: transparent;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #64748b;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .mode-btn.active {
+            background: #ffffff;
+            color: #b33939;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .stoop-pyramid-container {
+            background: #130a0a;
+            border-radius: var(--radius-lg);
+            padding: 22px 14px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 10px 25px rgba(20, 5, 5, 0.4);
+            overflow-x: auto;
+        }
+        .pyramid-tier {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        .pyramid-brick {
+            min-width: 28px;
+            height: 28px;
+            padding: 0 4px;
+            border-radius: 6px;
+            background: #2b1414;
+            color: #f1a9a9;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #451b1b;
+        }
+        .pyramid-brick.summit {
+            min-width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 800;
+            border-radius: 12px;
+            border-color: #fca5a5;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+            animation: pulseSummit 2s infinite alternate;
+        }
+        @keyframes pulseSummit {
+            from { transform: scale(1); }
+            to { transform: scale(1.08); }
+        }
+
+        .summit-verdict-card {
+            background: #fff5f5;
+            border: 1.5px solid #fecaca;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .summit-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .summit-badge.success { background: #dcfce7; color: #15803d; }
+        .summit-badge.warning { background: #fef3c7; color: #b45309; }
+        .summit-badge.danger { background: #fee2e2; color: #b91c1c; }
+
+        .summit-number-hero {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #b33939;
+            line-height: 1;
+            margin: 6px 0;
+        }
+
+        /* 4-Tab Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -974,31 +896,21 @@
             align-items: center;
             gap: 4px;
             color: #94a3b8;
-            font-size: 0.75rem;
+            font-size: 0.68rem;
             font-weight: 700;
             cursor: pointer;
-            transition: color 0.2s;
-            width: 33.33%;
+            width: 25%;
         }
-        .nav-item svg {
-            width: 22px;
-            height: 22px;
-            stroke: #94a3b8;
-            transition: stroke 0.2s, transform 0.2s;
-        }
+        .nav-item svg { width: 22px; height: 22px; stroke: #94a3b8; }
         .nav-item.active { color: var(--primary); }
         .nav-item.active svg { stroke: var(--primary); transform: scale(1.12); }
+        .nav-item.active.stoop-active { color: #b33939; }
+        .nav-item.active.stoop-active svg { stroke: #b33939; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* PDF Overrides */
-        .pdf-export-mode, .pdf-export-mode * { animation: none !important; transition: none !important; opacity: 1 !important; }
-        .pdf-export-mode { padding: 0 !important; margin: 0 !important; background: white !important; }
-        .pdf-export-mode .result-report-card { border: none !important; box-shadow: none !important; display: block !important; }
-        .pdf-export-mode .loshu-matrix-card { background: #0f0c20 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     </style>
 </head>
 <body>
@@ -1025,7 +937,6 @@
 
     <!-- ==================== TAB 1: NUMEROLOGY ==================== -->
     <section id="tabNumerology" class="page-content">
-        <!-- Hero Card -->
         <div class="hero-banner numerology">
             <div class="hero-pill-tag">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
@@ -1040,12 +951,10 @@
             </button>
         </div>
 
-        <!-- Collapsible Mystery Guide -->
         <div class="guide-box no-print" id="guideBox" style="display:none; margin-bottom:18px;">
             <div class="guide-content" id="guideContent" style="display:block;"></div>
         </div>
 
-        <!-- Inputs Card -->
         <div class="input-card no-print">
             <div class="input-field-block">
                 <label class="input-field-label" for="nameInput">
@@ -1071,7 +980,6 @@
             </button>
         </div>
 
-        <!-- Calculation Report -->
         <div id="reportAreaNum" class="result-report-card">
             <div class="report-header-text">
                 <div class="report-tag" id="repTag">अंक ज्योतिष विश्लेषण रिपोर्ट</div>
@@ -1080,7 +988,6 @@
                 <div class="system-pill">Chaldean Vedic Standard</div>
             </div>
 
-            <!-- 4-Stat Box Grid -->
             <div class="num-stat-grid">
                 <div class="num-stat-card purple">
                     <div class="stat-card-title" id="stTotalTitle">संयुक्त अंक</div>
@@ -1104,10 +1011,8 @@
                 </div>
             </div>
 
-            <!-- Mathematical Breakdown -->
             <div class="calc-breakdown-card" id="calcBreakdown"></div>
 
-            <!-- Name Root Trait Card -->
             <div class="trait-insight-box green">
                 <div class="trait-box-title" style="color:#00897b;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
@@ -1116,7 +1021,6 @@
                 <p class="trait-box-desc" id="rootPredictionText"></p>
             </div>
 
-            <!-- Compound Trait Card -->
             <div class="trait-insight-box">
                 <div class="trait-box-title" style="color:var(--primary);">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
@@ -1125,7 +1029,6 @@
                 <p class="trait-box-desc" id="predictionText"></p>
             </div>
 
-            <!-- Lucky Matrix (DOB Dependent) -->
             <div id="dobResultSection" style="display:none;">
                 <div class="lucky-grid-section-title" id="lblLuckyElementsTitle">शुभ तत्व एवं ऊर्जा</div>
                 <div class="lucky-matrix-grid">
@@ -1147,7 +1050,6 @@
                     </div>
                 </div>
 
-                <!-- Psychic & Destiny Descriptions -->
                 <div class="trait-insight-box orange">
                     <div class="trait-box-title" style="color:#d97706;">
                         <span id="lblPsyInsight">मूलांक का फल (Psychic)</span>
@@ -1162,7 +1064,6 @@
                     <p class="trait-box-desc" id="destinyText"></p>
                 </div>
 
-                <!-- Lo Shu Grid Matrix (Styled dark like ref 2) -->
                 <div class="loshu-matrix-card">
                     <div class="loshu-card-title" id="lblLoshuTitle">लो शु ग्रिड विश्लेषण (LO SHU GRID MATRIX)</div>
                     <div class="loshu-card-sub" id="lblLoshuSub">जन्म तिथि के अंकों की उपस्थिति एवं ऊर्जा संतुलन</div>
@@ -1180,16 +1081,9 @@
                 </div>
             </div>
 
-            <!-- PDF / WhatsApp Buttons -->
             <div class="report-actions-grid no-print">
-                <button class="btn-download-pdf" onclick="generatePDF('num')">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    <span id="btnPdfNum">PDF डाउनलोड करें</span>
-                </button>
-                <button class="btn-share-wa" onclick="shareWhatsApp()">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-                    <span id="btnWaNum">WhatsApp पर भेजें</span>
-                </button>
+                <button class="btn-download-pdf" onclick="generatePDF('num')">PDF डाउनलोड करें</button>
+                <button class="btn-share-wa" onclick="shareWhatsApp('num')">WhatsApp पर भेजें</button>
             </div>
         </div>
     </section>
@@ -1197,123 +1091,63 @@
     <!-- ==================== TAB 2: CHOGHADIYA ==================== -->
     <section id="tabChoghadiya" class="page-content" style="display:none;">
         <div class="hero-banner choghadiya">
-            <div class="hero-pill-tag">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                Vedic Muhurat Engine • Real-time Calculation
-            </div>
+            <div class="hero-pill-tag">Vedic Muhurat Engine</div>
             <h2 class="hero-title">दैनिक चौघड़िया मुहूर्त</h2>
-            <p class="hero-subtitle">सूर्योदय व सूर्यास्त वैदिक काल अनुसार दिन व रात्रि के 16 काल खंडों का सटीक विश्लेषण।</p>
-            
+            <p class="hero-subtitle">सूर्योदय व सूर्यास्त अनुसार दिन व रात्रि के 16 काल खंडों का सटीक विश्लेषण।</p>
             <div class="sun-pill-grid">
-                <div class="sun-mini-box">
-                    <span>🌅</span>
-                    <div>सूर्योदय (Sunrise)<strong id="chogSunriseDisplay">--:-- AM</strong></div>
-                </div>
-                <div class="sun-mini-box">
-                    <span>🌇</span>
-                    <div>सूर्यास्त (Sunset)<strong id="chogSunsetDisplay">--:-- PM</strong></div>
-                </div>
+                <div class="sun-mini-box"><span>🌅</span><div>सूर्योदय<strong id="chogSunriseDisplay">--:-- AM</strong></div></div>
+                <div class="sun-mini-box"><span>🌇</span><div>सूर्यास्त<strong id="chogSunsetDisplay">--:-- PM</strong></div></div>
             </div>
         </div>
 
-        <!-- Controls Card -->
         <div class="input-card no-print">
-            <div class="input-field-block" style="margin-bottom:6px;">
-                <label class="input-field-label" for="cityInput">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    शहर का नाम दर्ज करें
-                </label>
-                <div style="display:flex; gap:8px;">
-                    <input type="text" id="cityInput" class="custom-input" value="Udaipur" placeholder="e.g., Udaipur">
-                    <button class="primary-submit-btn" style="width:52px; padding:0; flex-shrink:0;" onclick="calculateChoghadiya()">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    </button>
-                </div>
+            <div class="input-field-block">
+                <label class="input-field-label">शहर का नाम</label>
+                <input type="text" id="cityInput" class="custom-input" value="Udaipur" placeholder="e.g., Udaipur">
             </div>
-
-            <!-- Quick City Chips -->
             <div class="chip-scroll-container">
                 <div class="city-chip active" onclick="selectCity('Udaipur')">Udaipur</div>
                 <div class="city-chip" onclick="selectCity('Jaipur')">Jaipur</div>
                 <div class="city-chip" onclick="selectCity('New Delhi')">New Delhi</div>
                 <div class="city-chip" onclick="selectCity('Mumbai')">Mumbai</div>
                 <div class="city-chip" onclick="selectCity('Bengaluru')">Bengaluru</div>
-                <div class="city-chip" onclick="selectCity('Ahmedabad')">Ahmedabad</div>
-                <div class="city-chip" onclick="selectCity('Kolkata')">Kolkata</div>
             </div>
-
-            <div class="input-field-block" style="margin-bottom:4px;">
-                <label class="input-field-label" for="chogDateInput">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    दिनांक चुनें
-                </label>
+            <div class="input-field-block">
+                <label class="input-field-label">दिनांक</label>
                 <input type="date" id="chogDateInput" class="custom-input" onchange="calculateChoghadiya()">
             </div>
-
-            <!-- Date Navigation Buttons -->
             <div class="date-nav-bar">
                 <button class="date-nav-btn" onclick="stepDate('chog', -1)">◀ पिछला दिन</button>
-                <button class="date-nav-btn" style="color:#0f172a;" onclick="setToday('chog')">आज (Today)</button>
+                <button class="date-nav-btn" onclick="setToday('chog')">आज (Today)</button>
                 <button class="date-nav-btn" onclick="stepDate('chog', 1)">अगला दिन ▶</button>
             </div>
         </div>
 
-        <div id="statusMsg" style="text-align:center; font-size:0.8rem; font-weight:700; color:var(--primary); margin-bottom:12px;"></div>
-
-        <!-- Choghadiya Output -->
         <div id="reportAreaChog">
-            <!-- Active/Live Highlight Banner -->
             <div class="live-chog-banner" id="liveChogBanner">
                 <div class="live-chog-top">
-                    <div class="live-tag-pulsing">
-                        <span class="pulse-dot"></span>
-                        वर्तमान में सक्रिय चौघड़िया
-                    </div>
+                    <div class="live-tag-pulsing"><span class="pulse-dot"></span>सक्रिय चौघड़िया</div>
                     <span class="status-badge-pill good" id="livePill">शुभ</span>
                 </div>
                 <div class="live-chog-title" id="liveChogName">अमृत (AMRIT)</div>
-                <div class="live-chog-desc" id="liveChogDesc">सर्वश्रेष्ठ फलदायी सूर्य मुहुर्त • स्थायी विकास हेतु</div>
+                <div class="live-chog-desc" id="liveChogDesc">-</div>
                 <div class="live-time-strip">
-                    <span id="liveChogTimeSlot">09:25 AM – 10:56 AM</span>
-                    <span id="liveChogRemaining" style="color:#fde047; font-size:0.75rem;">सक्रिय काल</span>
+                    <span id="liveChogTimeSlot">--:--</span>
+                    <span style="color:#fde047; font-size:0.75rem;">वर्तमान काल</span>
                 </div>
             </div>
 
-            <!-- City Horizon Meta Header -->
-            <div style="text-align:center; margin-bottom:16px;">
-                <div style="font-size:1.15rem; font-weight:800; color:#1e1b2e;" id="chogCityTitle">UDAIPUR, RAJASTHAN, INDIA</div>
-                <div style="font-size:0.76rem; color:var(--text-muted); margin-top:2px;" id="chogHorizonSub">24 Local Solar Horizon Timing</div>
-            </div>
-
-            <!-- Day Choghadiya Rows -->
-            <div class="chog-group-title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2.5"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                दिन का चौघड़िया (सूर्योदय से सूर्यास्त)
-            </div>
+            <div class="chog-group-title">दिन का चौघड़िया (सूर्योदय से सूर्यास्त)</div>
             <div id="dayChogList"></div>
 
-            <!-- Night Choghadiya Rows -->
-            <div class="chog-group-title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                रात्रि का चौघड़िया (सूर्यास्त से सूर्योदय)
-            </div>
+            <div class="chog-group-title">रात्रि का चौघड़िया (सूर्यास्त से सूर्योदय)</div>
             <div id="nightChogList"></div>
 
-            <!-- Auspicious Legend Card -->
             <div class="legend-card">
-                <div class="legend-title">चौघड़िया का संदर्भ तालिका</div>
-                <div class="legend-item good"><strong>अमृत, शुभ, लाभ (Auspicious):</strong> नए कार्य, गृह प्रवेश, व्यापार, यात्रा एवं शुभ प्रसंगों हेतु श्रेष्ठ।</div>
-                <div class="legend-item neutral"><strong>चल (Neutral):</strong> यात्रा, गमन, वाहन क्रय एवं दैनिक सामान्य कार्यों हेतु उपयुक्त।</div>
-                <div class="legend-item bad"><strong>उद्वेग, रोग, काल (Inauspicious):</strong> इन मुहूर्तों में धन निवेश, नया कार्य व मांगलिक कार्य वर्जित होते हैं।</div>
-            </div>
-
-            <!-- PDF Download Bar -->
-            <div class="floating-action-bar no-print">
-                <div class="floating-bar-text">इस शहर का दैनिक चौघड़िया सार<br>PDF डाउनलोड करें</div>
-                <button class="btn-action-small" onclick="generatePDF('chog')">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    दैनिक PDF
-                </button>
+                <div class="legend-title">चौघड़िया संदर्भ</div>
+                <div class="legend-item good"><strong>अमृत, शुभ, लाभ:</strong> श्रेष्ठ व फलदायी कार्य हेतु।</div>
+                <div class="legend-item neutral"><strong>चल:</strong> सामान्य व यात्रा कार्यों हेतु।</div>
+                <div class="legend-item bad"><strong>उद्वेग, रोग, काल:</strong> नए कार्य हेतु वर्जित।</div>
             </div>
         </div>
     </section>
@@ -1321,224 +1155,186 @@
     <!-- ==================== TAB 3: PANCHANG ==================== -->
     <section id="tabPanchang" class="page-content" style="display:none;">
         <div class="hero-banner panchang">
-            <div class="hero-pill-tag">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                5 Limbs of Vedic Astrology • Accurate Ephemeris
-            </div>
+            <div class="hero-pill-tag">Vedic Ephemeris</div>
             <h2 class="hero-title">दैनिक वैदिक पंचांग</h2>
-            <p class="hero-subtitle">तिथि, नक्षत्र, वार, योग, करण, सूर्य/चंद्र राशि, पद-चरण एवं संवत्सर का संपूर्ण दैनिक विवरण।</p>
-            
+            <p class="hero-subtitle">तिथि, नक्षत्र, वार, योग, करण, सूर्य/चंद्र राशि व पद-चरण गणना।</p>
             <div class="sun-pill-grid">
-                <div class="sun-mini-box">
-                    <span>🌅</span>
-                    <div>सूर्योदय (Sunrise)<strong id="panSunriseDisplay">--:-- AM</strong></div>
-                </div>
-                <div class="sun-mini-box">
-                    <span>🌇</span>
-                    <div>सूर्यास्त (Sunset)<strong id="panSunsetDisplay">--:-- PM</strong></div>
-                </div>
+                <div class="sun-mini-box"><span>🌅</span><div>सूर्योदय<strong id="panSunriseDisplay">--:-- AM</strong></div></div>
+                <div class="sun-mini-box"><span>🌇</span><div>सूर्यास्त<strong id="panSunsetDisplay">--:-- PM</strong></div></div>
             </div>
         </div>
 
-        <!-- Controls Card -->
         <div class="input-card no-print">
-            <div class="input-field-block" style="margin-bottom:6px;">
-                <label class="input-field-label" for="panchangCityInput">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    स्थान / शहर
-                </label>
-                <div style="display:flex; gap:8px;">
-                    <input type="text" id="panchangCityInput" class="custom-input" value="Udaipur" placeholder="e.g., Udaipur">
-                    <button class="primary-submit-btn" style="width:52px; padding:0; flex-shrink:0; background:#b45309;" onclick="calculateLivePanchang()">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    </button>
-                </div>
+            <div class="input-field-block">
+                <label class="input-field-label">स्थान / शहर</label>
+                <input type="text" id="panchangCityInput" class="custom-input" value="Udaipur">
             </div>
-
-            <!-- Quick City Chips -->
-            <div class="chip-scroll-container">
-                <div class="city-chip active" onclick="selectCityPanchang('Udaipur')">Udaipur</div>
-                <div class="city-chip" onclick="selectCityPanchang('Jaipur')">Jaipur</div>
-                <div class="city-chip" onclick="selectCityPanchang('New Delhi')">New Delhi</div>
-                <div class="city-chip" onclick="selectCityPanchang('Mumbai')">Mumbai</div>
-                <div class="city-chip" onclick="selectCityPanchang('Bengaluru')">Bengaluru</div>
-                <div class="city-chip" onclick="selectCityPanchang('Ahmedabad')">Ahmedabad</div>
-                <div class="city-chip" onclick="selectCityPanchang('Kolkata')">Kolkata</div>
-            </div>
-
-            <div class="input-field-block" style="margin-bottom:4px;">
-                <label class="input-field-label" for="panchangDateInput">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    पंचांग दिनांक
-                </label>
+            <div class="input-field-block">
+                <label class="input-field-label">पंचांग दिनांक</label>
                 <input type="date" id="panchangDateInput" class="custom-input" onchange="calculateLivePanchang()">
             </div>
-
-            <!-- Date Navigation Buttons -->
             <div class="date-nav-bar">
                 <button class="date-nav-btn" style="color:#b45309;" onclick="stepDate('pan', -1)">◀ पिछला दिन</button>
-                <button class="date-nav-btn" style="color:#0f172a;" onclick="setToday('pan')">आज (Today)</button>
+                <button class="date-nav-btn" onclick="setToday('pan')">आज (Today)</button>
                 <button class="date-nav-btn" style="color:#b45309;" onclick="stepDate('pan', 1)">अगला दिन ▶</button>
             </div>
         </div>
 
-        <!-- Panchang Output Report -->
         <div id="reportAreaPanchang">
-            <!-- City & Astronomical Info Banner -->
             <div class="panchang-loc-card">
                 <div class="panchang-loc-header">स्थान एवं खगोलीय निर्देशांक</div>
-                <div class="panchang-loc-name" id="panLocName">UDAIPUR, RAJASTHAN, INDIA</div>
-                <div class="panchang-loc-coords" id="panLocCoords">24.5858° N, 73.7135° E • Asia/Calcutta</div>
-                
+                <div class="panchang-loc-name" id="panLocName">UDAIPUR, INDIA</div>
+                <div class="panchang-loc-coords" id="panLocCoords">Coordinates Loading...</div>
                 <div class="moon-phase-banner">
                     <div class="moon-phase-icon"></div>
                     <div class="moon-phase-text">
-                        <strong id="panMoonPhaseTitle">Amavasya, कृष्ण पक्ष (Krishna Paksha)</strong>
-                        <span id="panMoonMasaSub">माह: Bhadrapada (Shravan)</span>
+                        <strong id="panMoonPhaseTitle">-</strong>
+                        <span id="panMoonMasaSub">-</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Five Core Limbs Section -->
-            <div class="panchang-section-header">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                पंचांग के पांच अंग (THE 5 CORE LIMBS)
-            </div>
-
-            <!-- 1. Tithi -->
+            <div class="panchang-section-header">पंचांग के पांच अंग (THE 5 LIMBS)</div>
             <div class="limb-card">
-                <div class="limb-header">
-                    <span>तिथि (Tithi)</span>
-                    <span class="limb-time-tag" id="panTithiTime">--:-- PM तक</span>
-                </div>
-                <div class="limb-main-title" id="panTithiName">अमावस्या (Amavasya)</div>
-                <div class="limb-next-hint" id="panTithiNext">अगली: शुक्ल प्रतिपदा ↑</div>
+                <div class="limb-header"><span>तिथि (Tithi)</span><span class="limb-time-tag" id="panTithiTime">-</span></div>
+                <div class="limb-main-title" id="panTithiName">-</div>
+                <div class="limb-next-hint" id="panTithiNext">-</div>
             </div>
-
-            <!-- 2. Paksha -->
             <div class="limb-card">
-                <div class="limb-header">
-                    <span>पक्ष (Paksha)</span>
-                    <span>चंद्रमा की कला</span>
-                </div>
-                <div class="limb-main-title" id="panPakshaName">कृष्ण पक्ष (Krishna Paksha)</div>
-                <div class="limb-next-hint">घटते चंद्रमा का पखवाड़ा</div>
+                <div class="limb-header"><span>पक्ष (Paksha)</span><span>चंद्र कला</span></div>
+                <div class="limb-main-title" id="panPakshaName">-</div>
             </div>
-
-            <!-- 3. Nakshatra -->
             <div class="limb-card">
-                <div class="limb-header">
-                    <span>नक्षत्र (Nakshatra)</span>
-                    <span class="limb-time-tag" id="panNakshatraTime">--:-- PM तक</span>
-                </div>
-                <div class="limb-main-title" id="panNakshatraName">पूर्वा फाल्गुनी (Purva Phalguni)</div>
-                <div class="limb-next-hint" id="panNakshatraNext">अगला: उत्तरा फाल्गुनी ↑</div>
+                <div class="limb-header"><span>नक्षत्र (Nakshatra)</span><span class="limb-time-tag" id="panNakshatraTime">-</span></div>
+                <div class="limb-main-title" id="panNakshatraName">-</div>
+                <div class="limb-next-hint" id="panNakshatraNext">-</div>
             </div>
-
-            <!-- 4. Yoga -->
             <div class="limb-card">
-                <div class="limb-header">
-                    <span>योग (Yoga)</span>
-                    <span class="limb-time-tag" id="panYogaTime">--:-- PM तक</span>
-                </div>
-                <div class="limb-main-title" id="panYogaName">साध्य (Sadhya)</div>
-                <div class="limb-next-hint" id="panYogaNext">अगला: शुभ योग ↑</div>
+                <div class="limb-header"><span>योग (Yoga)</span><span class="limb-time-tag" id="panYogaTime">-</span></div>
+                <div class="limb-main-title" id="panYogaName">-</div>
+                <div class="limb-next-hint" id="panYogaNext">-</div>
             </div>
-
-            <!-- 5. Karana -->
             <div class="limb-card">
-                <div class="limb-header">
-                    <span>करण (Karana)</span>
-                    <span class="limb-time-tag" id="panKaranaTime">--:-- PM तक</span>
-                </div>
-                <div class="limb-main-title" id="panKaranaName">नाग (Naga)</div>
-                <div class="limb-next-hint" id="panKaranaNext">अगला: किंस्तुघ्न ↑</div>
+                <div class="limb-header"><span>करण (Karana)</span><span class="limb-time-tag" id="panKaranaTime">-</span></div>
+                <div class="limb-main-title" id="panKaranaName">-</div>
+                <div class="limb-next-hint" id="panKaranaNext">-</div>
             </div>
-
-            <!-- 6. Vaar -->
             <div class="limb-card">
-                <div class="limb-header">
-                    <span>वार (Day of Week)</span>
-                    <span>दैनिक अधिपति</span>
-                </div>
-                <div class="limb-main-title" id="panVaarName">शुक्रवार (Friday)</div>
-                <div class="limb-next-hint">शुक्र देव का प्रभाव</div>
+                <div class="limb-header"><span>वार (Day)</span><span>अधिपति</span></div>
+                <div class="limb-main-title" id="panVaarName">-</div>
             </div>
 
-            <!-- Rashi, Season, Ayana Grid -->
-            <div class="panchang-section-header">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                माह, राशियां एवं अयन (PLANETARY SIGNS & ERAS)
-            </div>
+            <div class="panchang-section-header">माह, राशियां एवं अयन</div>
             <div class="lucky-matrix-grid">
-                <div class="lucky-item-card">
-                    <span>चन्द्र राशि (Moon Sign)</span>
-                    <strong id="panMoonSign">सिंह (Leo)</strong>
-                </div>
-                <div class="lucky-item-card">
-                    <span>सूर्य राशि (Sun Sign)</span>
-                    <strong id="panSunSign">सिंह (Leo)</strong>
-                </div>
-                <div class="lucky-item-card">
-                    <span>ऋतु (Season)</span>
-                    <strong id="panRitu">शरद (Sharad)</strong>
-                </div>
-                <div class="lucky-item-card">
-                    <span>अयन (Solar Course)</span>
-                    <strong id="panAyana">दक्षिणायन (Dakshinayana)</strong>
-                </div>
+                <div class="lucky-item-card"><span>चन्द्र राशि</span><strong id="panMoonSign">-</strong></div>
+                <div class="lucky-item-card"><span>सूर्य राशि</span><strong id="panSunSign">-</strong></div>
+                <div class="lucky-item-card"><span>ऋतु</span><strong id="panRitu">-</strong></div>
+                <div class="lucky-item-card"><span>अयन</span><strong id="panAyana">दक्षिणायन</strong></div>
             </div>
 
-            <!-- Samvat Eras Grid -->
-            <div class="panchang-section-header">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
-                संवत् एवं युग गणना (SAMVAT ERAS)
-            </div>
+            <div class="panchang-section-header">संवत् गणना</div>
             <div class="lucky-matrix-grid">
-                <div class="lucky-item-card">
-                    <span>विक्रम संवत (Vikram)</span>
-                    <strong id="panVikram">2083</strong>
-                </div>
-                <div class="lucky-item-card">
-                    <span>गुजराती संवत</span>
-                    <strong id="panGujarati">2083</strong>
-                </div>
-                <div class="lucky-item-card">
-                    <span>शक संवत (Shaka)</span>
-                    <strong id="panShaka">1948</strong>
-                </div>
-                <div class="lucky-item-card">
-                    <span>कलि संवत (Kali)</span>
-                    <strong id="panKali">5127</strong>
-                </div>
+                <div class="lucky-item-card"><span>विक्रम संवत</span><strong id="panVikram">-</strong></div>
+                <div class="lucky-item-card"><span>गुजराती संवत</span><strong id="panGujarati">-</strong></div>
+                <div class="lucky-item-card"><span>शक संवत</span><strong id="panShaka">-</strong></div>
+                <div class="lucky-item-card"><span>कलि संवत</span><strong id="panKali">-</strong></div>
             </div>
 
-            <!-- Pada/Charan Transitions Table -->
-            <div class="panchang-section-header">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00897b" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                पद, चरण एवं नामाक्षर (PADA TRANSITIONS)
-            </div>
+            <div class="panchang-section-header">पद, चरण एवं नामाक्षर</div>
             <div class="pada-table-card">
                 <div class="pada-table-header">
-                    <div>चरण (PADA) & अक्षर</div>
-                    <div>नक्षत्र (NAKSHATRA)</div>
-                    <div style="text-align:right;">समाप्ति समय</div>
+                    <div>चरण & अक्षर</div>
+                    <div>नक्षत्र</div>
+                    <div style="text-align:right;">समय</div>
                 </div>
                 <div id="panPadaRows"></div>
-            </div>
-
-            <!-- PDF Download Bar -->
-            <div class="floating-action-bar no-print">
-                <div class="floating-bar-text">आज का संपूर्ण वैदिक पंचांग विवरण<br>PDF रिपोर्ट सहेजें</div>
-                <button class="btn-action-small brown" onclick="generatePDF('panchang')">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                    पंचांग PDF
-                </button>
             </div>
         </div>
     </section>
 
-    <!-- ==================== FIXED MOBILE BOTTOM NAV ==================== -->
+    <!-- ==================== TAB 4: STOOP PADDHATI (NEW) ==================== -->
+    <section id="tabStoop" class="page-content" style="display:none;">
+        <div class="hero-banner stoop">
+            <div class="hero-pill-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 22 22 22 12 2"></polygon></svg>
+                Ancient Pyramid Divination • स्तूप प्रश्न प्रणाली
+            </div>
+            <h2 class="hero-title" id="stoopHeroTitle">स्तूप पद्धति प्रश्न कुंडली</h2>
+            <p class="hero-subtitle" id="stoopHeroSubtitle">अंक गणित, शब्द-संयोजन व स्तूप (पिरामिड) ऊर्जा द्वारा भविष्य प्रश्न का अचूक समाधान।</p>
+        </div>
+
+        <div class="input-card no-print">
+            <div class="mode-toggle-bar">
+                <button class="mode-btn active" id="modeWord" onclick="setStoopMode('word')">शब्द-अक्षर गणना विधि</button>
+                <button class="mode-btn" id="modeChaldean" onclick="setStoopMode('chaldean')">कैल्डियन मान विधि</button>
+            </div>
+
+            <div class="input-field-block">
+                <label class="input-field-label" for="stoopInput">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b33939" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    <span>मन का प्रश्न या व्यक्ति का नाम लिखें</span>
+                </label>
+                <input type="text" id="stoopInput" class="custom-input" placeholder="e.g. Shall I pass in my Examination" value="Shall I pass in my Examination">
+                <span class="input-hint">स्पष्ट व एकाग्र मन से प्रश्न अंग्रेजी या हिंदी में लिखें</span>
+            </div>
+
+            <!-- Quick Question Chips -->
+            <div class="chip-scroll-container">
+                <div class="city-chip" onclick="setStoopQuestion('Shall I pass in my Examination')">📚 परीक्षा (Exam)</div>
+                <div class="city-chip" onclick="setStoopQuestion('Will I get the new job')">💼 नौकरी (Job)</div>
+                <div class="city-chip" onclick="setStoopQuestion('Will my business deal succeed')">📈 व्यापार (Business)</div>
+                <div class="city-chip" onclick="setStoopQuestion('Is this journey favorable for me')">✈️ यात्रा (Travel)</div>
+                <div class="city-chip" onclick="setStoopQuestion('Will health recover soon')">🌿 स्वास्थ्य (Health)</div>
+            </div>
+
+            <button class="primary-submit-btn red-btn" onclick="calculateStoop()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 22 22 22 12 2"></polygon></svg>
+                <span>स्तूप बनाएं और उत्तर जानें</span>
+            </button>
+        </div>
+
+        <!-- Stoop Output Result -->
+        <div id="reportAreaStoop" class="result-report-card">
+            <div class="report-header-text">
+                <div class="report-tag" style="color:#b33939;">प्राचीन अंक स्तूपांक निर्णय</div>
+                <div class="report-name-title" id="stoopQuestionDisplay" style="font-size:1.15rem; font-family:'Plus Jakarta Sans';">-</div>
+                <div class="system-pill" id="stoopModeDisplay">पद्धति: शब्द-अक्षर गणना</div>
+            </div>
+
+            <!-- Pyramid Brick Visualizer -->
+            <div class="stoop-pyramid-container">
+                <div style="font-size:0.75rem; color:#fca5a5; margin-bottom:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">
+                    स्तूप पिरामिड (Pyramid Base to Summit)
+                </div>
+                <div id="stoopPyramidGraph"></div>
+            </div>
+
+            <!-- Apex Result Card -->
+            <div class="summit-verdict-card">
+                <div class="summit-badge success" id="stoopBadge">शुभ संकेत</div>
+                <div style="font-size:0.8rem; font-weight:700; color:#851c1c; text-transform:uppercase;">सर्वोच्च स्तूपांक (Apex Summit)</div>
+                <div class="summit-number-hero" id="stoopFinalDigit">1</div>
+                <div style="font-size:0.95rem; font-weight:800; color:#1e1b2e;" id="stoopHeadline">पूर्ण सफलता</div>
+            </div>
+
+            <!-- Detailed Predictive Interpretation -->
+            <div class="trait-insight-box crimson" style="margin-top:18px;">
+                <div class="trait-box-title" style="color:#b33939;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <span>विस्तृत भविष्यफल एवं मार्गदर्शन</span>
+                </div>
+                <p class="trait-box-desc" id="stoopMeaningDesc">-</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="report-actions-grid no-print">
+                <button class="btn-download-pdf" style="background:#b33939;" onclick="generatePDF('stoop')">PDF रिपोर्ट</button>
+                <button class="btn-share-wa" onclick="shareWhatsApp('stoop')">WhatsApp शेयर</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 4-TAB BOTTOM NAVIGATION ==================== -->
     <nav class="bottom-nav no-print">
         <button class="nav-item active" id="navNum" onclick="switchTab('num')">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1559,769 +1355,180 @@
             </svg>
             <span id="botNavPanchang">पंचांग</span>
         </button>
+        <button class="nav-item" id="navStoop" onclick="switchTab('stoop')">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 22 22 22 12 2"></polygon>
+            </svg>
+            <span id="botNavStoop">स्तूप प्रश्न</span>
+        </button>
     </nav>
 
 </div>
 
 <!-- Scripts -->
 <script>
-    // --- PWA INSTALLATION LOGIC ---
-    let deferredPrompt;
-    const pwaBtn = document.getElementById('pwaInstallBtn');
+    // --- STOOP PADDHATI LOGIC & DATA ---
+    let stoopMode = 'word'; // 'word' or 'chaldean'
+    let currentStoopResult = {};
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        if (pwaBtn) pwaBtn.style.display = 'inline-block';
-    });
+    const stoopMeanings = {
+        1: {
+            title: "पूर्ण सफलता (Complete Success)",
+            status: "success",
+            badge: "अति शुभ संकेत",
+            desc: "यह अंक पूर्ण सफलता का सूचक है। शीघ्र ही आपको कोई ऐसा व्यक्ति मिलेगा जो कि आपकी कार्य-सिद्धि में सहायक होगा और उसके सहयोग से आप अगले कुछ ही समय में सफलता प्राप्त कर सकेंगे।"
+        },
+        2: {
+            title: "अनिश्चितता (Uncertainty & Delays)",
+            status: "warning",
+            badge: "धैर्य रखें",
+            desc: "यह अंक अनिश्चितता का सूचक है। संभवतः आगे के कुछ समय में बाधाएं आएंगी और प्रयत्न करने पर भी आप-अपने इस कार्य में सफलता प्राप्त नहीं कर सकेंगे। अभी नए कदम टालें।"
+        },
+        3: {
+            title: "व्यय व सहयोग (Expense & Eventual Gain)",
+            status: "success",
+            badge: "सहयोग से सिद्धि",
+            desc: "यद्यपि आप कार्य की सफलता के लिए प्रयत्नशील हैं परन्तु निकट भविष्य में ही व्यय ज्यादा होगा और किसी व्यक्ति के सहयोग से ही आप-अपने उद्देश्य में सफलता प्राप्त कर सकेंगे। आपके प्रयत्न निश्चय ही आपको सफलता देंगे।"
+        },
+        4: {
+            title: "बाधाएं व अड़चनें (Obstacles & Resistance)",
+            status: "danger",
+            badge: "कठिन परीक्षा",
+            desc: "आपके इस कार्य की पूर्णता में जरूरत से ज्यादा बाधाएं तथा अड़चनें हैं। जितनी ही ज्यादा आप इन बाधाओं को हटाने का प्रयत्न करेंगे उतनी ही ज्यादा नई-नई समस्याएं आपके सामने पैदा होती रहेंगी। कार्य की सफलता अनिश्चित है।"
+        },
+        5: {
+            title: "पूर्ण सफलता व विजय (Complete Victory)",
+            status: "success",
+            badge: "विजय योग",
+            desc: "यह अंक पूर्ण सफलता का सूचक है। कार्य-सिद्धि यात्रा के माध्यम से ही हो सकेगी। आपको चाहिए कि आप इससे सम्बन्धित अधिकारियों से पत्र-व्यवहार करें या व्यक्तिगत रूप से मिलें तथा अपने प्रयत्नों में तेजी लावें। निश्चय ही विजय आपकी है।"
+        },
+        6: {
+            title: "अनुकूल समय व सिद्धि (Favorable Period)",
+            status: "success",
+            badge: "अनुकूल काल",
+            desc: "समय आपके अनुकूल चल रहा है। किसी मित्र या महिला के सहयोग से आप-अपने उद्देश्यों में सफलता प्राप्त कर सकेंगे। कार्य की पूर्णता से शीघ्र ही आपको प्रसन्नता प्राप्त होगी।"
+        },
+        7: {
+            title: "बाधाओं के बाद सफलता (Triumph After Trial)",
+            status: "warning",
+            badge: "यश व कीर्ति",
+            desc: "यह अंक कार्य-सफलता का सूचक है। यद्यपि अभी कुछ दिनों तक आपको बाधाओं का सामना करना पड़ेगा, परन्तु ये बाधाएं जल्दी ही समाप्त हो जाएंगी और आप सफलता प्राप्त कर सकेंगे। इस कार्य की सफलता से समाज में आपको यश तथा सम्मान भी मिलेगा।"
+        },
+        8: {
+            title: "संघर्ष और विरोध (Conflict & Uncertainty)",
+            status: "danger",
+            badge: "सावधानी अपेक्षित",
+            desc: "कार्य में सफलता निश्चित नहीं है। आपके विरोधी तेज हैं और उनके प्रयत्न आपसे ज्यादा बढ़े-चढ़े हैं। आपके बारे में गलत भ्रम बन गया है, जिसकी वजह से आपकी सफलता संदिग्ध हो गई है। कार्य-पूर्णता में काफी बाधाएं, धन-हानि तथा परेशानियां दिखाई पड़ रही हैं।"
+        },
+        9: {
+            title: "शत्रु पराजय व लक्ष्य प्राप्ति (Final Victory)",
+            status: "success",
+            badge: "सर्वार्थ सिद्धि",
+            desc: "शीघ्र ही शत्रु परास्त होंगे, तथा आपका जो लक्ष्य है उस लक्ष्य में आप पूर्णता प्राप्त कर सकेंगे। आप देखेंगे कि अभी तक जितनी परेशानियां आपके चारों ओर आ रही थीं वे परेशानियां दूर हो गई हैं और आप-अपने लक्ष्य की ओर तीव्रता के साथ बढ़ रहे हैं। सफलता आपके सामने ही है।"
+        }
+    };
 
-    function installPWA() {
-        if (!deferredPrompt) return;
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choice) => {
-            if (choice.outcome === 'accepted' && pwaBtn) {
-                pwaBtn.style.display = 'none';
+    function setStoopMode(mode) {
+        stoopMode = mode;
+        document.getElementById('modeWord').className = mode === 'word' ? 'mode-btn active' : 'mode-btn';
+        document.getElementById('modeChaldean').className = mode === 'chaldean' ? 'mode-btn active' : 'mode-btn';
+        document.getElementById('stoopModeDisplay').innerText = mode === 'word' ? 'पद्धति: शब्द-अक्षर गणना विधि' : 'पद्धति: कैल्डियन अंक मान विधि';
+        calculateStoop();
+    }
+
+    function setStoopQuestion(q) {
+        document.getElementById('stoopInput').value = q;
+        calculateStoop();
+    }
+
+    function calculateStoop() {
+        const text = document.getElementById('stoopInput').value.trim();
+        if (!text) {
+            alert('कृपया अपना प्रश्न या नाम दर्ज करें!');
+            return;
+        }
+
+        const words = text.split(/\s+/);
+        let baseRow = [];
+
+        if (stoopMode === 'word') {
+            // Method 1: Traditional length method
+            baseRow.push(calculateRoot(words.length));
+            for (let word of words) {
+                let clean = word.replace(/[^a-zA-Z0-9]/g, '');
+                if (clean.length > 0) {
+                    baseRow.push(calculateRoot(clean.length));
+                }
             }
-            deferredPrompt = null;
-        });
-    }
-
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Registration skipped.'));
-        });
-    }
-
-    // --- ASTRONOMICAL PANCHANG ENGINE ---
-    import('https://cdn.jsdelivr.net/npm/@ishubhamx/panchangam-js@latest/+esm').then(module => {
-        window.getPanchangam = module.getPanchangam;
-        window.Observer = module.Observer;
-        window.tithiNames = module.tithiNames;
-        window.nakshatraNames = module.nakshatraNames;
-        window.yogaNames = module.yogaNames;
-        window.karanaNames = module.karanaNames;
-    }).catch(e => console.error("Engine script load issue.", e));
-
-    const vaarNames = ["रविवार (Sunday)", "सोमवार (Monday)", "मंगलवार (Tuesday)", "बुधवार (Wednesday)", "गुरुवार (Thursday)", "शुक्रवार (Friday)", "शनिवार (Saturday)"];
-
-    const fallbackKaranas = [
-        "नाग (Naga)", "किंस्तुघ्न (Kintughna)", "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", 
-        "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", 
-        "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", 
-        "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", 
-        "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", 
-        "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", 
-        "बव (Bava)", "बालव (Balava)", "कौलव (Kaulava)", "तैतिल (Taitila)", "गर (Gara)", "वणिज (Vanija)", "भद्रा/विष्टि (Vishti)", 
-        "शकुनि (Shakuni)", "चतुष्पाद (Chatushpada)", "नाग (Naga)" 
-    ];
-
-    const padaSyllables = [
-        ["चू", "चे", "चो", "ला"], ["ली", "लू", "ले", "लो"], ["अ", "ई", "उ", "ए"], ["ओ", "वा", "वी", "वू"],
-        ["वे", "वो", "का", "की"], ["कू", "घ", "ङ", "छ"], ["के", "को", "हा", "ही"], ["हू", "हे", "हो", "डा"],
-        ["डी", "डू", "डे", "डो"], ["मा", "मी", "मू", "मे"], ["मो", "टा", "टी", "टू"], ["टे", "टो", "पा", "पी"],
-        ["पू", "ष", "ण", "ठ"], ["पे", "पो", "रा", "री"], ["रू", "रे", "रो", "ता"], ["ती", "तू", "ते", "तो"],
-        ["ना", "नी", "नू", "ने"], ["नो", "या", "यी", "यू"], ["ये", "यो", "भा", "भी"], ["भू", "धा", "फा", "ढा"],
-        ["भे", "भो", "जा", "जी"], ["खी", "खू", "खे", "खो"], ["गा", "गी", "गू", "गे"], ["गो", "सा", "सी", "सू"],
-        ["से", "सो", "दा", "दी"], ["दू", "थ", "झ", "ञ"], ["दे", "दो", "चा", "ची"]
-    ];
-
-    // --- TAB SWITCHER ---
-    function switchTab(tab) {
-        document.getElementById('tabNumerology').style.display = tab === 'num' ? 'block' : 'none';
-        document.getElementById('tabChoghadiya').style.display = tab === 'chog' ? 'block' : 'none';
-        document.getElementById('tabPanchang').style.display = tab === 'panchang' ? 'block' : 'none';
-
-        document.getElementById('navNum').className = tab === 'num' ? 'nav-item active' : 'nav-item';
-        document.getElementById('navChog').className = tab === 'chog' ? 'nav-item active' : 'nav-item';
-        document.getElementById('navPanchang').className = tab === 'panchang' ? 'nav-item active' : 'nav-item';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        if (tab === 'chog') calculateChoghadiya();
-        if (tab === 'panchang') calculateLivePanchang();
-    }
-
-    function toggleGuide() {
-        const box = document.getElementById('guideBox');
-        const arrow = document.getElementById('guideArrowIcon');
-        if (box.style.display === 'none') {
-            box.style.display = 'block';
-            arrow.innerText = '˄';
         } else {
-            box.style.display = 'none';
-            arrow.innerText = '⌵';
-        }
-    }
-
-    function toggleMenuDrawer() {
-        alert("Astro Pro v3.5\nChaldean Numerology, Choghadiya & Live Vedic Panchang\nDeveloped for Mobile Web & PWA.");
-    }
-
-    // --- NUMEROLOGY ENGINE & DATA ---
-    let isEnglish = false;
-    let currentData = {};
-    const currentDate = new Date();
-
-    const chaldeanMap = { 'A':1, 'I':1, 'J':1, 'Q':1, 'Y':1, 'B':2, 'K':2, 'R':2, 'C':3, 'G':3, 'L':3, 'S':3, 'D':4, 'M':4, 'T':4, 'E':5, 'H':5, 'N':5, 'X':5, 'U':6, 'V':6, 'W':6, 'O':7, 'Z':7, 'F':8, 'P':8 };
-
-    const planetaryLords = {
-        1: { hi: "सूर्य (Sun)", en: "Sun" },
-        2: { hi: "चन्द्रमा (Moon)", en: "Moon" },
-        3: { hi: "बृहस्पति (Jupiter)", en: "Jupiter" },
-        4: { hi: "राहु (Rahu)", en: "Rahu" },
-        5: { hi: "बुध (Mercury)", en: "Mercury" },
-        6: { hi: "शुक्र (Venus)", en: "Venus" },
-        7: { hi: "केतु (Ketu)", en: "Ketu" },
-        8: { hi: "शनि (Saturn)", en: "Saturn" },
-        9: { hi: "मंगल (Mars)", en: "Mars" }
-    };
-
-    const luckyElements = {
-        1: { hi_color: "लाल, पीला", en_color: "Red, Yellow", hi_gem: "माणिक्य (Ruby)", en_gem: "Ruby", hi_days: "रविवार, सोमवार", en_days: "Sun, Mon" },
-        2: { hi_color: "सफेद, हल्का हरा", en_color: "White, Light Green", hi_gem: "मोती (Pearl)", en_gem: "Pearl", hi_days: "सोमवार, शुक्रवार", en_days: "Mon, Fri" },
-        3: { hi_color: "पीला, बैंगनी", en_color: "Yellow, Purple", hi_gem: "पुखराज (Yellow Sapphire)", en_gem: "Yellow Sapphire", hi_days: "गुरुवार, मंगलवार", en_days: "Thu, Tue" },
-        4: { hi_color: "नीला, खाकी", en_color: "Blue, Khaki", hi_gem: "गोमेद (Hessonite)", en_gem: "Hessonite", hi_days: "रविवार, सोमवार", en_days: "Sun, Mon" },
-        5: { hi_color: "हरा, हल्का शेड", en_color: "Green, Light Shades", hi_gem: "पन्ना (Emerald)", en_gem: "Emerald", hi_days: "बुधवार, शुक्रवार", en_days: "Wed, Fri" },
-        6: { hi_color: "सफेद, हल्का नीला", en_color: "White, Light Blue", hi_gem: "हीरा (Diamond)", en_gem: "Diamond", hi_days: "शुक्रवार, मंगलवार", en_days: "Fri, Tue" },
-        7: { hi_color: "हल्का हरा, सफेद", en_color: "Light Green, White", hi_gem: "लहसुनिया (Cat's Eye)", en_gem: "Cat's Eye", hi_days: "रविवार, सोमवार", en_days: "Sun, Mon" },
-        8: { hi_color: "काला, गहरा नीला", en_color: "Black, Dark Blue", hi_gem: "नीलम (Blue Sapphire)", en_gem: "Blue Sapphire", hi_days: "शनिवार, शुक्रवार", en_days: "Sat, Fri" },
-        9: { hi_color: "लाल, गुलाबी", en_color: "Red, Pink", hi_gem: "मूंगा (Red Coral)", en_gem: "Red Coral", hi_days: "मंगलवार, गुरुवार", en_days: "Tue, Thu" }
-    };
-
-    const rootPredictions = {
-        1: { hi: "सूर्य का अंक: नेतृत्व, स्वतंत्रता, दृढ़ इच्छाशक्ति, महत्वाकांक्षा का प्रतीक। यह व्यक्ति को समाज में मान-सम्मान व उच्च पद दिलाता है।", en: "Sun Number: Symbolizes leadership, independence, strong will, and ambition. Grants honor and authority in society." },
-        2: { hi: "चन्द्रमा का अंक: सौम्यता, भावुकता, कल्पनाशीलता और सहयोग का सूचक। यह व्यक्ति को कलात्मक, संवेदनशील और शांतिप्रिय बनाता है।", en: "Moon Number: Indicates gentleness, emotional depth, imagination, and cooperation. Makes the person artistic and peaceful." },
-        3: { hi: "बृहस्पति (गुरु): ज्ञान, बुद्धि, दूरदर्शिता, विद्या, आध्यात्मिकता तथा सामाजिक प्रतिष्ठा। ये लोग उत्कृष्ट मार्गदर्शक और शिक्षक होते हैं।", en: "Jupiter Number: Represents knowledge, wisdom, foresight, spirituality, and social prestige. Natural mentors and leaders." },
-        4: { hi: "राहु का अंक: आकस्मिक परिवर्तन, संघर्ष, अनूठी सोच, मौलिक विचार। यह परंपराओं से हटकर कार्य करने की हिम्मत देता है।", en: "Rahu Number: Symbolizes sudden changes, struggle, unique thinking, and originality. Prompts out-of-the-box actions." },
-        5: { hi: "बुध का अंक: तीव्र बुद्धि, बहुमुखी प्रतिभा, वाकपटुता, व्यापारिक दक्षता। ये हर परिस्थिति में खुद को ढालने में माहिर होते हैं।", en: "Mercury Number: Indicates sharp intellect, versatility, eloquence, and commercial acumen. Highly adaptable." },
-        6: { hi: "शुक्र का अंक: प्रेम, सौंदर्य, आकर्षण, भौतिक सुख-सुविधाओं और कला। यह जीवन में आकर्षण और विलासिता प्रदान करता है।", en: "Venus Number: Represents love, beauty, attraction, luxury, and artistic flair. Brings aesthetic harmony." },
-        7: { hi: "केतु का अंक: रहस्य, शोध, दार्शनिक दृष्टिकोण, एकांतप्रियता, अंतर्मुखी। ये गहरे विचारक और आध्यात्मिक साधक होते हैं।", en: "Ketu Number: Symbolizes mystery, research, philosophical outlook, and introversion. Deep thinkers and spiritual seekers." },
-        8: { hi: "शनि का अंक: कठिन परिश्रम, अनुशासन, धैर्य, संघर्ष तथा स्थायी सफलता। यह न्यायप्रियता और धीरज से बड़ा मुकाम दिलाता है।", en: "Saturn Number: Indicates hard work, discipline, patience, struggle, and eventual lasting success." },
-        9: { hi: "मंगल का अंक: अदम्य साहस, ऊर्जा, पराक्रम, नेतृत्व और आक्रामकता। यह व्यक्ति को कभी हार न मानने वाला योद्धा बनाता है।", en: "Mars Number: Represents indomitable courage, energy, valor, leadership, and aggression. A warrior mindset." }
-    };
-
-    const compoundPredictions = {
-        10: "यह अंक दृढ़ संकल्प, अटूट आत्मविश्वास और धीरज का प्रतीक है। ये लोग एक बार जो ठान लेते हैं, उसे पूरा करके ही दम लेते हैं। सामान्य परिवार में जन्म लेने के बावजूद ये सफलता के उच्च शिखरों तक पहुंचते हैं।",
-        11: "इस अंक वाले लोग चंचल और कमजोर इरादों वाले होते हैं। ये आगे बढ़ने की कोशिश तो करते हैं, लेकिन जल्द ही निराश हो जाते हैं, जिसके कारण इन्हें कामयाबी बहुत मुश्किल से मिलती है।",
-        12: "यह अंक त्याग को दर्शाता है। इनके दोस्त और रिश्तेदार हमेशा इनसे फायदा उठाते हैं और वक्त आने पर इन्हें धोखा दे जाते हैं। इस वजह से ये लोग अक्सर मानसिक तनाव, चिंता और कुंठा का शिकार रहते हैं।",
-        13: "इस अंक से प्रभावित लोगों के विचार लगातार बदलते रहते हैं। किसी भी काम की शुरुआत तो ये बड़े जोश से करते हैं, लेकिन जल्द ही उनका उत्साह फीका पड़ जाता है। ऐसे लोग अक्सर जीवन में असफल ही देखे गए हैं।",
-        14: "यह एक बेहद भाग्यशाली अंक है। इन्हें जीवन में कई बार अचानक धन की प्राप्ति होती है और ये अपनी मेहनत से लक्ष्य पाने में पूरी तरह कामयाब रहते हैं। ये अकेले रहने के बजाय सामाजिक कामों में सक्रिय रूप से भाग लेते हैं और सफल होते हैं।",
-        15: "इस अंक वाले लोग कला और संगीत में गहरी रुचि रखते हैं और अपना ज्यादातर समय इन्हीं कामों में बिताते हैं। यह एक रहस्यमयी अंक भी है; इनके मन में क्या चल रहा है, इसका अंदाजा लगाना बेहद मुश्किल होता है। ये लोग भाग्यशाली, साहसी और लगातार प्रगति करने वाले होते हैं।",
-        16: "ऐसे लोगों का जीवन हमेशा अनिश्चितता से घिरा रहता है। इनके साथ अक्सर अप्रत्याशित घटनाएं होती हैं। जितनी तेजी से ये तरक्की करते हैं, उतनी ही तेजी से इनका पतन भी हो सकता है। इन्हें जीवन भर लगातार चुनौतियों और बाधाओं का सामना करना पड़ता है।",
-        17: "ये लोग बेहद संघर्षशील होते हैं और अपने लक्ष्य को पाकर ही दम लेते हैं। रास्ते में चाहे कितनी भी मुश्किलें आएं, ये कभी हार नहीं मानते। स्वभाव से ये लोग उदार, धैर्यवान और माफ करने वाले होते हैं, जिससे इन्हें खूब यश और तारीफ मिलती है।",
-        18: "यह अंक संघर्ष और हार को दर्शाता है। ऐसे लोगों का जीवन अक्सर विवादों और परेशानियों में उलझा रहता है। कोई न कोई मानसिक तनाव हमेशा इन्हें घेरे रहता है और पारिवारिक जीवन के लिहाज से भी इसे बहुत शुभ नहीं माना जाता।",
-        19: "विद्वानों ने इस अंक को न्याय का प्रतीक माना है। ऐसे लोग जीवन भर अपनी न्यायप्रियता के लिए जाने जाते हैं। ये अनुशासन और अच्छे संस्कारों का बहुत सख्ती से पालन करते हैं।",
-        20: "यह अंक तरक्की का प्रतीक है। एक साधारण परिवार में जन्म लेने के बावजूद ऐसा व्यक्ति काफी ऊंचाइयों को छूता है। इनके जीवन में कभी भी धन और मान-सम्मान की कमी नहीं होती।",
-        21: "यह अंक बेहद शुभ और कामयाबी का प्रतीक माना गया है। ऐसे लोग लगातार तरक्की की सीढ़ियां चढ़ते हैं और धन व मान-सम्मान के लिए बहुत मशहूर होते हैं। ये जिस भी क्षेत्र में जाते हैं, अपना परचम लहराते हैं।",
-        22: "यह पूरी तरह से भावनाओं का अंक है। ये लोग ख्यालों की दुनिया में जीते हैं और किसी को भी परेशानी में देखकर उसकी मदद के लिए अपना सब कुछ न्योछावर करने को तैयार रहते हैं। जीवन की कड़वी सच्चाइयों का सामना करना इनके लिए मुश्किल होता है, इसीलिए इन्हें 'स्वप्नदर्शी' (सपने देखने वाला) कहा जाता है।",
-        23: "इस अंक वाले लोग खुद से कोई काम या फैसला नहीं ले पाते। इनके दोस्त या जानने वाले इन्हें जो भी रास्ता दिखाते हैं, ये उसी पर चलने लगते हैं। इनके विकास के रास्ते में हमेशा कोई न कोई रुकावट आती रहती है।",
-        24: "यह मुनाफे का अंक है। ऐसे लोग जीवन में हमेशा सतर्क और अपनी तरक्की के प्रति सावधान रहते हैं। ये हर काम को पूरी योजना के साथ करते हैं और कोई ढिलाई नहीं छोड़ते। विपरीत लिंग के प्रति इनका आकर्षण काफी अधिक होता है।",
-        25: "यह अंक मिले-जुले परिणाम देता है। सफलता इन्हें मिलती जरूर है, लेकिन बहुत सी रुकावटों के बाद। हालांकि ये लोग मेहनती और नई सोच अपनाने वाले होते हैं, लेकिन लगातार आने वाली बाधाओं के कारण ये पूरी तरह से कामयाब नहीं हो पाते।",
-        26: "इस अंक के लोग बेहद चालाक और केवल अपने फायदों पर नजर रखने वाले होते हैं। इन पर आसानी से भरोसा नहीं किया जा सकता, क्योंकि ये कभी भी धोखा दे सकते हैं।",
-        27: "ये लोग बेहद समझदार, चतुर और अपने काम में हमेशा चुस्त रहते हैं। अपनी अक्लमंदी से ये अपने लक्ष्य को हासिल कर समाज में एक सम्मानजनक मुकाम पाते हैं। इनकी सोच में हमेशा नयापन और मौलिकता होती है। ये एक सफल कर्मयोगी माने जाते हैं।",
-        28: "यह 'इंद्र' का अंक है, जिसका प्रभाव शुभ और अशुभ दोनों होता है। ये लोग बेहद मेहनती, अनुशासित और कर्मठ होते हैं, लेकिन फिर भी मनचाही सफलता नहीं पा पाते। मुश्किलें हमेशा इनके जीवन का हिस्सा बनी रहती हैं।",
-        29: "यह अंक दुविधा और अनिश्चितता को दर्शाता है। ये लोग किसी भी काम को शुरू करने से पहले बहुत सोचते हैं और अक्सर शुरुआत ही नहीं कर पाते। अगर शुरू कर भी दें, तो उसे अंजाम तक नहीं पहुंचा पाते। दिखावे और झूठी शान में ये अपना बहुत सा पैसा और समय बर्बाद कर देते हैं।",
-        30: "यह प्रतिभा (टैलेंट) का अंक है। अपनी बुद्धिमानी और खासियतों के कारण समाज में इनकी एक अलग पहचान होती है। इन्हें खुद पर पूरा भरोसा होता है और इसी के दम पर ये ऊंचाइयां छूते हैं। ये लोग दौलत से ज्यादा ज्ञान को अहमियत देते हैं।",
-        31: "यह अंक अंतर्मुखी (Introvert) स्वभाव को दर्शाता है। ऐसे लोग भीड़-भाड़ से दूर और अकेले रहना पसंद करते हैं। इन्हें लोगों के बीच जाने में घबराहट होती है और सांसारिक सफलता के मामले में ये अक्सर पिछड़ जाते हैं।",
-        32: "बौद्धिक रूप से ये लोग बेहद सक्षम और श्रेष्ठ होते हैं। अगर ये पूरी गंभीरता से कोई काम करें, तो इन्हें शानदार कामयाबी मिल सकती है, लेकिन जरूरत से ज्यादा आलस के कारण सफलता अक्सर इनसे दूर ही रह जाती है।",
-        33: "यह जबर्दस्त आत्मविश्वास का प्रतीक है। ये लोग जो ठान लेते हैं, उसे हर हाल में पूरा करते हैं, चाहे कितनी भी रुकावटें क्यों न आएं। असीम धैर्य, कभी न टूटने वाला आत्मविश्वास और जीवन-शक्ति ही इनकी कामयाबी का राज है। ये जीवन में बहुत सफल होते हैं।",
-        34: "इनके मन में हमेशा एक झिझक सी रहती है, जिससे ये दूसरों पर अपनी छाप नहीं छोड़ पाते। ये अपने वरिष्ठ अधिकारियों से बात करने में घबराते हैं। हीन भावना के कारण चाहकर भी ये सफलता हासिल नहीं कर पाते। इनके जीवन में जरूरत से ज्यादा मुश्किलें आती हैं।",
-        35: "ये लोग बस किसी तरह जिंदगी काटने में यकीन रखते हैं। इनमें न तो कुछ नया करने का जोश होता है और न ही ये आगे बढ़ने की कोशिश करते हैं। ये अक्सर दूसरों के भरोसे अपना काम छोड़कर बेफिक्र हो जाते हैं।",
-        36: "ऐसे लोग जुबान के पक्के और बेहद स्वाभिमानी होते हैं। जो जिम्मेदारी इन्हें मिलती है, उसे पूरा करके ही चैन की सांस लेते हैं। ये अपनी मेहनत से जीवन में भारी सफलता पाते हैं। मानसिक रूप से ये बेहद सुलझे हुए और सही रास्ते पर चलने वाले होते हैं।",
-        37: "यह साझेदारी और सहयोग का अंक है। इनकी किस्मत तभी चमकती है जब ये किसी के साथ मिलकर काम करते हैं। ये लोग काफी तेज दिमाग वाले होते हैं और अपनी मेहनत से अपनी किस्मत खुद लिखते हैं।",
-        38: "यह अंक चंचलता और अस्थिरता को दर्शाता है। ये लोग किसी एक काम या विषय पर ज्यादा देर तक नहीं टिक सकते। एक जगह शांत बैठना इनके बस का नहीं है। ऐसे लोग 'फील्ड वर्क' या भाग-दौड़ वाले कामों में ज्यादा कामयाब होते हैं।",
-        39: "यह बहादुरी का प्रतीक है। इनका दिमाग बहुत तेज चलता है। रास्ते में चाहे जितनी भी रुकावटें आएं, ये कभी निराश होकर अपना रास्ता नहीं बदलते। अपनी मेहनत के बलबूते पर ये जीवन में शानदार सफलता हासिल करते हैं।",
-        40: "बाहर से भले ही ये नास्तिक दिखें, लेकिन अंदर से ये बहुत धार्मिक और ईश्वर पर भरोसा करने वाले होते हैं। ये अपनी ही दुनिया में खोए रहते हैं और दुनियादारी से इन्हें खास मतलब नहीं होता। जीवन में काफी धक्के खाने के बाद ही इन्हें सफलता नसीब होती है।",
-        41: "एक साधारण परिवार में जन्म लेने के बावजूद ये लोग काफी ऊंचाइयों तक पहुंचते हैं। अपनी मेहनत से ये अपने लक्ष्य को हासिल कर ही लेते हैं। इनकी काबिलियत तारीफ के लायक होती है और समाज में इन्हें खूब यश मिलता है।",
-        42: "ऐसे लोगों को दूसरों पर निर्भर माना जाता है। हालांकि इनमें समझ और टैलेंट की कमी नहीं होती, लेकिन ये उसका सही इस्तेमाल नहीं कर पाते। ये हमेशा दूसरों के सहारे ही आगे बढ़ते हैं।",
-        43: "यह रुकावटों का अंक है। ऐसे लोगों को जीवन में अक्सर नाकामी का ही सामना करना पड़ता है। इनका कोई भी काम बिना परेशानी या बाधा के पूरा नहीं होता। विवाद, कलह और झंझट इनके साथ लगे ही रहते हैं।",
-        44: "दूसरों की मदद के बिना ये कोई काम नहीं कर पाते। दुर्भाग्य की बात यह है कि जब भी ये किसी का सहारा लेते हैं, इन्हें धोखा ही मिलता है या फिर ये खुद के लिए नई मुसीबतें खड़ी कर लेते हैं।",
-        45: "ऐसे लोग ऊंचे ख्वाब देखने वाले होते हैं और जीवन में पूरी तरह सफल होते हैं। इनमें हालात के हिसाब से खुद को ढालने की गजब की खूबी होती है। ये लोग अपनी जवानी के दिनों में ही अपने लक्ष्यों को हासिल कर लेते हैं।",
-        46: "यह किस्मत चमकाने वाला अंक है। इनके जीवन में जो भी होता है, वह अचानक और अप्रत्याशित रूप से होता है। ये अपना हर काम एक खास अंदाज में करते हैं, जिसकी वजह से समाज में हर जगह इनकी तारीफ होती है।",
-        47: "यह अनिश्चितता का अंक है। इनके जीवन में कब क्या हो जाए, कुछ कहा नहीं जा सकता। बेहद तेज दिमाग होने के बावजूद ऐसे लोगों को अक्सर गरीबी और बहुत साधारण जीवन जीते हुए देखा गया है।",
-        48: "यह अंक अक्लमंदी, टैलेंट और सादगी को दर्शाता है। इनका रहन-सहन बेहद सादा होता है, लेकिन समाज को ये कुछ ऐसा देकर जाते हैं जिससे इनका नाम पीढ़ियों तक अमर हो जाता है। पैसों के मामले में इनका जीवन बस सामान्य ही रहता है।",
-        49: "ऐसे लोग काफी अंतर्मुखी होते हैं। दुनियादारी और समाज के संघर्षों से ये जल्दी हार मान लेते हैं। ये लोगों से कम ही घुलते-मिलते हैं और इनके दोस्तों की गिनती भी न के बराबर होती है।",
-        50: "यह गजब की कल्पना-शक्ति का अंक है। ऐसे लोग बहुत दयालु, भावुक, मददगार और ख्यालों की दुनिया में रहने वाले होते हैं। जीवन की कड़वी सच्चाइयों से ये कोसों दूर रहते हैं। हालांकि, इनके जीवन में अक्सर मानसिक अशांति बनी रहती है और ये हमेशा सपने ही बुनते रहते हैं।",
-        51: "यह पूर्ण विजय का अंक है। हालांकि इनके जीवन में संघर्ष कम ही आता है, लेकिन जब आता है तो इनका दिमाग और भी तेजी से काम करने लगता है। ये हर चुनौती को पार करके जीत हासिल करते हैं। इनके बहुत सारे दुश्मन होते हैं, लेकिन वे इनका कुछ बिगाड़ नहीं पाते।",
-        52: "यह हार और परेशानियों का प्रतीक है। ऐसे लोगों के जीवन में सुकून के पल बहुत कम होते हैं। इनकी जिंदगी हमेशा उथल-पुथल और मुश्किलों से भरी रहती है।",
-        53: "यह एक रहस्यमयी अंक है। ये लोग सोचते कुछ और हैं और बोलते कुछ और हैं। इनके चेहरे के भावों से इनके मन की बात पढ़ना नामुमकिन होता है। अपने चेहरे पर कोई भाव न आने देना इनकी सबसे बड़ी खूबी है। ये लोग एक बेहतरीन गुप्तचर (जासूस) बन सकते हैं।",
-        54: "यह नेतृत्व क्षमता का अंक है। इनमें समाज और देश का मार्गदर्शन करने की पूरी काबिलियत होती है। अपनी लीडरशिप, तुरंत फैसले लेने की क्षमता और समझदारी से ये जल्द ही अपनी मंजिल पा लेते हैं।",
-        55: "यह विद्वान होने का प्रतीक है। ये लोग बातचीत में बेहद माहिर होते हैं और अपनी तर्कों से विरोधियों को चुप करा देते हैं। इनकी दलीलों के आगे कोई टिक नहीं सकता। ये अपनी बोलने की कला से खूब नाम और सम्मान कमाते हैं।",
-        56: "यह अंक रुकावटों को दर्शाता है। ये लोग आगे तो बढ़ना चाहते हैं, लेकिन इनकी योजनाएं अक्सर गलत और अव्यवस्थित होती हैं, जिससे इन्हें सफलता नहीं मिलती। इनके मित्र भी कमजोर और अदूरदर्शी होते हैं।",
-        57: "ये लोग आत्मविश्वास से भरे, हंसमुख और दूसरों में खुशियां बांटने वाले होते हैं। अपने व्यापार या पेशे में इन्हें शानदार कामयाबी मिलती है। लगातार आगे बढ़ते रहना ही इनकी जिंदगी का मूलमंत्र होता है।",
-        58: "इनकी जिंदगी एक खुली किताब की तरह होती है। इनके मन में न तो कोई गांठ (छल-कपट) होती है और न ही कोई हीन भावना। कुल मिलाकर ये लोग अपने जीवन में हर तरह से सफल होते हैं।",
-        59: "जितने उतार-चढ़ाव इन लोगों को देखने पड़ते हैं, उतने शायद ही किसी और ने देखे हों। चरित्र के मामले में ये थोड़े कमजोर हो सकते हैं। किसी भी तरीके से बस पैसा कमाना ही इनका मकसद होता है। आर्थिक रूप से ये काफी समृद्ध होते हैं।",
-        60: "हर हाल में मुस्कुराते रहना और आसपास के माहौल को खुशनुमा बनाए रखना इनकी खासियत होती है। मुश्किल से मुश्किल वक्त में भी ये हार नहीं मानते। ये लोग चिकित्सा, देश सेवा और समाज सुधार के कामों में बहुत सफल होते हैं।",
-        61: "ये लोग खुद पर पूरा नियंत्रण रखने वाले और बहुत कम बोलने वाले होते हैं। शुरुआत में भले ही इन्हें बहुत संघर्ष करना पड़े, लेकिन जल्द ही ये कामयाबी के शिखर पर पहुंच जाते हैं।",
-        62: "सेना या सैन्य नेतृत्व के क्षेत्र में यह अंक बहुत शुभ है। इनकी काम करने की रफ्तार तूफान जैसी होती है और इन्हें खुद पर अटूट विश्वास होता है।",
-        63: "यह परोपकार का अंक है। दूसरों की मदद करना और धार्मिक कामों में लगे रहना इनका स्वभाव होता है। समाज में इन्हें बहुत इज्जत और मान-सम्मान मिलता है।",
-        64: "यह मानसिक तनाव और जीवन में अस्थिरता का प्रतीक है। ऐसे लोगों का गृहस्थ जीवन बहुत सुखद या शांत नहीं माना जाता।",
-        65: "यह दुर्घटनाओं को दर्शाने वाला अंक है। इनके साथ लगातार कोई न कोई अप्रिय घटना होती रहती है। इनका पूरा जीवन बस संघर्ष करते हुए ही बीतता है।",
-        66: "यह पूर्ण सफलता का सूचक है। ये जिस भी फील्ड में जाते हैं, वहां पूरी कामयाबी हासिल करते हैं। ये लोग अपने लक्ष्यों को लेकर हमेशा सचेत और जागरूक रहते हैं।",
-        67: "ये लोग स्वभाव से बहुत सीधे, सात्विक और मुंह पर बात कहने वाले (स्पष्ट वक्ता) होते हैं। सामाजिक रूप से इन्हें बहुत सम्मान और प्रसिद्धि मिलती है।",
-        68: "ऐसे लोग हमेशा किसी न किसी बात को लेकर घबराए और परेशान रहते हैं। इनकी जिंदगी में हमेशा उथल-पुथल मची रहती है। इसे काफी हद तक धोखे और छल-कपट का अंक भी माना जाता है।",
-        69: "यह यश और कीर्ति का अंक है। ये लोग अपने अच्छे कामों और व्यवहार से खूब पैसा और नाम कमाते हैं। इनका जीवन बहुत सुखी, समृद्ध और शानो-शौकत वाला होता है।",
-        70: "यह अच्छी किस्मत (सौभाग्य) का अंक है। ये जिस भी काम में हाथ डालते हैं, उसमें इन्हें पूरी कामयाबी मिलती है। इनका बुढ़ापा बेहद सुखद और शांतिपूर्ण गुजरता है।",
-        71: "यह बाधाओं का प्रतीक है। इनके रास्ते में लगातार कोई न कोई अड़चन आती रहती है, जिससे ये कभी चैन से नहीं बैठ पाते। इनके मन में हमेशा एक अनजाना डर या आशंका बनी रहती है।",
-        72: "यह कड़ी मेहनत का अंक है। ढेरों मुश्किलों और लंबे संघर्ष के बाद ही इन्हें कामयाबी मिलती है। हालांकि, इतनी मेहनत के बावजूद इनके चेहरे पर कभी निराशा के भाव नहीं दिखते।",
-        73: "यह एक साधारण अंक है। ये लोग जरूरत से ज्यादा मेहनत करते हैं, लेकिन फिर भी सफलता इन्हें बहुत मुश्किल से नसीब होती है। लगातार आने वाली रुकावटों के कारण कभी-कभी इनका हौसला टूट जाता है।",
-        74: "यह सफलता और श्रेष्ठता का शानदार प्रतीक है। एक आम परिवार में जन्म लेकर भी ये लोग बहुत ऊंचे मुकाम हासिल करते हैं। ये मुश्किल हालात से लड़कर हमेशा जीतते हैं।",
-        75: "यह भौतिक सुख-सुविधाओं का अंक है। ये लोग दुनियादारी में डूबे हुए, ऐशो-आराम पसंद करने वाले और भगवान में कम आस्था रखने वाले होते हैं। हालांकि, पैसों की तंगी इनके जीवन में हमेशा बनी रहती है।",
-        76: "यह दुर्भाग्य को दर्शाने वाला अंक है। कड़ी मेहनत के बावजूद इन्हें मनचाही सफलता नहीं मिलती। जिंदगी में कोई न कोई समस्या हमेशा इनके साथ चलती है।",
-        77: "यह वैराग्य या विरक्ति का अंक है। इनमें स्वार्थ की भावना बहुत ज्यादा होती है। ये हर काम में सबसे पहले अपना फायदा देखते हैं, जिसके कारण समाज में इन्हें ज्यादा सम्मान नहीं मिलता।",
-        78: "यह धन और दौलत का प्रतीक है। अचानक पैसा मिलने के कई मौके इनकी जिंदगी में आते हैं। जिस व्यापार या काम में दूसरे लोग असफल हो जाते हैं, उसमें ये सफलता के झंडे गाड़ देते हैं। इनमें व्यापारिक बुद्धि बहुत तेज होती है।",
-        79: "यह अंक परमार्थ और दूसरों का भला करने का प्रतीक है। ये लोग अपना नुकसान सहकर भी दूसरों की मदद करते हैं। सार्वजनिक कामों में ये हमेशा आगे रहते हैं।",
-        80: "यह पूरी तरह से कामयाबी का परिचायक है। अपनी मेहनत और लगन से ये लोग ऊंचाइयों को छूते हैं। धर्म, अर्थ, काम और मोक्ष—जीवन के इन चारों पहलुओं में ये लोग बेहद सफल, सुखी और संतुष्ट रहते हैं।"
-    };
-
-    const guideContentHI = `
-        <div style="font-size:0.88rem; line-height:1.6; color:#4a2c11;">
-            <p><strong>अंक ज्योतिष (विशेषकर कैल्डियन प्रणाली) में 1 से 9 तक के अंक 'मूल अंक' (Root Numbers) कहलाते हैं, जबकि 10 से 80 या उससे आगे की संख्याएं 'यौगिक अंक' (Compound Numbers) कहलाती हैं।</strong></p>
-            <h4 style="color:#d35400; margin:14px 0 6px 0;">1. यौगिक अंकों (10-80) का क्या महत्व है?</h4>
-            <p>कैल्डियन ज्योतिष के अनुसार, मूल अंक (1-9) आपके बाहरी स्वरूप को दर्शाता है। लेकिन यौगिक अंक (Compound Number) आपके आंतरिक स्वरूप, छिपे हुए भाग्य और कर्मों (Karmic Destiny) को दर्शाता है।</p>
-            <h4 style="color:#d35400; margin:14px 0 6px 0;">2. मुख्य श्रेणियां (Series of Numbers)</h4>
-            <ul style="padding-left:18px; margin:0;">
-                <li><strong>मूल अंक 1 श्रृंखला (10, 19, 28, 37, 46, 55, 64, 73):</strong> सूर्य की ऊर्जा, नेतृत्व व नई शुरुआत।</li>
-                <li><strong>मूल अंक 2 श्रृंखला (11, 20, 29, 38, 47, 56, 65, 74):</strong> चंद्रमा का प्रभाव, कल्पनाशीलता व भावुकता।</li>
-                <li><strong>मूल अंक 3 श्रृंखला (12, 21, 30, 39, 48, 57, 66, 75):</strong> गुरु का प्रभाव, ज्ञान व प्रतिष्ठा।</li>
-                <li><strong>मूल अंक 4 श्रृंखला (13, 22, 31, 40, 49, 58, 67, 76):</strong> राहु का प्रभाव, अनपेक्षित बदलाव।</li>
-                <li><strong>मूल अंक 5 श्रृंखला (14, 23, 32, 41, 50, 59, 68, 77):</strong> बुध का प्रभाव, व्यापार व बौद्धिक दक्षता।</li>
-                <li><strong>मूल अंक 6 श्रृंखला (15, 24, 33, 42, 51, 60, 69, 78):</strong> शुक्र का प्रभाव, कला, धन व आकर्षण।</li>
-                <li><strong>मूल अंक 7 श्रृंखला (16, 25, 34, 43, 52, 61, 70, 79):</strong> केतु का प्रभाव, शोध व आध्यात्मिक दर्शन।</li>
-                <li><strong>मूल अंक 8 श्रृंखला (17, 26, 35, 44, 53, 62, 71, 80):</strong> शनि का प्रभाव, कर्म व स्थायी सफलता।</li>
-                <li><strong>मूल अंक 9 श्रृंखला (18, 27, 36, 45, 54, 63, 72):</strong> मंगल का प्रभाव, साहस, ऊर्जा व पराक्रम।</li>
-            </ul>
-            <h4 style="color:#d35400; margin:14px 0 6px 0;">3. अति शुभ एवं सतर्कता अंक</h4>
-            <p><strong style="color:#15803d;">अति भाग्यशाली अंक:</strong> 14, 19, 21, 23, 24, 27, 33, 37, 45, 46, 51</p>
-            <p><strong style="color:#be123c;">सतर्कता कार्मिक अंक:</strong> 16 (पतन), 18 (कलह), 26 (धोखा), 29 (अनिश्चितता), 43 व 44 (अवरोध)</p>
-        </div>
-    `;
-
-    const guideContentEN = `
-        <div style="font-size:0.88rem; line-height:1.6; color:#4a2c11;">
-            <p><strong>In Chaldean Numerology, numbers 1-9 represent single Root Numbers, while numbers 10-80 are Karmic Compound Numbers.</strong></p>
-            <h4 style="color:#d35400; margin:14px 0 6px 0;">1. Outer vs Inner Persona</h4>
-            <p>Your Root number shows your visible outer personality, whereas the Compound number governs your inner spiritual reality and karmic destiny.</p>
-            <h4 style="color:#d35400; margin:14px 0 6px 0;">2. Series of Numbers</h4>
-            <ul style="padding-left:18px; margin:0;">
-                <li><strong>Series 1 (Sun):</strong> 10, 19, 28, 37, 46, 55, 64, 73</li>
-                <li><strong>Series 2 (Moon):</strong> 11, 20, 29, 38, 47, 56, 65, 74</li>
-                <li><strong>Series 3 (Jupiter):</strong> 12, 21, 30, 39, 48, 57, 66, 75</li>
-                <li><strong>Series 4 (Rahu):</strong> 13, 22, 31, 40, 49, 58, 67, 76</li>
-                <li><strong>Series 5 (Mercury):</strong> 14, 23, 32, 41, 50, 59, 68, 77</li>
-                <li><strong>Series 6 (Venus):</strong> 15, 24, 33, 42, 51, 60, 69, 78</li>
-                <li><strong>Series 7 (Ketu):</strong> 16, 25, 34, 43, 52, 61, 70, 79</li>
-                <li><strong>Series 8 (Saturn):</strong> 17, 26, 35, 44, 53, 62, 71, 80</li>
-                <li><strong>Series 9 (Mars):</strong> 18, 27, 36, 45, 54, 63, 72</li>
-            </ul>
-        </div>
-    `;
-
-    function toggleLang() {
-        isEnglish = !isEnglish;
-        document.getElementById('langBtnText').innerText = isEnglish ? "HI" : "EN";
-
-        // Titles
-        document.getElementById('numHeroTitle').innerText = isEnglish ? "Name & Birth Numerology" : "नाम एवं जन्म अंक ज्योतिष";
-        document.getElementById('numHeroSubtitle').innerText = isEnglish ? "Ancient Chaldean System, Compound 1-80, Psychic, Destiny & Lo Shu Matrix." : "प्राचीन कैल्डियन प्रणाली, 1-80 यौगिक अंक, मूलांक, भाग्यांक, एवं लो शु ग्रिड का संपूर्ण विश्लेषण।";
-        document.getElementById('guideBtnLabel').innerText = isEnglish ? "Chaldean Mystery Guide" : "कैल्डियन रहस्य गाइड";
-        document.getElementById('lblFullName').innerText = isEnglish ? "ENTER FULL NAME (ENGLISH)" : "पूरा नाम दर्ज करें (ENGLISH)";
-        document.getElementById('lblDOB').innerText = isEnglish ? "BIRTH DATE (OPTIONAL)" : "जन्म तिथि (वैकल्पिक / OPTIONAL)";
-        document.getElementById('btnCalcNum').innerText = isEnglish ? "Calculate Numerology" : "अंक ज्योतिष गणना करें";
-
-        document.getElementById('stTotalTitle').innerText = isEnglish ? "Compound No" : "संयुक्त अंक";
-        document.getElementById('stRootTitle').innerText = isEnglish ? "Name Root" : "नामांक (ROOT)";
-        document.getElementById('stPsyTitle').innerText = isEnglish ? "Psychic" : "मूलांक (PSYCHIC)";
-        document.getElementById('stDesTitle').innerText = isEnglish ? "Destiny" : "भाग्यांक (DESTINY)";
-
-        document.getElementById('titleRootEffect').innerText = isEnglish ? "Name Root Influence" : "नामांक का प्रभाव";
-        document.getElementById('titleCompEffect').innerText = isEnglish ? "Compound Number Insights" : "संयुक्त अंक का रहस्य एवं फल";
-        document.getElementById('lblLuckyElementsTitle').innerText = isEnglish ? "Lucky Elements & Vibration" : "शुभ तत्व एवं ऊर्जा";
-        document.getElementById('lblColor').innerText = isEnglish ? "Lucky Color" : "शुभ रंग";
-        document.getElementById('lblGem').innerText = isEnglish ? "Gemstone" : "रत्न (Gemstone)";
-        document.getElementById('lblDays').innerText = isEnglish ? "Lucky Days" : "शुभ वार (Days)";
-        document.getElementById('lblYear').innerText = isEnglish ? "Personal Year" : "व्यक्तिगत वर्ष";
-        document.getElementById('lblLoshuTitle').innerText = isEnglish ? "Lo Shu Grid Matrix Analysis" : "लो शु ग्रिड विश्लेषण (LO SHU GRID MATRIX)";
-        document.getElementById('lblLoshuSub').innerText = isEnglish ? "Energy Balance of Birth Date Numbers" : "जन्म तिथि के अंकों की उपस्थिति एवं ऊर्जा संतुलन";
-
-        document.getElementById('botNavNum').innerText = isEnglish ? "Numerology" : "अंक शास्त्र";
-        document.getElementById('botNavChog').innerText = isEnglish ? "Choghadiya" : "चौघड़िया";
-        document.getElementById('botNavPanchang').innerText = isEnglish ? "Panchang" : "पंचांग";
-
-        document.getElementById('guideContent').innerHTML = isEnglish ? guideContentEN : guideContentHI;
-
-        if (currentData.name) calculateNumerology(true);
-    }
-
-    function calculateRoot(num) {
-        while (num > 9) {
-            num = num.toString().split('').reduce((sum, d) => sum + parseInt(d, 10), 0);
-        }
-        return num;
-    }
-
-    function generateLoShu(dateStr) {
-        // Reset cells
-        [1,2,3,4,5,6,7,8,9].forEach(n => {
-            const el = document.getElementById('ls_' + n);
-            if (el) {
-                el.className = 'loshu-cell';
-                el.innerText = n;
-            }
-        });
-
-        const digitsStr = dateStr.replace(/\D/g, '');
-        let counts = {};
-        for (let d of digitsStr) {
-            if (d !== '0') counts[d] = (counts[d] || 0) + 1;
-        }
-
-        for (let n in counts) {
-            const el = document.getElementById('ls_' + n);
-            if (el) {
-                el.className = 'loshu-cell active';
-                el.innerText = n.repeat(counts[n]);
-            }
-        }
-    }
-
-    function calculateNumerology(isRecalc = false) {
-        try {
-            const nameEl = document.getElementById('nameInput');
-            if (!nameEl) return;
-            const rawInput = nameEl.value.toUpperCase().trim();
-            const dobInput = document.getElementById('dobInput')?.value || "";
-            const sanitizedInput = rawInput.replace(/[^A-Z]/g, '');
-
-            if (!isRecalc && !sanitizedInput) {
-                alert("कृपया मान्य अंग्रेजी नाम दर्ज करें (Please enter a valid English name).");
-                return;
-            }
-
-            currentData.name = rawInput;
-
-            let totalScore = 0;
-            let breakdownParts = [];
-            for (let char of sanitizedInput) {
-                if (chaldeanMap[char]) {
-                    totalScore += chaldeanMap[char];
-                    breakdownParts.push(`${char}(${chaldeanMap[char]})`);
+            // Method 2: Chaldean numerical value per word
+            baseRow.push(calculateRoot(words.length));
+            for (let word of words) {
+                let clean = word.toUpperCase().replace(/[^A-Z]/g, '');
+                let wordSum = 0;
+                for (let char of clean) {
+                    if (chaldeanMap[char]) wordSum += chaldeanMap[char];
+                }
+                if (wordSum > 0) {
+                    baseRow.push(calculateRoot(wordSum));
                 }
             }
-
-            // Chaldean Logic: Reductions above 80
-            let originalTotal = totalScore;
-            let effectiveCompound = totalScore;
-            let reductionMsg = "";
-
-            if (effectiveCompound > 80) {
-                effectiveCompound = effectiveCompound.toString().split('').reduce((s, d) => s + parseInt(d, 10), 0);
-                reductionMsg = isEnglish ? ` ➔ ${effectiveCompound} (Reduced)` : ` ➔ ${effectiveCompound} (घटाया गया)`;
-            }
-
-            const rootScore = calculateRoot(effectiveCompound);
-            currentData.compound = effectiveCompound;
-            currentData.originalTotal = originalTotal;
-            currentData.root = rootScore;
-
-            // UI Stat Update
-            document.getElementById('stTotalNum').innerText = effectiveCompound;
-            document.getElementById('stTotalSub').innerText = originalTotal > 80 ? `Orig: ${originalTotal}` : `Total ${effectiveCompound}`;
-            document.getElementById('stRootNum').innerText = rootScore;
-            document.getElementById('stRootLord').innerText = planetaryLords[rootScore][isEnglish ? 'en' : 'hi'];
-
-            document.getElementById('calcBreakdown').innerHTML = `<strong>∑ नामांक:</strong> ${breakdownParts.join(' + ')} = <strong>${originalTotal}</strong>${reductionMsg}`;
-            document.getElementById('repNameDisplay').innerText = rawInput;
-
-            const langKey = isEnglish ? 'en' : 'hi';
-            document.getElementById('rootPredictionText').innerText = rootPredictions[rootScore][langKey];
-
-            // 1-9 Root Number Logic
-            let compoundText = "";
-            if (effectiveCompound < 10) {
-                compoundText = isEnglish
-                    ? "Numbers 1 through 9 are known as Root Numbers or Single Digits. Since this name totals a single digit, it means there is no hidden karmic 'compound' influence attached. What you see is what you get. Please refer to the standard planetary meaning of the Root Number above."
-                    : "1 से 9 तक की संख्याओं को मूलांक या एकल अंक कहा जाता है। चूंकि इस नाम का कुल योग एक एकल अंक है, इसका अर्थ है कि इसके साथ कोई छिपा हुआ कार्मिक 'संयुक्त' प्रभाव नहीं है। जो दिखता है वही सच है। कृपया ऊपर दिए गए नामांक (Root Number) के फल को ही पढ़ें।";
-            } else {
-                compoundText = compoundPredictions[effectiveCompound] || (isEnglish ? "N/A" : "उपलब्ध नहीं");
-            }
-            document.getElementById('predictionText').innerText = compoundText;
-
-            // DOB Calculations
-            const dobSection = document.getElementById('dobResultSection');
-            const dobBadges = document.querySelectorAll('.dob-dep');
-
-            if (dobInput) {
-                currentData.dob = dobInput;
-                const parts = dobInput.split('-');
-
-                const daySum = parts[2].split('').reduce((s, d) => s + parseInt(d, 10), 0);
-                const psychicScore = calculateRoot(daySum);
-
-                const fullDateSum = dobInput.replace(/\D/g, '').split('').reduce((s, d) => s + parseInt(d, 10), 0);
-                const destinyScore = calculateRoot(fullDateSum);
-
-                const currYearSum = currentDate.getFullYear().toString().split('').reduce((s, d) => s + parseInt(d, 10), 0);
-                const pySum = currYearSum + daySum + parts[1].split('').reduce((s, d) => s + parseInt(d, 10), 0);
-                const personalYear = calculateRoot(pySum);
-
-                currentData.psychic = psychicScore;
-                currentData.destiny = destinyScore;
-                currentData.personalYear = personalYear;
-
-                document.getElementById('stPsyNum').innerText = psychicScore;
-                document.getElementById('stPsyLord').innerText = planetaryLords[psychicScore][langKey];
-                document.getElementById('stDesNum').innerText = destinyScore;
-                document.getElementById('stDesLord').innerText = planetaryLords[destinyScore][langKey];
-
-                document.getElementById('repDobDisplay').innerText = `जन्म तिथि: ${parts[2]}/${parts[1]}/${parts[0]}`;
-
-                document.getElementById('luckyColor').innerText = luckyElements[psychicScore][isEnglish ? 'en_color' : 'hi_color'];
-                document.getElementById('luckyGem').innerText = luckyElements[psychicScore][isEnglish ? 'en_gem' : 'hi_gem'];
-                document.getElementById('luckyDays').innerText = luckyElements[psychicScore][isEnglish ? 'en_days' : 'hi_days'];
-                document.getElementById('personalYear').innerText = personalYear;
-
-                document.getElementById('psychicText').innerText = rootPredictions[psychicScore][langKey];
-                document.getElementById('destinyText').innerText = rootPredictions[destinyScore][langKey];
-
-                generateLoShu(dobInput);
-
-                dobSection.style.display = 'block';
-                dobBadges.forEach(el => el.style.display = 'flex');
-            } else {
-                currentData.dob = null;
-                dobSection.style.display = 'none';
-                dobBadges.forEach(el => el.style.display = 'none');
-                document.getElementById('repDobDisplay').innerText = isEnglish ? "Date of Birth: Not Specified" : "जन्म तिथि: दर्ज नहीं";
-            }
-
-            document.getElementById('reportAreaNum').style.display = 'block';
-        } catch (error) {
-            console.error(error);
-            alert("गणना में त्रुटि (Calculation Error): " + error.message);
-        }
-    }
-
-    // --- CHOGHADIYA DATA & LOGIC ---
-    let currentChogData = {};
-    const choghadiyaInfo = {
-        "Amrit": { nameHI: "अमृत (Amrit)", statusClass: "good", meaningHI: "अमृत - सर्वोत्तम मुहूर्त", lord: "चंद्रमा / सूर्य प्रभाव" },
-        "Shubh": { nameHI: "शुभ (Shubh)", statusClass: "good", meaningHI: "शुभ - उत्तम फलदायी", lord: "गुरु का प्रभाव" },
-        "Labh": { nameHI: "लाभ (Labh)", statusClass: "good", meaningHI: "लाभ - व्यापार में उन्नतिकारक", lord: "बुध का प्रभाव" },
-        "Chal": { nameHI: "चल (Chal)", statusClass: "neutral", meaningHI: "चल - सामान्य व मध्यम फल", lord: "शुक्र का प्रभाव" },
-        "Udveg": { nameHI: "उद्वेग (Udveg)", statusClass: "bad", meaningHI: "उद्वेग - क्लेश व बाधाएं", lord: "सूर्य का प्रभाव" },
-        "Rog": { nameHI: "रोग (Rog)", statusClass: "bad", meaningHI: "रोग - हानि व बाधा", lord: "मंगल का प्रभाव" },
-        "Kaal": { nameHI: "काल (Kaal)", statusClass: "bad", meaningHI: "काल - अत्यंत अशुभ व कष्टप्रद", lord: "शनि का प्रभाव" }
-    };
-
-    const daySequences = [
-        ["Udveg", "Chal", "Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg"], // Sun
-        ["Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Chal", "Labh", "Amrit"], // Mon
-        ["Rog", "Udveg", "Chal", "Labh", "Amrit", "Kaal", "Shubh", "Rog"],   // Tue
-        ["Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Chal", "Labh"],  // Wed
-        ["Shubh", "Rog", "Udveg", "Chal", "Labh", "Amrit", "Kaal", "Shubh"], // Thu
-        ["Chal", "Labh", "Amrit", "Kaal", "Shubh", "Rog", "Udveg", "Chal"],  // Fri
-        ["Kaal", "Shubh", "Rog", "Udveg", "Chal", "Labh", "Amrit", "Kaal"]   // Sat
-    ];
-
-    const nightSequences = [
-        ["Shubh", "Amrit", "Chal", "Rog", "Kaal", "Labh", "Udveg", "Shubh"], // Sun
-        ["Chal", "Rog", "Kaal", "Labh", "Udveg", "Shubh", "Amrit", "Chal"],  // Mon
-        ["Kaal", "Labh", "Udveg", "Shubh", "Amrit", "Chal", "Rog", "Kaal"],  // Tue
-        ["Udveg", "Shubh", "Amrit", "Chal", "Rog", "Kaal", "Labh", "Udveg"], // Wed
-        ["Amrit", "Chal", "Rog", "Kaal", "Labh", "Udveg", "Shubh", "Amrit"], // Thu
-        ["Rog", "Kaal", "Labh", "Udveg", "Shubh", "Amrit", "Chal", "Rog"],   // Fri
-        ["Labh", "Udveg", "Shubh", "Amrit", "Chal", "Rog", "Kaal", "Labh"]   // Sat
-    ];
-
-    function formatTime12(dateObj) {
-        let hours = dateObj.getHours();
-        let minutes = dateObj.getMinutes();
-        let ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12;
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        return `${hours}:${minutes} ${ampm}`;
-    }
-
-    function formatTime24(dateObj) {
-        return `${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
-    }
-
-    async function getCoordinates(city) {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1&email=astropro@web.app`);
-        const data = await res.json();
-        if (data.length === 0) throw new Error("शहर नहीं मिला। कृपया पुनः जांचें।");
-        return { lat: data[0].lat, lng: data[0].lon, displayName: data[0].display_name };
-    }
-
-    async function getSunTimes(lat, lng, dateStr) {
-        const res = await fetch(`https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lng}&date=${dateStr}&formatted=0`);
-        const data = await res.json();
-        return data.results;
-    }
-
-    function selectCity(cityName) {
-        document.getElementById('cityInput').value = cityName;
-        document.querySelectorAll('.city-chip').forEach(c => {
-            c.className = c.innerText.toLowerCase() === cityName.toLowerCase() ? 'city-chip active' : 'city-chip';
-        });
-        calculateChoghadiya();
-    }
-
-    function selectCityPanchang(cityName) {
-        document.getElementById('panchangCityInput').value = cityName;
-        calculateLivePanchang();
-    }
-
-    function stepDate(context, deltaDays) {
-        const elId = context === 'chog' ? 'chogDateInput' : 'panchangDateInput';
-        const el = document.getElementById(elId);
-        const cur = new Date(el.value || new Date());
-        cur.setDate(cur.getDate() + deltaDays);
-        el.value = cur.toISOString().split('T')[0];
-        if (context === 'chog') calculateChoghadiya();
-        else calculateLivePanchang();
-    }
-
-    function setToday(context) {
-        const elId = context === 'chog' ? 'chogDateInput' : 'panchangDateInput';
-        document.getElementById(elId).value = new Date().toISOString().split('T')[0];
-        if (context === 'chog') calculateChoghadiya();
-        else calculateLivePanchang();
-    }
-
-    async function calculateChoghadiya() {
-        const city = document.getElementById('cityInput').value.trim() || 'Udaipur';
-        const dateStr = document.getElementById('chogDateInput').value;
-        const status = document.getElementById('statusMsg');
-
-        status.innerText = "गणना हो रही है (Calculating)...";
-
-        try {
-            const coords = await getCoordinates(city);
-            const selectedDate = new Date(dateStr);
-            const dayOfWeek = selectedDate.getDay();
-
-            const nextDate = new Date(selectedDate);
-            nextDate.setDate(nextDate.getDate() + 1);
-            const nextDateStr = nextDate.toISOString().split('T')[0];
-
-            const todaySun = await getSunTimes(coords.lat, coords.lng, dateStr);
-            const tomorrowSun = await getSunTimes(coords.lat, coords.lng, nextDateStr);
-
-            const sunrise = new Date(todaySun.sunrise);
-            const sunset = new Date(todaySun.sunset);
-            const nextSunrise = new Date(tomorrowSun.sunrise);
-
-            document.getElementById('chogSunriseDisplay').innerText = formatTime12(sunrise);
-            document.getElementById('chogSunsetDisplay').innerText = formatTime12(sunset);
-            document.getElementById('chogCityTitle').innerText = `${coords.displayName.split(',').slice(0, 3).join(', ').toUpperCase()}`;
-            document.getElementById('chogHorizonSub').innerText = `दिनांक: ${dateStr.split('-').reverse().join('/')} • सूर्योदय: ${formatTime12(sunrise)} • सूर्यास्त: ${formatTime12(sunset)}`;
-
-            const dayDuration = sunset.getTime() - sunrise.getTime();
-            const nightDuration = nextSunrise.getTime() - sunset.getTime();
-
-            const daySeg = dayDuration / 8;
-            const nightSeg = nightDuration / 8;
-
-            const now = new Date().getTime();
-            let currentLiveFound = null;
-
-            // Render Function
-            function buildRows(containerId, sequence, startMs, segDuration, isNight = false) {
-                const container = document.getElementById(containerId);
-                container.innerHTML = '';
-
-                for (let i = 0; i < 8; i++) {
-                    const slotStart = new Date(startMs + (i * segDuration));
-                    const slotEnd = new Date(startMs + ((i + 1) * segDuration));
-                    const cKey = sequence[i];
-                    const info = choghadiyaInfo[cKey];
-
-                    const isCurrentSlot = now >= slotStart.getTime() && now < slotEnd.getTime();
-                    if (isCurrentSlot) {
-                        currentLiveFound = { name: info.nameHI, status: info.statusClass, start: slotStart, end: slotEnd, lord: info.lord };
-                    }
-
-                    const statusPillLabel = info.statusClass === 'good' ? 'शुभ' : (info.statusClass === 'neutral' ? 'सामान्य / चल' : 'अशुभ');
-
-                    const row = document.createElement('div');
-                    row.className = `chog-item-row ${isCurrentSlot ? 'is-current' : ''}`;
-                    row.innerHTML = `
-                        <div class="chog-row-left">
-                            <div class="chog-index-badge">${i + 1}</div>
-                            <div class="chog-name-block">
-                                <strong>${info.nameHI} ${isCurrentSlot ? '<span style="color:#582be8; font-size:0.75rem; font-weight:800;">(LIVE)</span>' : ''}</strong>
-                                <span>${info.lord}</span>
-                            </div>
-                        </div>
-                        <div class="chog-row-right">
-                            <div class="chog-time-text">${formatTime12(slotStart)} - ${formatTime12(slotEnd)}</div>
-                            <span class="status-badge-pill ${info.statusClass}">${statusPillLabel}</span>
-                        </div>
-                    `;
-                    container.appendChild(row);
-                }
-            }
-
-            buildRows('dayChogList', daySequences[dayOfWeek], sunrise.getTime(), daySeg);
-            buildRows('nightChogList', nightSequences[dayOfWeek], sunset.getTime(), nightSeg, true);
-
-            // Update Live Banner
-            if (currentLiveFound) {
-                document.getElementById('liveChogName').innerText = currentLiveFound.name;
-                document.getElementById('liveChogDesc').innerText = currentLiveFound.lord;
-                document.getElementById('liveChogTimeSlot').innerText = `${formatTime12(currentLiveFound.start)} – ${formatTime12(currentLiveFound.end)}`;
-                const pill = document.getElementById('livePill');
-                pill.className = `status-badge-pill ${currentLiveFound.status}`;
-                pill.innerText = currentLiveFound.status === 'good' ? 'शुभ मुहूर्त' : (currentLiveFound.status === 'neutral' ? 'चल मुहूर्त' : 'अशुभ काल');
-            } else {
-                document.getElementById('liveChogName').innerText = "चौघड़िया अवलोकन";
-                document.getElementById('liveChogDesc').innerText = "चयनित तिथि के मुहूर्त की गणना";
-                document.getElementById('liveChogTimeSlot').innerText = `${dateStr.split('-').reverse().join('/')}`;
-            }
-
-            status.innerText = "";
-        } catch (e) {
-            status.innerText = "त्रुटि: " + e.message;
-        }
-    }
-
-    // --- LIVE PANCHANG LOGIC ---
-    async function calculateLivePanchang() {
-        const city = document.getElementById('panchangCityInput').value.trim() || 'Udaipur';
-        const dateInput = document.getElementById('panchangDateInput').value;
-
-        let targetDate = new Date();
-        if (dateInput) {
-            targetDate = new Date(dateInput);
-            targetDate.setHours(12, 0, 0);
         }
 
-        try {
-            const coords = await getCoordinates(city);
-            document.getElementById('panLocName').innerText = coords.displayName.split(',').slice(0, 3).join(', ').toUpperCase();
-            document.getElementById('panLocCoords').innerText = `${parseFloat(coords.lat).toFixed(4)}° N, ${parseFloat(coords.lng).toFixed(4)}° E • Asia/Calcutta`;
+        if (baseRow.length < 2) {
+            alert("कृपया कम से कम दो शब्दों का प्रश्न दर्ज करें (Please write a longer question).");
+            return;
+        }
 
-            const sunData = await getSunTimes(coords.lat, coords.lng, dateInput);
-            const sunrise = new Date(sunData.sunrise);
-            const sunset = new Date(sunData.sunset);
+        let pyramid = [baseRow];
 
-            document.getElementById('panSunriseDisplay').innerText = formatTime12(sunrise);
-            document.getElementById('panSunsetDisplay').innerText = formatTime12(sunset);
-
-            if (window.getPanchangam && window.Observer) {
-                const observer = new window.Observer(parseFloat(coords.lat), parseFloat(coords.lng), 0);
-                const tzOffsetMinutes = -(new Date().getTimezoneOffset());
-                const p = window.getPanchangam(targetDate, observer, { timezoneOffset: tzOffsetMinutes });
-
-                const tName = window.tithiNames[p.tithi];
-                const pName = p.paksha === 'Shukla' ? 'शुक्ल पक्ष (Shukla Paksha)' : 'कृष्ण पक्ष (Krishna Paksha)';
-                const nName = window.nakshatraNames[p.nakshatra];
-                const mName = p.masa?.name || "Bhadrapad";
-
-                document.getElementById('panMoonPhaseTitle').innerText = `${tName}, ${pName}`;
-                document.getElementById('panMoonMasaSub').innerText = `माह: ${mName}`;
-
-                document.getElementById('panTithiName').innerText = tName;
-                document.getElementById('panTithiTime').innerText = p.tithiEndTime ? `${formatTime12(p.tithiEndTime)} तक` : "सूर्योदय पर्यन्त";
-                document.getElementById('panTithiNext').innerText = `अगली: ${window.tithiNames[(p.tithi + 1) % 30]} ↑`;
-
-                document.getElementById('panPakshaName').innerText = pName;
-
-                document.getElementById('panNakshatraName').innerText = nName;
-                document.getElementById('panNakshatraTime').innerText = p.nakshatraEndTime ? `${formatTime12(p.nakshatraEndTime)} तक` : "अहोरात्र";
-                document.getElementById('panNakshatraNext').innerText = `अगला: ${window.nakshatraNames[(p.nakshatra + 1) % 27]} ↑`;
-
-                document.getElementById('panYogaName').innerText = window.yogaNames[p.yoga];
-                document.getElementById('panYogaTime').innerText = p.yogaEndTime ? `${formatTime12(p.yogaEndTime)} तक` : "दिनमान";
-                document.getElementById('panYogaNext').innerText = `अगला: ${window.yogaNames[(p.yoga + 1) % 27]} ↑`;
-
-                const kIndex = typeof p.karana === 'object' ? p.karana.id : p.karana;
-                const kName = fallbackKaranas[kIndex] || "बव (Bava)";
-                document.getElementById('panKaranaName').innerText = kName;
-                document.getElementById('panKaranaTime').innerText = p.karanaEndTime ? `${formatTime12(p.karanaEndTime)} तक` : "कालखंड";
-                document.getElementById('panKaranaNext').innerText = `अगला: ${fallbackKaranas[(kIndex + 1) % 60]} ↑`;
-
-                document.getElementById('panVaarName').innerText = vaarNames[targetDate.getDay()];
-
-                document.getElementById('panMoonSign').innerText = p.planetaryPositions?.moon?.rashiName || "सिंह (Leo)";
-                document.getElementById('panSunSign').innerText = p.planetaryPositions?.sun?.rashiName || "सिंह (Leo)";
-                document.getElementById('panRitu').innerText = p.ritu || "शरद (Sharad)";
-                document.getElementById('panAyana').innerText = "दक्षिणायन (Dakshinayana)";
-
-                const cYear = targetDate.getFullYear();
-                document.getElementById('panVikram').innerText = cYear + 57;
-                document.getElementById('panGujarati').innerText = cYear + 57;
-                document.getElementById('panShaka').innerText = cYear - 78;
-                document.getElementById('panKali').innerText = cYear + 3101;
-
-                // Render Pada Transitions Table matching ref 4
-                const padaRowsContainer = document.getElementById('panPadaRows');
-                padaRowsContainer.innerHTML = '';
-                const syllables = padaSyllables[p.nakshatra] || ["-","-","-","-"];
-                const daySeg = (sunset.getTime() - sunrise.getTime()) / 4;
-
-                for (let i = 0; i < 4; i++) {
-                    const row = document.createElement('div');
-                    row.className = 'pada-table-row';
-                    const padTime = new Date(sunrise.getTime() + ((i + 1) * daySeg));
-                    row.innerHTML = `
-                        <div class="pada-char-badge">${i + 1} &nbsp; ${syllables[i]}</div>
-                        <div class="pada-nak-name">${nName}</div>
-                        <div class="pada-time">${formatTime24(padTime)}</div>
-                    `;
-                    padaRowsContainer.appendChild(row);
-                }
+        // Pyramid generation loop
+        while (pyramid[pyramid.length - 1].length > 1) {
+            let current = pyramid[pyramid.length - 1];
+            let next = [];
+            for (let i = 0; i < current.length - 1; i++) {
+                next.push(calculateRoot(current[i] + current[i + 1]));
             }
-        } catch (e) {
-            console.error("Panchang Error:", e);
-        }
-    }
-
-    // --- PDF & WHATSAPP EXPORTS ---
-    function generatePDF(type) {
-        let element, filename;
-        if (type === 'num') {
-            element = document.getElementById('reportAreaNum');
-            filename = `${(currentData.name || 'User').replace(/\s+/g, '_')}_Numerology.pdf`;
-        } else if (type === 'chog') {
-            element = document.getElementById('reportAreaChog');
-            filename = `Choghadiya_${document.getElementById('chogDateInput').value}.pdf`;
-        } else if (type === 'panchang') {
-            element = document.getElementById('reportAreaPanchang');
-            filename = `Vedic_Panchang_${document.getElementById('panchangDateInput').value}.pdf`;
+            pyramid.push(next);
         }
 
-        element.classList.add('pdf-export-mode');
-        const opt = {
-            margin: 0.25,
-            filename: filename,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
-            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        // Render graphical pyramid
+        const graphContainer = document.getElementById('stoopPyramidGraph');
+        graphContainer.innerHTML = '';
+
+        for (let r = 0; r < pyramid.length; r++) {
+            const tier = document.createElement('div');
+            tier.className = 'pyramid-tier';
+            const isSummit = (r === pyramid.length - 1);
+
+            pyramid[r].forEach(num => {
+                const brick = document.createElement('div');
+                brick.className = `pyramid-brick ${isSummit ? 'summit' : ''}`;
+                brick.innerText = num;
+                tier.appendChild(brick);
+            });
+            graphContainer.appendChild(tier);
+        }
+
+        const apexDigit = pyramid[pyramid.length - 1][0];
+        const verdict = stoopMeanings[apexDigit] || stoopMeanings[1];
+
+        currentStoopResult = {
+            question: text,
+            apexDigit: apexDigit,
+            verdict: verdict
         };
 
-        html2pdf().set(opt).from(element).save().then(() => {
-            element.classList.remove('pdf-export-mode');
-        });
-    }
+        document.getElementById('stoopQuestionDisplay').innerText = `"${text}"`;
+        document.getElementById('stoopFinalDigit').innerText = apexDigit;
+        document.getElementById('stoopHeadline').innerText = verdict.title;
+        document.getElementById('stoopMeaningDesc').innerText = verdict.desc;
 
-    function shareWhatsApp() {
-        const langKey = isEnglish ? 'en' : 'hi';
-        let text = `*🔮 ASTRO PRO NUMEROLOGY REPORT*\n`;
-        text += `👤 *नाम (Name):* ${currentData.name}\n\n`;
-        text += `🔹 *संयुक्त अंक (Compound):* ${currentData.compound}\n`;
-        text += `🔹 *नामांक (Root Number):* ${currentData.root} (${planetaryLords[currentData.root][langKey]})\n`;
+        const badge = document.getElementById('stoopBadge');
+        badge.className = `summit-badge ${verdict.status}`;
+        badge.innerText = verdict.badge;
 
-        if (currentData.dob) {
-            text += `🔹 *मूलांक (Psychic):* ${currentData.psychic}\n`;
-            text += `🔹 *भाग्यांक (Destiny):* ${currentData.destiny}\n`;
-            text += `🔹 *व्यक्तिगत वर्ष (Personal Year):* ${currentData.personalYear}\n`;
-            text += `🎨 *शुभ रंग:* ${luckyElements[currentData.psychic][isEnglish ? 'en_color' : 'hi_color']}\n`;
-            text += `💎 *भाग्यशाली रत्न:* ${luckyElements[currentData.psychic][isEnglish ? 'en_gem' : 'hi_gem']}\n`;
-        }
-        text += `\n_Generated via Astro Pro PWA_`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        document.getElementById('reportAreaStoop').style.display = 'block';
     }
 
     // Default Init
@@ -2332,9 +1539,11 @@
         document.getElementById('guideContent').innerHTML = guideContentHI;
 
         calculateChoghadiya();
+        calculateStoop();
     });
 </script>
 
+<!-- PDF Exporter -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
 </html>
