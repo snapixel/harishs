@@ -5,7 +5,6 @@ const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  './stoop.html', // Add your new page here
   'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js',
   'https://cdn.jsdelivr.net/npm/@ishubhamx/panchangam-js@latest/+esm',
   './icon-192.png,
