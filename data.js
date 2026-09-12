@@ -246,7 +246,7 @@ const periodMeaning = {
 };
 
 // --- LO SHU GRID PREDICTIONS ---
-const predictions = {
+const loShuPredictions = {
     missing: {
         1: "<strong>1 (Water):</strong> <b>Communication & Self-Expression.</b> You may find it difficult to express your true feelings to others. You might lack self-confidence or rely too much on others for validation. <br><i>(आत्म-अभिव्यक्ति और संचार की कमी। आपको अपनी भावनाओं को व्यक्त करने में कठिनाई हो सकती है। आपमें आत्मविश्वास की कमी हो सकती है या आप दूसरों की राय पर ज्यादा निर्भर रह सकते हैं।)</i>",
         2: "<strong>2 (Earth):</strong> <b>Intuition & Relationships.</b> Indicates a lack of patience and intuition. You might struggle to understand others' emotions, leading to misunderstandings. It can also indicate delays in marriage or partnerships. <br><i>(अंतर्ज्ञान और धैर्य की कमी। दूसरों की भावनाओं को समझने में संघर्ष करना पड़ सकता है, जिससे रिश्तों में गलतफहमी पैदा होती है। विवाह या साझेदारी में भी देरी हो सकती है।)</i>",
