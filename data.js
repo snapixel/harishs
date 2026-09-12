@@ -270,3 +270,66 @@ const loShuPredictions = {
         9: "<strong>Multiple 9s:</strong> You are highly intelligent, humanitarian, and idealistic. Too many 9s make you prone to sudden anger, impulsive actions, and becoming overly critical of others. <br><i>(अत्यधिक बुद्धिमान और आदर्शवादी। बहुत अधिक 9 होने से आपको अचानक गुस्सा आ सकता है, आप जल्दबाजी में काम कर सकते हैं और दूसरों की अत्यधिक आलोचना कर सकते हैं।)</i>"
     }
 };
+
+// --- SYNASTRY / COMPATIBILITY DATA ---
+const numData = {
+    1: {
+        title: "The Independent Leader (स्वतंत्र नेता)",
+        romance: { en: "Passionate and protective, but highly independent. They like to take the lead in relationships and need a partner who respects their personal space and ambition.", hi: "भावुक और सुरक्षात्मक, लेकिन अत्यधिक स्वतंत्र। ये रिश्तों में नेतृत्व करना पसंद करते हैं और इन्हें ऐसे साथी की आवश्यकता होती है जो इनकी महत्वाकांक्षा का सम्मान करे।" },
+        business: { en: "A natural self-starter and innovator. They prefer giving directions rather than taking orders and thrive when given full autonomy.", hi: "एक जन्मजात नेता और नवप्रवर्तक। ये आदेश लेने के बजाय निर्देश देना पसंद करते हैं और पूरी स्वतंत्रता मिलने पर सबसे अच्छा काम करते हैं।" }
+    },
+    2: {
+        title: "The Peacemaker (शांतिदूत)",
+        romance: { en: "Highly romantic, deeply sensitive, and empathetic. They crave emotional connection, harmony, and are willing to compromise to keep the peace.", hi: "अत्यधिक रोमांटिक, संवेदनशील और सहानुभूतिपूर्ण। ये गहरा भावनात्मक जुड़ाव चाहते हैं और शांति बनाए रखने के लिए समझौता करने को तैयार रहते हैं।" },
+        business: { en: "An excellent team player and diplomat. They excel at networking, resolving conflicts, and supporting others behind the scenes.", hi: "एक उत्कृष्ट टीम प्लेयर और कूटनीतिज्ञ। ये नेटवर्किंग, विवाद सुलझाने और पर्दे के पीछे से दूसरों का समर्थन करने में माहिर होते हैं।" }
+    },
+    3: {
+        title: "The Creative (रचनात्मक संचारक)",
+        romance: { en: "Fun-loving, expressive, and charming. They need a relationship filled with communication, laughter, and social activities, but can struggle with deep emotional commitment.", hi: "मज़ेदार, अभिव्यंजक और आकर्षक। इन्हें ऐसा रिश्ता चाहिए जिसमें बातचीत और हँसी-मज़ाक हो, लेकिन गहरी प्रतिबद्धता (commitment) में इन्हें परेशानी हो सकती है।" },
+        business: { en: "Brilliant communicators and idea generators. They excel in marketing, arts, and speaking, but may struggle with strict routines and deadlines.", hi: "शानदार संचारक और विचार उत्पन्न करने वाले। ये मार्केटिंग और कला में उत्कृष्ट हैं, लेकिन सख्त दिनचर्या और डेडलाइन का पालन करने में संघर्ष कर सकते हैं।" }
+    },
+    4: {
+        title: "The Builder (व्यावहारिक निर्माता)",
+        romance: { en: "Loyal, practical, and dependable. They express love through actions and providing security, rather than grand romantic gestures. They dislike unpredictability.", hi: "वफादार, व्यावहारिक और भरोसेमंद। ये भव्य रोमांटिक वादों के बजाय सुरक्षा प्रदान करके प्यार जताते हैं। इन्हें अप्रत्याशित बदलाव पसंद नहीं हैं।" },
+        business: { en: "The backbone of any project. Highly organized, hardworking, and systemic. They build solid foundations but can be rigid in their methods.", hi: "किसी भी प्रोजेक्ट की रीढ़। अत्यधिक व्यवस्थित और मेहनती। ये मजबूत नींव बनाते हैं लेकिन अपने तरीकों में थोड़े कठोर हो सकते हैं।" }
+    },
+    5: {
+        title: "The Explorer (गतिशील अन्वेषक)",
+        romance: { en: "Adventurous and magnetic. They crave variety, freedom, and excitement. They easily feel trapped in overly traditional or restrictive relationships.", hi: "साहसी और आकर्षक। ये विविधता और स्वतंत्रता चाहते हैं। बहुत अधिक पारंपरिक या प्रतिबंधात्मक रिश्तों में ये घुटन महसूस करते हैं।" },
+        business: { en: "Adaptable problem-solvers who thrive in dynamic, fast-paced environments. They are excellent at sales and taking calculated risks.", hi: "तेजी से बदलते माहौल में फलने-फूलने वाले। ये समस्याओं को आसानी से सुलझाते हैं और बिक्री (sales) तथा जोखिम लेने में उत्कृष्ट हैं।" }
+    },
+    6: {
+        title: "The Nurturer (देखभाल करने वाला)",
+        romance: { en: "The ultimate caregiver. They are devoted, family-oriented, and seek deep soulmate connections. However, they can become overly possessive or sacrifice too much.", hi: "परम देखभाल करने वाले। ये समर्पित और परिवार-उन्मुख होते हैं। हालांकि, ये अत्यधिक अधिकार जमाने वाले बन सकते हैं या बहुत अधिक त्याग कर सकते हैं।" },
+        business: { en: "Highly responsible and ethical. They excel in human resources, healing professions, or any business that serves the community.", hi: "अत्यधिक जिम्मेदार और नैतिक। ये मानव संसाधन (HR), चिकित्सा या समुदाय की सेवा करने वाले किसी भी व्यवसाय में उत्कृष्ट होते हैं।" }
+    },
+    7: {
+        title: "The Seeker (विश्लेषणात्मक खोजी)",
+        romance: { en: "Intellectual, mysterious, and deeply spiritual. They need plenty of alone time to recharge and seek a partner who connects with their mind first.", hi: "बौद्धिक, रहस्यमय और आध्यात्मिक। इन्हें अकेले समय बिताने की आवश्यकता होती है और ऐसे साथी की तलाश होती है जो इनके मन/विचारों से जुड़े।" },
+        business: { en: "Brilliant analysts, researchers, and strategists. They prefer working independently in quiet environments rather than loud, collaborative spaces.", hi: "शानदार विश्लेषक और रणनीतिकार। ये शोर-शराबे वाली जगहों के बजाय शांत वातावरण में स्वतंत्र रूप से काम करना पसंद करते हैं।" }
+    },
+    8: {
+        title: "The Executive (महत्वाकांक्षी अधिकारी)",
+        romance: { en: "Intense, powerful, and demanding. They take relationships as seriously as business. They want a powerful 'power-couple' dynamic but can be dominating.", hi: "तीव्र, शक्तिशाली और मांग करने वाले। ये रिश्तों को व्यापार की तरह गंभीरता से लेते हैं। ये एक 'पावर-कपल' बनना चाहते हैं लेकिन हावी हो सकते हैं।" },
+        business: { en: "Ambitious visionaries driven by financial success and authority. They are natural CEOs who excel at managing wealth and large-scale operations.", hi: "वित्तीय सफलता और अधिकार से प्रेरित महत्वाकांक्षी दूरदर्शी। ये प्राकृतिक लीडर हैं जो धन और बड़े कार्यों के प्रबंधन में माहिर हैं।" }
+    },
+    9: {
+        title: "The Humanitarian (दयालु मानवतावादी)",
+        romance: { en: "Idealistic, romantic, and incredibly generous. They love with a big heart but can easily get hurt if their partner doesn't share their high moral standards.", hi: "आदर्शवादी, रोमांटिक और अविश्वसनीय रूप से उदार। ये बड़े दिल से प्यार करते हैं, लेकिन अगर साथी इनके आदर्शों को नहीं समझता, तो जल्दी आहत हो जाते हैं।" },
+        business: { en: "Visionaries who want to change the world. They are driven by purpose rather than just profit, excelling in global causes, education, and creative arts.", hi: "दुनिया को बदलने की चाह रखने वाले दुनिया को बदलने की चाह रखने वाले दूरदर्शी। ये केवल लाभ के बजाय उद्देश्य से प्रेरित होते हैं, और शिक्षा या वैश्विक कार्यों में उत्कृष्ट होते हैं।" }
+    }
+};
+
+const compMatrix = [
+    [],
+    [0, 80, 70, 90, 50, 90, 40, 85, 20, 95], // 1
+    [0, 70, 85, 75, 40, 70, 50, 80, 85, 60], // 2
+    [0, 90, 75, 80, 55, 85, 65, 70, 50, 90], // 3
+    [0, 50, 40, 55, 85, 60, 75, 70, 85, 45], // 4
+    [0, 90, 70, 85, 60, 80, 65, 75, 60, 85], // 5
+    [0, 40, 50, 65, 75, 65, 90, 45, 80, 75], // 6
+    [0, 85, 80, 70, 70, 75, 45, 85, 55, 65], // 7
+    [0, 20, 85, 50, 85, 60, 80, 55, 80, 40], // 8
+    [0, 95, 60, 90, 45, 85, 75, 65, 40, 85]  // 9
+];
+

@@ -618,12 +618,14 @@ function switchTab(tab) {
     document.getElementById('tabPanchang').style.display = tab === 'panchang' ? 'block' : 'none';
     document.getElementById('tabStupank').style.display = tab === 'stupank' ? 'block' : 'none';
     document.getElementById('tabDetailed').style.display = tab === 'detailed' ? 'block' : 'none';
+    document.getElementById('tabSynastry').style.display = tab === 'synastry' ? 'block' : 'none';
 
     document.getElementById('navNum').className = tab === 'num' ? 'nav-item active' : 'nav-item';
     document.getElementById('navChog').className = tab === 'chog' ? 'nav-item active' : 'nav-item';
     document.getElementById('navPanchang').className = tab === 'panchang' ? 'nav-item active' : 'nav-item';
     document.getElementById('navStupank').className = tab === 'stupank' ? 'nav-item active' : 'nav-item';
     document.getElementById('navDetailed').className = tab === 'detailed' ? 'nav-item active' : 'nav-item';
+    document.getElementById('navSynastry').className = tab === 'synastry' ? 'nav-item active' : 'nav-item';
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -631,6 +633,87 @@ function switchTab(tab) {
     if (tab === 'panchang') calculateLivePanchang();
 }
 
+// --- SYNASTRY LOGIC ---
+function getLifePathNumber(dateString) {
+    let sum = dateString.replace(/-/g, '').split('').map(Number).reduce((a, b) => a + b, 0);
+    return calculateRoot(sum); // Reusing your existing root calculation
+}
+
+function calculateCompatibility() {
+    const name1 = document.getElementById('synName1').value || "Person 1";
+    const dob1 = document.getElementById('synDob1').value;
+    const name2 = document.getElementById('synName2').value || "Person 2";
+    const dob2 = document.getElementById('synDob2').value;
+    const relType = document.getElementById('relType').value;
+
+    if(!dob1 || !dob2) return alert("कृपया दोनों व्यक्तियों की जन्म तिथि दर्ज करें (Please enter DOB for both).");
+
+    const lp1 = getLifePathNumber(dob1);
+    const lp2 = getLifePathNumber(dob2);
+    const score = compMatrix[lp1][lp2];
+
+    // UI Updates
+    document.getElementById('scoreText').innerText = score + '%';
+    document.getElementById('scoreCircle').style.background = `conic-gradient(#ff4757 ${score}%, #eee ${score}%)`;
+    document.getElementById('pathNumbers').innerHTML = `<div>${name1}: अंक ${lp1}</div><div>${name2}: अंक ${lp2}</div>`;
+
+    const verdicts = [
+        { s: 80, en: "Soulmate Potential! (Excellent Match)", hi: "अद्भुत योग! (बहुत अच्छा मिलान)" },
+        { s: 60, en: "Strong Connection (Good Match)", hi: "मजबूत संबंध (अच्छा मिलान)" },
+        { s: 40, en: "Karmic Bond (Requires Effort)", hi: "औसत मिलान (प्रयास की आवश्यकता है)" },
+        { s: 0, en: "Challenging Dynamic (Opposite Energies)", hi: "चुनौतीपूर्ण संबंध (विपरीत ऊर्जा)" }
+    ];
+    let v = verdicts.find(x => score >= x.s);
+    document.getElementById('matchVerdict').innerText = v.en;
+    document.getElementById('hiVerdict').innerText = v.hi;
+
+    const p1Data = numData[lp1];
+    const p2Data = numData[lp2];
+    
+    document.getElementById('individualTraits').innerHTML = `
+        <div class="person-trait">
+            <strong>${name1} (${p1Data.title}):</strong> <br>
+            <span style="font-size: 0.85rem;">${p1Data[relType].en}</span>
+            <span class="hi-text">${p1Data[relType].hi}</span>
+        </div>
+        <div class="person-trait">
+            <strong>${name2} (${p2Data.title}):</strong> <br>
+            <span style="font-size: 0.85rem;">${p2Data[relType].en}</span>
+            <span class="hi-text">${p2Data[relType].hi}</span>
+        </div>
+    `;
+
+    let synEn, synHi, advEn, advHi;
+
+    if (score >= 80) {
+        synEn = `The numbers ${lp1} and ${lp2} are highly compatible. Your fundamental energies align perfectly. You naturally cover each other's blind spots without feeling restricted.`;
+        synHi = `अंक ${lp1} और ${lp2} अत्यधिक अनुकूल हैं। आपकी ऊर्जा पूरी तरह से मेल खाती है। आप बिना किसी प्रतिबंध के स्वाभाविक रूप से एक-दूसरे की कमियों को पूरा करते हैं।`;
+        advEn = `Maintain this beautiful harmony by continuing to express gratitude.`;
+        advHi = `आभार व्यक्त करके इस खूबसूरत सामंजस्य को बनाए रखें।`;
+    } else if (score >= 60) {
+        synEn = `There is a solid foundation here. The ${lp1} and ${lp2} dynamic offers strong potential for growth.`;
+        synHi = `यहाँ एक मजबूत नींव है। ${lp1} और ${lp2} का तालमेल विकास की मजबूत संभावना प्रदान करता है।`;
+        advEn = `Focus on active listening. Remember that your partner's opposite approach is an asset.`;
+        advHi = `सक्रिय रूप से सुनने पर ध्यान दें। याद रखें कि आपके साथी का अलग दृष्टिकोण एक संपत्ति है।`;
+    } else if (score >= 40) {
+        synEn = `The ${lp1} and ${lp2} pairing creates a Karmic friction. You are drawn together to teach each other difficult life lessons.`;
+        synHi = `यह जोड़ी एक 'कर्मिक घर्षण' पैदा करती है। आप एक-दूसरे को जीवन के कठिन सबक सिखाने के लिए साथ आए हैं।`;
+        advEn = `Clear boundaries and extreme compromise are required. Find a middle ground where both feel heard.`;
+        advHi = `स्पष्ट सीमाएं और अत्यधिक समझौते की आवश्यकता है। एक बीच का रास्ता खोजें।`;
+    } else {
+        synEn = `This is a highly challenging dynamic. The energies of ${lp1} and ${lp2} naturally repel each other.`;
+        synHi = `यह एक अत्यधिक चुनौतीपूर्ण संबंध है। ${lp1} और ${lp2} की ऊर्जा स्वाभाविक रूप से एक-दूसरे का विरोध करती है।`;
+        advEn = `You must practice radical acceptance to make this work.`;
+        advHi = `आपको पूर्ण स्वीकृति का अभ्यास करना होगा।`;
+    }
+
+    document.getElementById('enSynergy').innerText = synEn;
+    document.getElementById('hiSynergy').innerText = synHi;
+    document.getElementById('enAdvice').innerText = advEn;
+    document.getElementById('hiAdvice').innerText = advHi;
+
+    document.getElementById('reportAreaSynastry').style.display = 'block';
+}
 // --- DETAILED NUMEROLOGY LOGIC ---
 function reduceToSingleDigitMod9(num) {
     if (num === 0) return 0;

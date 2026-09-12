@@ -1,4 +1,4 @@
-const CACHE_NAME = 'astro-pro-v4';
+const CACHE_NAME = 'astro-pro-v5';
 
 // Core assets required for complete offline operation
 const ASSETS_TO_CACHE = [

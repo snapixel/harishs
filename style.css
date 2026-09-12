@@ -946,6 +946,7 @@ body {
             z-index: 1000;
             border-top: 1px solid #edf0f7;
         }
+		/* Update existing nav-item width */
         .nav-item {
             background: none;
             border: none;
@@ -980,12 +981,37 @@ body {
         .pdf-export-mode .result-report-card { border: none !important; box-shadow: none !important; display: block !important; }
         .pdf-export-mode .loshu-matrix-card { background: #0f0c20 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 		
-		/* Update existing nav-item width */
+/* Update existing nav-item width */
 .nav-item {
     /* ... keep other properties ... */
-    width: 25%; /* Changed from 33.33% */
+    width: 16.66%; /* Changed to 16.66% for 6 tabs */
+}
+/* Synastry Styles */
+.hero-banner.synastry { background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%); }
+
+.score-display { text-align: center; margin: 20px 0; }
+.score-circle {
+    width: 120px; height: 120px; border-radius: 50%;
+    background: conic-gradient(#ff4757 0%, #eee 0);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 15px auto; position: relative;
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.2);
+}
+.score-circle::after {
+    content: ""; position: absolute; width: 100px; height: 100px;
+    background: white; border-radius: 50%;
+}
+.score-text { position: relative; z-index: 1; font-size: 28px; font-weight: bold; color: #1e1b2e; }
+
+.path-numbers {
+    display: flex; justify-content: space-around; background: #fff0f1;
+    padding: 15px; border-radius: var(--radius-md); margin-bottom: 20px; font-weight: bold;
+    color: #ff4757;
 }
 
+.person-trait { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #e8ecf4; }
+.person-trait:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.hi-text { color: var(--text-muted); font-size: 0.85rem; margin-top: 6px; display: block; }
 /* Add new Stupank styles */
 .pyramid-container {
     text-align: center;

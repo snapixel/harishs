@@ -535,6 +535,88 @@
             </div>
         </div>
     </section>
+	<!-- TAB 6: COSMIC SYNASTRY -->
+    <section id="tabSynastry" class="page-content" style="display:none;">
+        <div class="hero-banner synastry">
+            <div class="hero-pill-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                Life Path Match
+            </div>
+            <h2 class="hero-title">Cosmic Synastry</h2>
+            <p class="hero-subtitle">विस्तृत मूलांक/भाग्यांक मिलान (Detailed Compatibility)</p>
+        </div>
+
+        <div class="input-card no-print">
+            <div style="background: #f8fafc; padding: 12px; border-radius: 12px; margin-bottom: 12px;">
+                <div class="input-field-block">
+                    <label class="input-field-label">Person 1 Name</label>
+                    <input type="text" id="synName1" class="custom-input" placeholder="e.g., Rahul">
+                </div>
+                <div class="input-field-block" style="margin-bottom: 0;">
+                    <label class="input-field-label">Date of Birth</label>
+                    <input type="date" id="synDob1" class="custom-input">
+                </div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 12px; border-radius: 12px; margin-bottom: 16px;">
+                <div class="input-field-block">
+                    <label class="input-field-label">Person 2 Name</label>
+                    <input type="text" id="synName2" class="custom-input" placeholder="e.g., Priya">
+                </div>
+                <div class="input-field-block" style="margin-bottom: 0;">
+                    <label class="input-field-label">Date of Birth</label>
+                    <input type="date" id="synDob2" class="custom-input">
+                </div>
+            </div>
+
+            <div class="input-field-block">
+                <label class="input-field-label">रिश्ते का प्रकार (Type)</label>
+                <select id="relType" class="custom-input">
+                    <option value="romance">Romance & Marriage (प्रेम और विवाह)</option>
+                    <option value="business">Business & Friendship (व्यापार और मित्रता)</option>
+                </select>
+            </div>
+
+            <button class="primary-submit-btn" style="background: #ff4757;" onclick="calculateCompatibility()">
+                मिलान जांचें (Check Compatibility)
+            </button>
+        </div>
+
+        <div id="reportAreaSynastry" class="result-report-card">
+            <div class="score-display">
+                <div class="score-circle" id="scoreCircle">
+                    <span class="score-text" id="scoreText">0%</span>
+                </div>
+                <h3 id="matchVerdict" style="margin-bottom: 4px; color: #1e1b2e;">-</h3>
+                <span class="hi-text" style="font-size: 1rem; color: #ff4757;" id="hiVerdict">-</span>
+            </div>
+
+            <div class="path-numbers" id="pathNumbers"></div>
+
+            <div class="trait-insight-box">
+                <div class="trait-box-title" style="color:var(--primary);">
+                    🎭 Core Approaches (स्वभाव)
+                </div>
+                <div id="individualTraits" class="trait-box-desc" style="margin-top: 10px;"></div>
+            </div>
+
+            <div class="trait-insight-box orange">
+                <div class="trait-box-title" style="color:#d97706;">
+                    🔮 The Dynamic (रिश्ते की ऊर्जा)
+                </div>
+                <p class="trait-box-desc" id="enSynergy" style="font-weight: 500; font-size: 0.85rem; margin-top: 6px;"></p>
+                <p class="hi-text" id="hiSynergy"></p>
+            </div>
+
+            <div class="trait-insight-box green">
+                <div class="trait-box-title" style="color:#059669;">
+                    ✨ Success Mantra (सफलता का मंत्र)
+                </div>
+                <p class="trait-box-desc" id="enAdvice" style="font-weight: 500; font-size: 0.85rem; margin-top: 6px;"></p>
+                <p class="hi-text" id="hiAdvice"></p>
+            </div>
+        </div>
+    </section>
     <!-- FIXED MOBILE BOTTOM NAV -->
     <nav class="bottom-nav no-print">
         <button class="nav-item active" id="navNum" onclick="switchTab('num')">
@@ -570,12 +652,19 @@
             </svg>
             <span id="botNavDetailed" style="font-size: 0.65rem;">विस्तृत अंक</span>
         </button>
+		<!-- Add after the Detailed Numerology nav-item -->
+        <button class="nav-item" id="navSynastry" onclick="switchTab('synastry')">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <span id="botNavSynastry" style="font-size: 0.65rem;">मिलान</span>
+        </button>
     </nav>
 </div>
 
 <!-- Scripts loaded in order -->
-<script src="data.js?v=4"></script>
-<script src="app.js?v=4"></script>
+<script src="data.js?v=5"></script>
+<script src="app.js?v=5"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
 </html>
