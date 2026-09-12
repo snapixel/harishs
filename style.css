@@ -999,3 +999,46 @@ body {
 }
 .hero-banner.stupank { background: linear-gradient(135deg, #1f4037 0%, #99f2c8 100%); color: #0f2027; }
 .hero-banner.stupank .hero-subtitle, .hero-banner.stupank .hero-pill-tag { color: #1e3c33; border-color: rgba(0,0,0,0.1); background: rgba(255,255,255,0.3); }
+
+/* Update existing nav-item width */
+.nav-item {
+    /* ... keep other properties ... */
+    width: 20%; /* Changed to 20% for 5 tabs */
+}
+
+/* Detailed Numerology Styles */
+.hero-banner.detailed { background: linear-gradient(135deg, #e65c00 0%, #f9d423 100%); }
+
+.detailed-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+.detailed-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-light);
+    border-bottom: 4px solid #e67e22;
+    box-shadow: var(--shadow-subtle);
+    display: flex;
+    flex-direction: column;
+}
+.detailed-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 0.9rem;
+    color: #2980b9;
+    text-transform: uppercase;
+}
+.detailed-card .number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #2c3e50;
+    margin-bottom: 12px;
+}
+.detailed-card .reading {
+    font-size: 0.85rem;
+    color: #444;
+    line-height: 1.6;
+}

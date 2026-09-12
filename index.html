@@ -442,6 +442,83 @@
             </div>
         </div>
     </section>
+<!-- TAB 5: DETAILED NUMEROLOGY -->
+    <section id="tabDetailed" class="page-content" style="display:none;">
+        <div class="hero-banner detailed">
+            <div class="hero-pill-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                In-Depth Life Path
+            </div>
+            <h2 class="hero-title">विस्तृत अंक विश्लेषण</h2>
+            <p class="hero-subtitle">जन्म दिनांक और समय के आधार पर अपने व्यक्तित्व और भविष्य का गहरा विश्लेषण।</p>
+        </div>
+
+        <div class="input-card no-print">
+            <div class="input-field-block">
+                <label class="input-field-label" for="detDob">
+                    आपकी जन्म तिथि (DOB)
+                </label>
+                <input type="date" id="detDob" class="custom-input" required>
+            </div>
+            
+            <div class="input-field-block">
+                <label class="input-field-label" for="detTargetDate">
+                    लक्ष्य तिथि (Target Date)
+                </label>
+                <input type="date" id="detTargetDate" class="custom-input" required>
+            </div>
+
+            <div class="input-field-block">
+                <label class="input-field-label" for="detTargetTime">
+                    समय (Time)
+                </label>
+                <input type="time" id="detTargetTime" class="custom-input" required>
+            </div>
+            
+            <button class="primary-submit-btn" style="background: #e67e22;" onclick="calculateDetailedNum()">
+                विस्तृत फलादेश प्राप्त करें
+            </button>
+        </div>
+
+        <div id="reportAreaDetailed" style="display:none; margin-top:20px;">
+            <div class="report-header-text" style="background:#fff; padding:15px; border-radius:12px; box-shadow:var(--shadow-subtle);">
+                <div class="report-tag">आपका व्यक्तिगत विश्लेषण</div>
+            </div>
+
+            <div class="detailed-grid">
+                <div class="detailed-card">
+                    <h3>मूलांक (आपका स्वभाव)</h3>
+                    <div class="number" id="resMulank">-</div>
+                    <div class="reading" id="readMulank"></div>
+                </div>
+                <div class="detailed-card">
+                    <h3>भाग्यांक (आपका जीवन पथ)</h3>
+                    <div class="number" id="resBhagyank">-</div>
+                    <div class="reading" id="readBhagyank"></div>
+                </div>
+                <div class="detailed-card">
+                    <h3>व्यक्तिगत वर्षफल</h3>
+                    <div class="number" id="resVarshphal">-</div>
+                    <div class="reading" id="readVarshphal"></div>
+                </div>
+                <div class="detailed-card">
+                    <h3>व्यक्तिगत मासफल</h3>
+                    <div class="number" id="resMaasphal">-</div>
+                    <div class="reading" id="readMaasphal"></div>
+                </div>
+                <div class="detailed-card">
+                    <h3>व्यक्तिगत दैनिकफल</h3>
+                    <div class="number" id="resDainikphal">-</div>
+                    <div class="reading" id="readDainikphal"></div>
+                </div>
+                <div class="detailed-card">
+                    <h3>होराफल (वर्तमान घंटा)</h3>
+                    <div class="number" id="resHoraphal">-</div>
+                    <div class="reading" id="readHoraphal"></div>
+                </div>
+            </div>
+        </div>
+    </section>
     <!-- FIXED MOBILE BOTTOM NAV -->
     <nav class="bottom-nav no-print">
         <button class="nav-item active" id="navNum" onclick="switchTab('num')">
@@ -469,6 +546,13 @@
                 <polygon points="12 2 22 20 2 20 12 2"></polygon>
             </svg>
             <span id="botNavStupank">स्तूप</span>
+        </button>
+<!-- Existing nav items above... -->
+        <button class="nav-item" id="navDetailed" onclick="switchTab('detailed')">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span id="botNavDetailed" style="font-size: 0.65rem;">विस्तृत अंक</span>
         </button>
     </nav>
 </div>

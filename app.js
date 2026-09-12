@@ -47,10 +47,15 @@ function switchTab(tab) {
     document.getElementById('tabNumerology').style.display = tab === 'num' ? 'block' : 'none';
     document.getElementById('tabChoghadiya').style.display = tab === 'chog' ? 'block' : 'none';
     document.getElementById('tabPanchang').style.display = tab === 'panchang' ? 'block' : 'none';
+    document.getElementById('tabStupank').style.display = tab === 'stupank' ? 'block' : 'none';
+    document.getElementById('tabDetailed').style.display = tab === 'detailed' ? 'block' : 'none';
 
     document.getElementById('navNum').className = tab === 'num' ? 'nav-item active' : 'nav-item';
     document.getElementById('navChog').className = tab === 'chog' ? 'nav-item active' : 'nav-item';
     document.getElementById('navPanchang').className = tab === 'panchang' ? 'nav-item active' : 'nav-item';
+    document.getElementById('navStupank').className = tab === 'stupank' ? 'nav-item active' : 'nav-item';
+    document.getElementById('navDetailed').className = tab === 'detailed' ? 'nav-item active' : 'nav-item';
+    
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (tab === 'chog') calculateChoghadiya();
@@ -563,17 +568,78 @@ function switchTab(tab) {
     document.getElementById('tabChoghadiya').style.display = tab === 'chog' ? 'block' : 'none';
     document.getElementById('tabPanchang').style.display = tab === 'panchang' ? 'block' : 'none';
     document.getElementById('tabStupank').style.display = tab === 'stupank' ? 'block' : 'none';
+    document.getElementById('tabDetailed').style.display = tab === 'detailed' ? 'block' : 'none';
 
     document.getElementById('navNum').className = tab === 'num' ? 'nav-item active' : 'nav-item';
     document.getElementById('navChog').className = tab === 'chog' ? 'nav-item active' : 'nav-item';
     document.getElementById('navPanchang').className = tab === 'panchang' ? 'nav-item active' : 'nav-item';
     document.getElementById('navStupank').className = tab === 'stupank' ? 'nav-item active' : 'nav-item';
+    document.getElementById('navDetailed').className = tab === 'detailed' ? 'nav-item active' : 'nav-item';
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (tab === 'chog') calculateChoghadiya();
     if (tab === 'panchang') calculateLivePanchang();
 }
+
+// --- DETAILED NUMEROLOGY LOGIC ---
+function reduceToSingleDigitMod9(num) {
+    if (num === 0) return 0;
+    return (num % 9 === 0) ? 9 : (num % 9);
+}
+
+function calculateDetailedNum() {
+    const dobInput = document.getElementById('detDob').value;
+    const targetDateInput = document.getElementById('detTargetDate').value;
+    const targetTimeInput = document.getElementById('detTargetTime').value;
+
+    if (!dobInput || !targetDateInput || !targetTimeInput) {
+        alert("कृपया सभी जानकारी सही-सही भरें।");
+        return;
+    }
+
+    const dob = new Date(dobInput);
+    const target = new Date(targetDateInput);
+    
+    const bDay = dob.getDate();
+    const bMonth = dob.getMonth() + 1;
+    const bYear = dob.getFullYear();
+
+    const tDay = target.getDate();
+    const tMonth = target.getMonth() + 1;
+    const tYear = target.getFullYear();
+    const tHour = parseInt(targetTimeInput.split(':')[0]) || 1;
+
+    // Calculations
+    const mulank = reduceToSingleDigitMod9(bDay);
+    const bhagyank = reduceToSingleDigitMod9(bDay + bMonth + bYear);
+    const varshphal = reduceToSingleDigitMod9(bDay + bMonth + tYear);
+    const maasphal = reduceToSingleDigitMod9(varshphal + tMonth);
+    const dainikphal = reduceToSingleDigitMod9(maasphal + tDay);
+    const horaphal = reduceToSingleDigitMod9(dainikphal + tHour);
+
+    // Update UI numbers
+    document.getElementById('resMulank').innerText = mulank;
+    document.getElementById('resBhagyank').innerText = bhagyank;
+    document.getElementById('resVarshphal').innerText = varshphal;
+    document.getElementById('resMaasphal').innerText = maasphal;
+    document.getElementById('resDainikphal').innerText = dainikphal;
+    document.getElementById('resHoraphal').innerText = horaphal;
+
+    // Update UI readings
+    document.getElementById('readMulank').innerHTML = traitsMeaning[mulank] || "";
+    document.getElementById('readBhagyank').innerHTML = traitsMeaning[bhagyank] || "";
+    document.getElementById('readVarshphal').innerHTML = periodMeaning[varshphal] || "";
+    document.getElementById('readMaasphal').innerHTML = periodMeaning[maasphal] || "";
+    document.getElementById('readDainikphal').innerHTML = periodMeaning[dainikphal] || "";
+    document.getElementById('readHoraphal').innerHTML = periodMeaning[horaphal] || "";
+
+    document.getElementById('reportAreaDetailed').style.display = 'block';
+}
+
+// In your existing DOMContentLoaded listener at the bottom of app.js, add these lines:
+// document.getElementById('detTargetDate').value = todayStr;
+// document.getElementById('detTargetTime').value = "12:00";
 
 // --- STUPANK LOGIC ---
 function calculateStoop() {
