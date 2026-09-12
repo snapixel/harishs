@@ -618,6 +618,7 @@
         </div>
     </section>
     <!-- FIXED MOBILE BOTTOM NAV -->
+<!-- ==================== FIXED MOBILE BOTTOM NAV ==================== -->
     <nav class="bottom-nav no-print">
         <button class="nav-item active" id="navNum" onclick="switchTab('num')">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -638,33 +639,51 @@
             </svg>
             <span id="botNavPanchang">पंचांग</span>
         </button>
- <!-- Existing nav items above... -->
-        <button class="nav-item" id="navStupank" onclick="switchTab('stupank')">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="12 2 22 20 2 20 12 2"></polygon>
-            </svg>
-            <span id="botNavStupank">स्तूप</span>
-        </button>
-<!-- Existing nav items above... -->
-        <button class="nav-item" id="navDetailed" onclick="switchTab('detailed')">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            <span id="botNavDetailed" style="font-size: 0.65rem;">विस्तृत अंक</span>
-        </button>
-		<!-- Add after the Detailed Numerology nav-item -->
         <button class="nav-item" id="navSynastry" onclick="switchTab('synastry')">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
-            <span id="botNavSynastry" style="font-size: 0.65rem;">मिलान</span>
+            <span id="botNavSynastry">मिलान</span>
+        </button>
+        <!-- The Hamburger / More Trigger -->
+        <button class="nav-item" onclick="openMoreMenu()">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <span>अधिक (More)</span>
         </button>
     </nav>
+
+    <!-- ==================== SLIDE-UP MORE MENU ==================== -->
+    <div class="sheet-overlay no-print" id="moreOverlay" onclick="closeMoreMenu()"></div>
+    <div class="bottom-sheet no-print" id="moreSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">अतिरिक्त सुविधाएं (Extras)</div>
+        <div class="sheet-grid">
+            <button class="sheet-item" id="sheetStupank" onclick="switchTab('stupank')">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 22 20 2 20 12 2"></polygon>
+                </svg>
+                स्तूप पद्धति (Stoop)
+            </button>
+            <button class="sheet-item" id="sheetDetailed" onclick="switchTab('detailed')">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                विस्तृत अंक ज्योतिष
+            </button>
+        </div>
+    </div>
 </div>
 
 <!-- Scripts loaded in order -->
-<script src="data.js?v=5"></script>
-<script src="app.js?v=5"></script>
+<script src="data.js?v=6"></script>
+<script src="app.js?v=6"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
 </html>

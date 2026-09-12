@@ -981,11 +981,11 @@ body {
         .pdf-export-mode .result-report-card { border: none !important; box-shadow: none !important; display: block !important; }
         .pdf-export-mode .loshu-matrix-card { background: #0f0c20 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 		
-/* Update existing nav-item width */
+/* Update your existing nav-item width */
 .nav-item {
-    /* ... keep other properties ... */
-    width: 16.66%; /* Changed to 16.66% for 6 tabs */
+    width: 20%; /* Changed from 16.66% or 25% to fit 5 items */
 }
+
 /* Synastry Styles */
 .hero-banner.synastry { background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%); }
 
@@ -1067,4 +1067,72 @@ body {
     font-size: 0.85rem;
     color: #444;
     line-height: 1.6;
+}
+
+
+
+/* Bottom Sheet Slide-up Styles */
+.sheet-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(17, 13, 38, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 1001;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+.sheet-overlay.active { 
+    opacity: 1; 
+    visibility: visible; 
+}
+
+.bottom-sheet {
+    position: fixed;
+    bottom: -100%; left: 0; right: 0;
+    margin: 0 auto;
+    max-width: 480px;
+    background: #ffffff;
+    border-radius: 24px 24px 0 0;
+    z-index: 1002;
+    padding: 24px 20px calc(20px + env(safe-area-inset-bottom));
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
+    transition: bottom 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.bottom-sheet.active { 
+    bottom: 0; 
+}
+
+.sheet-handle {
+    width: 40px; height: 5px; 
+    background: #cbd5e1;
+    border-radius: 10px; 
+    margin: -10px auto 16px auto;
+}
+.sheet-header {
+    font-size: 1.1rem; 
+    font-weight: 800; 
+    color: #1e1b2e;
+    margin-bottom: 20px; 
+    text-align: center;
+}
+.sheet-grid {
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 14px;
+}
+.sheet-item {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 18px 12px; background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 16px; color: #334155; font-size: 0.85rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; text-align: center;
+}
+.sheet-item svg { 
+    margin-bottom: 8px; stroke: #64748b; transition: stroke 0.2s;
+}
+.sheet-item.active { 
+    background: #f4efff; border-color: #c7b8fc; color: var(--primary); 
+}
+.sheet-item.active svg { 
+    stroke: var(--primary); 
 }
