@@ -1,13 +1,10 @@
-// ==========================================
-// PWA INSTALLATION LOGIC
-// ==========================================
 let deferredPrompt;
 const pwaBtn = document.getElementById('pwaInstallBtn');
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    if (pwaBtn) pwaBtn.style.display = 'inline-block';
+    if (pwaBtn) pwaBtn.style.display = 'flex';
 });
 
 function installPWA() {
@@ -27,9 +24,6 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// ==========================================
-// ASTRONOMICAL PANCHANG ENGINE IMPORT
-// ==========================================
 import('https://cdn.jsdelivr.net/npm/@ishubhamx/panchangam-js@latest/+esm').then(module => {
     window.getPanchangam = module.getPanchangam;
     window.Observer = module.Observer;
@@ -40,17 +34,11 @@ import('https://cdn.jsdelivr.net/npm/@ishubhamx/panchangam-js@latest/+esm').then
 }).catch(e => console.error("Engine script load issue.", e));
 
 
-// ==========================================
-// GLOBAL STATE VARIABLES
-// ==========================================
 let isEnglish = false;
 let currentData = {};
 const currentDate = new Date();
 let currentChogData = {};
 
-// ==========================================
-// NAVIGATION & UI TOGGLES
-// ==========================================
 function openMoreMenu() {
     document.getElementById('moreOverlay').classList.add('active');
     document.getElementById('moreSheet').classList.add('active');
@@ -62,7 +50,6 @@ function closeMoreMenu() {
 }
 
 function switchTab(tab) {
-    // 1. Manage Section Visibility
     document.getElementById('tabNumerology').style.display = tab === 'num' ? 'block' : 'none';
     document.getElementById('tabChoghadiya').style.display = tab === 'chog' ? 'block' : 'none';
     document.getElementById('tabPanchang').style.display = tab === 'panchang' ? 'block' : 'none';
@@ -70,13 +57,11 @@ function switchTab(tab) {
     document.getElementById('tabStupank').style.display = tab === 'stupank' ? 'block' : 'none';
     document.getElementById('tabDetailed').style.display = tab === 'detailed' ? 'block' : 'none';
 
-    // 2. Update Main Bottom Nav Active States
     document.getElementById('navNum').className = tab === 'num' ? 'nav-item active' : 'nav-item';
     document.getElementById('navChog').className = tab === 'chog' ? 'nav-item active' : 'nav-item';
     document.getElementById('navPanchang').className = tab === 'panchang' ? 'nav-item active' : 'nav-item';
     document.getElementById('navSynastry').className = tab === 'synastry' ? 'nav-item active' : 'nav-item';
     
-    // 3. Update Slide-up Menu Active States
     document.getElementById('sheetStupank').className = tab === 'stupank' ? 'sheet-item active' : 'sheet-item';
     document.getElementById('sheetDetailed').className = tab === 'detailed' ? 'sheet-item active' : 'sheet-item';
 
@@ -99,13 +84,22 @@ function toggleGuide() {
     }
 }
 
-function toggleMenuDrawer() {
-    alert("Astro Pro v4.0\nNumerology, Choghadiya, Panchang, Synastry & Stupank\nDeveloped for Mobile Web & PWA.");
+function openRightDrawer() {
+    document.getElementById('drawerOverlay').classList.add('active');
+    document.getElementById('rightDrawer').classList.add('active');
+}
+
+function closeRightDrawer() {
+    document.getElementById('drawerOverlay').classList.remove('active');
+    document.getElementById('rightDrawer').classList.remove('active');
 }
 
 function toggleLang() {
     isEnglish = !isEnglish;
-    document.getElementById('langBtnText').innerText = isEnglish ? "HI" : "EN";
+    
+    document.getElementById('langBtnText').innerText = isEnglish ? "EN" : "HI";
+    const langDesc = document.getElementById('langDescText');
+    if(langDesc) langDesc.innerText = isEnglish ? "Currently: English" : "Currently: Hindi";
 
     document.getElementById('numHeroTitle').innerText = isEnglish ? "Name & Birth Numerology" : "नाम एवं जन्म अंक ज्योतिष";
     document.getElementById('numHeroSubtitle').innerText = isEnglish ? "Ancient Chaldean System, Compound 1-80, Psychic, Destiny & Lo Shu Matrix." : "प्राचीन कैल्डियन प्रणाली, 1-80 यौगिक अंक, मूलांक, भाग्यांक, एवं लो शु ग्रिड का संपूर्ण विश्लेषण।";
@@ -138,9 +132,6 @@ function toggleLang() {
     if (currentData.name) calculateNumerology(true);
 }
 
-// ==========================================
-// 1. CORE NUMEROLOGY & LO SHU GRID
-// ==========================================
 function calculateRoot(num) {
     while (num > 9) {
         num = num.toString().split('').reduce((sum, d) => sum + parseInt(d, 10), 0);
@@ -189,7 +180,7 @@ function generateLoShu(dateStr, driver, conductor) {
 
     const missingList = document.getElementById('missingList');
     const repeatedList = document.getElementById('repeatedList');
-    if(!missingList || !repeatedList) return; // Prevent crashes if UI elements are missing
+    if(!missingList || !repeatedList) return;
     
     missingList.innerHTML = '';
     repeatedList.innerHTML = '';
@@ -329,9 +320,6 @@ function calculateNumerology(isRecalc = false) {
     }
 }
 
-// ==========================================
-// UTILITY FUNCTIONS (TIME & GPS)
-// ==========================================
 function formatTime12(dateInput) {
     if (!dateInput) return "--:--";
     let d;
@@ -414,9 +402,6 @@ function setToday(context) {
     else calculateLivePanchang();
 }
 
-// ==========================================
-// 2. CHOGHADIYA LOGIC
-// ==========================================
 async function calculateChoghadiya() {
     const city = document.getElementById('cityInput').value.trim() || 'Udaipur';
     const dateStr = document.getElementById('chogDateInput').value;
@@ -512,9 +497,6 @@ async function calculateChoghadiya() {
     }
 }
 
-// ==========================================
-// 3. LIVE PANCHANG LOGIC
-// ==========================================
 async function calculateLivePanchang() {
     const city = document.getElementById('panchangCityInput').value.trim() || 'Udaipur';
     const dateInput = document.getElementById('panchangDateInput').value;
@@ -618,9 +600,6 @@ async function calculateLivePanchang() {
     }
 }
 
-// ==========================================
-// 4. DETAILED NUMEROLOGY LOGIC
-// ==========================================
 function reduceToSingleDigitMod9(num) {
     if (num === 0) return 0;
     return (num % 9 === 0) ? 9 : (num % 9);
@@ -672,9 +651,6 @@ function calculateDetailedNum() {
     document.getElementById('reportAreaDetailed').style.display = 'block';
 }
 
-// ==========================================
-// 5. STUPANK LOGIC
-// ==========================================
 function calculateStoop() {
     let text = document.getElementById('stoopInput').value.trim();
     if (!text) {
@@ -720,9 +696,6 @@ function calculateStoop() {
     document.getElementById('reportAreaStoop').style.display = 'block';
 }
 
-// ==========================================
-// 6. SYNASTRY LOGIC
-// ==========================================
 function getLifePathNumber(dateString) {
     let sum = dateString.replace(/-/g, '').split('').map(Number).reduce((a, b) => a + b, 0);
     return calculateRoot(sum);
@@ -747,7 +720,7 @@ function calculateCompatibility() {
 
     const verdicts = [
         { s: 80, en: "Soulmate Potential! (Excellent Match)", hi: "अद्भुत योग! (बहुत अच्छा मिलान)" },
-        { s: 60, en: "Strong Connection (Good Match)", hi: "मजबूत संबंध (अच्छा मिलान)" },
+        { s: 60, en: "Strong Connection (Good Match)", hi: "म मजबूत संबंध (अच्छा मिलान)" },
         { s: 40, en: "Karmic Bond (Requires Effort)", hi: "औसत मिलान (प्रयास की आवश्यकता है)" },
         { s: 0, en: "Challenging Dynamic (Opposite Energies)", hi: "चुनौतीपूर्ण संबंध (विपरीत ऊर्जा)" }
     ];
@@ -803,9 +776,6 @@ function calculateCompatibility() {
     document.getElementById('reportAreaSynastry').style.display = 'block';
 }
 
-// ==========================================
-// PDF & WHATSAPP EXPORTS
-// ==========================================
 function generatePDF(type) {
     let element, filename;
     if (type === 'num') {
@@ -851,15 +821,11 @@ function shareWhatsApp() {
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 }
 
-// ==========================================
-// INITIALIZATION
-// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     const todayStr = new Date().toISOString().split('T')[0];
     document.getElementById('chogDateInput').value = todayStr;
     document.getElementById('panchangDateInput').value = todayStr;
     
-    // Auto-fill Detailed Numerology with today's date
     const detTargetDate = document.getElementById('detTargetDate');
     if(detTargetDate) detTargetDate.value = todayStr;
     const detTargetTime = document.getElementById('detTargetTime');
