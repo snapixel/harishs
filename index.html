@@ -159,6 +159,22 @@
                         <div class="loshu-cell" id="ls_6">6<span class="loshu-cell-sub">Metal</span></div>
                     </div>
                 </div>
+				<!-- Insert directly below the closing div of loshu-matrix-card -->
+                <div id="loShuPredictionsArea" style="margin-top: 20px;">
+                    <div class="trait-insight-box red">
+                        <div class="trait-box-title" style="color:#e11d48; font-size: 0.9rem;">
+                            ⚠️ Missing Numbers (गायब अंक)
+                        </div>
+                        <ul id="missingList" class="trait-box-desc" style="padding-left: 20px; margin-top: 8px;"></ul>
+                    </div>
+                    
+                    <div class="trait-insight-box green">
+                        <div class="trait-box-title" style="color:#059669; font-size: 0.9rem;">
+                            🔄 Repeated Numbers (बार-बार आए अंक)
+                        </div>
+                        <ul id="repeatedList" class="trait-box-desc" style="padding-left: 20px; margin-top: 8px;"></ul>
+                    </div>
+                </div>
             </div>
             <div class="report-actions-grid no-print">
                 <button class="btn-download-pdf" onclick="generatePDF('num')">

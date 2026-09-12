@@ -121,28 +121,73 @@ function toggleMenuDrawer() {
         return num;
     }
 
-    function generateLoShu(dateStr) {
+function generateLoShu(dateStr, driver, conductor) {
+        // Elements' original subtitles to preserve layout
+        const subLabels = {
+            4: "Wood", 9: "Fire", 2: "Earth", 3: "Wood", 5: "Earth",
+            7: "Metal", 8: "Earth", 1: "Water", 6: "Metal"
+        };
+
         // Reset cells
         [1,2,3,4,5,6,7,8,9].forEach(n => {
             const el = document.getElementById('ls_' + n);
             if (el) {
                 el.className = 'loshu-cell';
-                el.innerText = n;
+                el.innerHTML = `${n}<span class="loshu-cell-sub">${subLabels[n]}</span>`;
             }
         });
 
-        const digitsStr = dateStr.replace(/\D/g, '');
-        let counts = {};
-        for (let d of digitsStr) {
-            if (d !== '0') counts[d] = (counts[d] || 0) + 1;
+        const digitsStr = dateStr.replace(/\D/g, '').replace(/0/g, '');
+        let counts = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0};
+        
+        for (let d of digitsStr) counts[d]++;
+        if (driver) counts[driver]++;
+        if (conductor) counts[conductor]++;
+
+        let missingNumbers = [];
+        let repeatedNumbers = [];
+
+        for (let n = 1; n <= 9; n++) {
+            let count = counts[n];
+            const el = document.getElementById('ls_' + n);
+            
+            if (count > 0) {
+                if (el) {
+                    el.className = 'loshu-cell active';
+                    el.innerHTML = `${String(n).repeat(count)}<span class="loshu-cell-sub">${subLabels[n]}</span>`;
+                }
+                if (count > 1) repeatedNumbers.push(n);
+            } else {
+                missingNumbers.push(n);
+            }
         }
 
-        for (let n in counts) {
-            const el = document.getElementById('ls_' + n);
-            if (el) {
-                el.className = 'loshu-cell active';
-                el.innerText = n.repeat(counts[n]);
-            }
+        // Render Predictions
+        const missingList = document.getElementById('missingList');
+        const repeatedList = document.getElementById('repeatedList');
+        missingList.innerHTML = '';
+        repeatedList.innerHTML = '';
+
+        if (missingNumbers.length === 0) {
+            missingList.innerHTML = "<li>No missing numbers! Your grid is fully balanced. (कोई अंक गायब नहीं है!)</li>";
+        } else {
+            missingNumbers.forEach(num => {
+                let li = document.createElement('li');
+                li.innerHTML = loShuPredictions.missing[num];
+                li.style.marginBottom = "6px";
+                missingList.appendChild(li);
+            });
+        }
+
+        if (repeatedNumbers.length === 0) {
+            repeatedList.innerHTML = "<li>No numbers are repeated more than once. (कोई भी अंक एक से अधिक बार नहीं आया है।)</li>";
+        } else {
+            repeatedNumbers.forEach(num => {
+                let li = document.createElement('li');
+                li.innerHTML = loShuPredictions.repeated[num];
+                li.style.marginBottom = "6px";
+                repeatedList.appendChild(li);
+            });
         }
     }
 
@@ -245,7 +290,11 @@ function toggleMenuDrawer() {
                 document.getElementById('psychicText').innerText = rootPredictions[psychicScore][langKey];
                 document.getElementById('destinyText').innerText = rootPredictions[destinyScore][langKey];
 
-                generateLoShu(dobInput);
+// Change this line inside calculateNumerology():
+// generateLoShu(dobInput);
+
+// To this:
+generateLoShu(dobInput, psychicScore, destinyScore);
 
                 dobSection.style.display = 'block';
                 dobBadges.forEach(el => el.style.display = 'flex');
