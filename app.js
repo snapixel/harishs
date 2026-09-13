@@ -792,6 +792,63 @@ function generatePDF(type) {
         filename = `Vedic_Panchang_${document.getElementById('panchangDateInput').value}.pdf`;
     }
 
+    // 1. Create a hidden, off-screen wrapper
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'absolute';
+    wrapper.style.top = '-9999px';
+    wrapper.style.left = '-9999px';
+    wrapper.style.width = '800px'; // Force a clean desktop width
+    wrapper.style.backgroundColor = '#ffffff';
+    wrapper.style.padding = '20px';
+    
+    // 2. Clone the live element so we don't mess up the user's screen
+    const clone = element.cloneNode(true);
+    
+    // 3. Strip all CSS animations and force 100% opacity
+    clone.style.display = 'block';
+    clone.style.animation = 'none';
+    clone.style.opacity = '1';
+    
+    // Remove the download/share buttons from the PDF
+    clone.querySelectorAll('.report-actions-grid, .floating-action-bar').forEach(btn => btn.remove());
+    
+    clone.querySelectorAll('*').forEach(el => {
+        el.style.animation = 'none';
+        el.style.opacity = '1';
+    });
+
+    // 4. Force dark text colors (Bypasses Dark Mode text inversion)
+    clone.querySelectorAll('div, span, p, h2, h3, h4, li, strong').forEach(el => {
+        if (!el.closest('.stat-number-circle') && !el.closest('.loshu-cell') && !el.closest('.system-pill') && !el.closest('.status-badge-pill')) {
+            el.style.color = '#1e1b2e';
+        }
+    });
+
+    // 5. Force solid card background colors
+    clone.querySelectorAll('.num-stat-card.purple').forEach(c => c.style.backgroundColor = '#f4efff');
+    clone.querySelectorAll('.num-stat-card.teal').forEach(c => c.style.backgroundColor = '#e8faf4');
+    clone.querySelectorAll('.num-stat-card.orange').forEach(c => c.style.backgroundColor = '#fff5e6');
+    clone.querySelectorAll('.num-stat-card.red').forEach(c => c.style.backgroundColor = '#fdf0f2');
+    
+    clone.querySelectorAll('.trait-insight-box').forEach(c => c.style.backgroundColor = '#f9faff');
+    clone.querySelectorAll('.trait-insight-box.green').forEach(c => c.style.backgroundColor = '#f5fcf8');
+    clone.querySelectorAll('.trait-insight-box.orange').forEach(c => c.style.backgroundColor = '#fdfbf4');
+    clone.querySelectorAll('.trait-insight-box.red').forEach(c => c.style.backgroundColor = '#fdf5f6');
+
+    clone.querySelectorAll('.loshu-matrix-card').forEach(c => {
+        c.style.backgroundColor = '#0f0c20';
+        c.style.color = '#ffffff';
+    });
+    clone.querySelectorAll('.loshu-cell').forEach(c => {
+        c.style.backgroundColor = c.classList.contains('active') ? '#9333ea' : '#1b1638';
+        c.style.color = '#ffffff';
+    });
+
+    // Append clone to the hidden wrapper, then to the document
+    wrapper.appendChild(clone);
+    document.body.appendChild(wrapper);
+
+    // 6. Generate the PDF from the perfect off-screen clone
     const opt = {
         margin: 0.3,
         filename: filename,
@@ -800,67 +857,15 @@ function generatePDF(type) {
             scale: 2, 
             useCORS: true, 
             backgroundColor: '#ffffff',
-            scrollY: 0, 
-            scrollX: 0,
-            onclone: function(clonedDoc) {
-                const el = clonedDoc.getElementById(element.id);
-
-                // CRITICAL FIX: Kill the CSS fade-in animation on the clone
-                // This stops the engine from capturing the container while it is transparent!
-                el.style.animation = 'none';
-                el.style.opacity = '1';
-
-                // 1. Hide buttons in the PDF
-                el.querySelectorAll('.report-actions-grid, .floating-action-bar').forEach(bar => {
-                    bar.style.display = 'none';
-                });
-
-                // 2. Force all text to be pitch black (except badges/circles)
-                el.querySelectorAll('div, span, p, h2, h3, h4, li, strong').forEach(node => {
-                    node.style.animation = 'none'; // Kill animations on all children
-                    
-                    if (!node.closest('.stat-number-circle') && !node.closest('.loshu-cell') && !node.closest('.system-pill') && !node.closest('.lucky-item-card strong') && !node.closest('.status-badge-pill') ) {
-                        node.style.color = '#1e1b2e';
-                        node.style.textShadow = 'none';
-                    }
-                });
-
-                // 3. Force solid backgrounds for all cards
-                el.style.backgroundColor = '#ffffff';
-                
-                el.querySelectorAll('.num-stat-card').forEach(card => {
-                    if(card.classList.contains('purple')) card.style.backgroundColor = '#f4efff';
-                    if(card.classList.contains('teal')) card.style.backgroundColor = '#e8faf4';
-                    if(card.classList.contains('orange')) card.style.backgroundColor = '#fff5e6';
-                    if(card.classList.contains('red')) card.style.backgroundColor = '#fdf0f2';
-                });
-                
-                el.querySelectorAll('.trait-insight-box').forEach(box => {
-                    box.style.backgroundColor = '#f9faff';
-                    if(box.classList.contains('green')) box.style.backgroundColor = '#f5fcf8';
-                    if(box.classList.contains('orange')) box.style.backgroundColor = '#fdfbf4';
-                    if(box.classList.contains('red')) box.style.backgroundColor = '#fdf5f6';
-                });
-
-                el.querySelectorAll('.loshu-matrix-card').forEach(card => {
-                    card.style.backgroundColor = '#0f0c20';
-                });
-                
-                el.querySelectorAll('.loshu-cell').forEach(cell => {
-                    if(cell.classList.contains('active')) {
-                        cell.style.background = '#9333ea';
-                        cell.style.color = '#ffffff';
-                    } else {
-                        cell.style.background = '#1b1638';
-                        cell.style.color = '#ffffff';
-                    }
-                });
-            }
+            windowWidth: 800 // Matches wrapper width
         },
         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
     };
 
-    html2pdf().set(opt).from(element).save();
+    html2pdf().set(opt).from(wrapper).save().then(() => {
+        // Destroy the hidden clone after the PDF is saved
+        document.body.removeChild(wrapper);
+    });
 }
 
 function shareWhatsApp() {
