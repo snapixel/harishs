@@ -1181,3 +1181,101 @@ async function checkSadeSati() {
         document.getElementById('resSadeDesc').innerText = "";
     }
 }
+
+// ==========================================
+// 12. LOCAL STORAGE (AUTO-SAVE PROFILE)
+// ==========================================
+function saveProfileData(key, value) {
+    if (value) localStorage.setItem('astro_pro_' + key, value);
+}
+
+function loadProfileData() {
+    const name = localStorage.getItem('astro_pro_name');
+    const dob = localStorage.getItem('astro_pro_dob');
+    const time = localStorage.getItem('astro_pro_time');
+    const city = localStorage.getItem('astro_pro_city');
+
+    // Auto-fill Name
+    if (name) {
+        const elName = document.getElementById('nameInput');
+        const elSynName = document.getElementById('synName1');
+        if(elName) elName.value = name;
+        if(elSynName) elSynName.value = name;
+    }
+
+    // Auto-fill Date of Birth across all 5 tools
+    if (dob) {
+        ['dobInput', 'detDob', 'synDob1', 'gemDobInput', 'sadeDobInput'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = dob;
+        });
+    }
+
+    // Auto-fill Time of Birth
+    if (time) {
+        const elTime = document.getElementById('sadeTimeInput');
+        if(elTime) elTime.value = time;
+    }
+
+    // Auto-fill City across Panchang, Choghadiya, and Sade Sati
+    if (city) {
+        ['cityInput', 'panchangCityInput', 'sadeCityInput'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = city;
+        });
+    }
+}
+
+function setupAutoSave() {
+    // Listen for Name changes
+    ['nameInput', 'synName1'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', (e) => saveProfileData('name', e.target.value));
+    });
+
+    // Listen for DOB changes
+    ['dobInput', 'detDob', 'synDob1', 'gemDobInput', 'sadeDobInput'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', (e) => {
+            saveProfileData('dob', e.target.value);
+            loadProfileData(); // Sync instantly across all tabs
+        });
+    });
+
+    // Listen for Time changes
+    const elTime = document.getElementById('sadeTimeInput');
+    if (elTime) elTime.addEventListener('change', (e) => saveProfileData('time', e.target.value));
+
+    // Listen for City changes
+    ['cityInput', 'panchangCityInput', 'sadeCityInput'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', (e) => {
+            saveProfileData('city', e.target.value);
+            loadProfileData(); // Sync instantly across all tabs
+        });
+    });
+}
+
+// ==========================================
+// INITIALIZATION
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Set today's default dates
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('chogDateInput').value = todayStr;
+    document.getElementById('panchangDateInput').value = todayStr;
+    
+    const detTargetDate = document.getElementById('detTargetDate');
+    if(detTargetDate) detTargetDate.value = todayStr;
+    const detTargetTime = document.getElementById('detTargetTime');
+    if(detTargetTime) detTargetTime.value = "12:00";
+
+    document.getElementById('guideContent').innerHTML = guideContentHI;
+    
+    // 2. Load saved user data & activate auto-save
+    loadProfileData();
+    setupAutoSave();
+
+    // 3. Run initial calculations
+    calculateChoghadiya();
+});
