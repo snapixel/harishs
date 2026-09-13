@@ -802,10 +802,13 @@ function generatePDF(type) {
             backgroundColor: '#ffffff',
             scrollY: 0, 
             scrollX: 0,
-            // THE FIX: This intercepts the PDF engine and forces hardcoded colors
-            // specifically for the PDF document, ignoring mobile Dark Mode.
             onclone: function(clonedDoc) {
                 const el = clonedDoc.getElementById(element.id);
+
+                // CRITICAL FIX: Kill the CSS fade-in animation on the clone
+                // This stops the engine from capturing the container while it is transparent!
+                el.style.animation = 'none';
+                el.style.opacity = '1';
 
                 // 1. Hide buttons in the PDF
                 el.querySelectorAll('.report-actions-grid, .floating-action-bar').forEach(bar => {
@@ -814,7 +817,8 @@ function generatePDF(type) {
 
                 // 2. Force all text to be pitch black (except badges/circles)
                 el.querySelectorAll('div, span, p, h2, h3, h4, li, strong').forEach(node => {
-                    // Skip text inside colored badges so they stay white
+                    node.style.animation = 'none'; // Kill animations on all children
+                    
                     if (!node.closest('.stat-number-circle') && !node.closest('.loshu-cell') && !node.closest('.system-pill') && !node.closest('.lucky-item-card strong') && !node.closest('.status-badge-pill') ) {
                         node.style.color = '#1e1b2e';
                         node.style.textShadow = 'none';
