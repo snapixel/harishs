@@ -679,23 +679,24 @@
         </div>
     </section>
 
-    <!-- TAB 11: SADE SATI TRACKER -->
+<!-- TAB 11: SADE SATI TRACKER -->
     <section id="tabSadesati" class="page-content" style="display:none;">
         <div class="hero-banner detailed">
             <h2 class="hero-title" id="sadeTitle">साढ़े साती (Sade Sati Tracker)</h2>
-            <p class="hero-subtitle" id="sadeSub">अपनी चंद्र राशि के अनुसार शनि गोचर और ढैय्या की जांच करें।</p>
+            <p class="hero-subtitle" id="sadeSub">जन्म तिथि, समय और स्थान के आधार पर सटीक शनि गोचर की गणना।</p>
         </div>
         <div class="input-card no-print">
             <div class="input-field-block">
-                <label class="input-field-label" id="sadeMoonLabel">आपकी चंद्र राशि (Your Moon Sign)</label>
-                <select id="moonSignSelect" class="custom-input">
-                    <option value="0">Aries (मेष)</option><option value="1">Taurus (वृषभ)</option>
-                    <option value="2">Gemini (मिथुन)</option><option value="3">Cancer (कर्क)</option>
-                    <option value="4">Leo (सिंह)</option><option value="5">Virgo (कन्या)</option>
-                    <option value="6">Libra (तुला)</option><option value="7">Scorpio (वृश्चिक)</option>
-                    <option value="8">Sagittarius (धनु)</option><option value="9">Capricorn (मकर)</option>
-                    <option value="10">Aquarius (कुंभ)</option><option value="11">Pisces (मीन)</option>
-                </select>
+                <label class="input-field-label" id="sadeDobLabel">जन्म तिथि (Date of Birth)</label>
+                <input type="date" id="sadeDobInput" class="custom-input" required>
+            </div>
+            <div class="input-field-block">
+                <label class="input-field-label" id="sadeTimeLabel">जन्म समय (Time of Birth)</label>
+                <input type="time" id="sadeTimeInput" class="custom-input" required>
+            </div>
+            <div class="input-field-block">
+                <label class="input-field-label" id="sadeCityLabel">जन्म स्थान (Place of Birth)</label>
+                <input type="text" id="sadeCityInput" class="custom-input" placeholder="e.g., New Delhi" required>
             </div>
             <div class="input-field-block">
                 <label class="input-field-label" id="sadeSaturnLabel">वर्तमान शनि गोचर (Saturn Transit)</label>
@@ -827,7 +828,7 @@
 </div>
 
 <script src="data.js?v=17"></script>
-<script src="app.js?v=17"></script>
+<script src="app.js?v=18"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
 </html>

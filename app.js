@@ -151,13 +151,22 @@ function toggleLang() {
     document.getElementById('lblRudraksha').innerText = isEnglish ? "Recommended Rudraksha" : "रुद्राक्ष अनुशंसा (Rudraksha)";
     if (document.getElementById('sheetGemText')) document.getElementById('sheetGemText').innerText = isEnglish ? "Gems & Rudraksha" : "रत्न (Gems)";
 
-    // Sade Sati Translations
+// Sade Sati Translations
     document.getElementById('sadeTitle').innerText = isEnglish ? "Sade Sati Tracker" : "साढ़े साती (Sade Sati Tracker)";
-    document.getElementById('sadeSub').innerText = isEnglish ? "Check your Saturn transit phases based on Moon Sign." : "अपनी चंद्र राशि के अनुसार शनि गोचर और ढैय्या की जांच करें।";
-    document.getElementById('sadeMoonLabel').innerText = isEnglish ? "Your Moon Sign" : "आपकी चंद्र राशि (Your Moon Sign)";
+    document.getElementById('sadeSub').innerText = isEnglish ? "Precise Saturn transit calculation based on Date, Time, and Place of Birth." : "जन्म तिथि, समय और स्थान के आधार पर सटीक शनि गोचर की गणना।";
+    
+    document.getElementById('sadeDobLabel').innerText = isEnglish ? "Date of Birth" : "जन्म तिथि (Date of Birth)";
+    document.getElementById('sadeTimeLabel').innerText = isEnglish ? "Time of Birth" : "जन्म समय (Time of Birth)";
+    document.getElementById('sadeCityLabel').innerText = isEnglish ? "Place of Birth" : "जन्म स्थान (Place of Birth)";
+    
     document.getElementById('sadeSaturnLabel').innerText = isEnglish ? "Current Saturn Transit" : "वर्तमान शनि गोचर (Saturn Transit)";
     document.getElementById('btnCalcSade').innerText = isEnglish ? "Check Transit" : "गोचर जांचें (Check Transit)";
-    document.getElementById('lblSadeStatus').innerText = isEnglish ? "Saturn Status" : "शनि स्थिति (Saturn Status)";
+    
+    // Only update status label if it hasn't been dynamically changed by a calculation yet
+    if(!document.getElementById('lblSadeStatus').innerText.includes(':')) {
+        document.getElementById('lblSadeStatus').innerText = isEnglish ? "Saturn Status" : "शनि स्थिति (Saturn Status)";
+    }
+    
     if (document.getElementById('sheetSadeText')) document.getElementById('sheetSadeText').innerText = isEnglish ? "Sade Sati" : "साढ़े साती (Sade Sati)";
 
     // Refresh dynamic content
@@ -1094,27 +1103,81 @@ function recommendGems() {
 }
 
 // ==========================================
-// 11. SADE SATI TRACKER LOGIC
+// 11. SADE SATI TRACKER LOGIC (ASTRO ENGINE)
 // ==========================================
-function checkSadeSati() {
-    const moonIdx = parseInt(document.getElementById('moonSignSelect').value);
+async function checkSadeSati() {
+    const dob = document.getElementById('sadeDobInput').value;
+    const time = document.getElementById('sadeTimeInput').value;
+    const city = document.getElementById('sadeCityInput').value.trim();
     const saturnIdx = parseInt(document.getElementById('saturnTransitSelect').value);
 
-    // Calculate astrological distance
-    const dist = (saturnIdx - moonIdx + 12) % 12;
-    
-    let resultKey = "none";
-    if (dist === 11) resultKey = 11; // 12th from moon (1st phase)
-    else if (dist === 0) resultKey = 0; // On the moon (2nd phase)
-    else if (dist === 1) resultKey = 1; // 2nd from moon (3rd phase)
-    else if (dist === 3) resultKey = 3; // 4th from moon (Kantak Dhaiya)
-    else if (dist === 7) resultKey = 7; // 8th from moon (Ashtam Dhaiya)
+    if (!dob || !time || !city) {
+        alert(isEnglish ? "Please enter Date, Time, and Place of Birth." : "कृपया जन्म तिथि, समय और स्थान दर्ज करें।");
+        return;
+    }
 
-    const res = sadeSatiResults[resultKey];
-    const langKey = isEnglish ? 'En' : 'Hi';
+    try {
+        // Show loading state
+        document.getElementById('resSadePhase').innerText = isEnglish ? "Calculating..." : "गणना हो रही है...";
+        document.getElementById('reportAreaSade').style.display = 'block';
 
-    document.getElementById('resSadePhase').innerText = res[`title${langKey}`];
-    document.getElementById('resSadeDesc').innerText = res[`desc${langKey}`];
+        // 1. Fetch Location Coordinates
+        const coords = await getCoordinates(city);
+        
+        // 2. Setup Exact Birth Date/Time Object
+        const [year, month, day] = dob.split('-').map(Number);
+        const [hour, minute] = time.split(':').map(Number);
+        const birthDate = new Date(year, month - 1, day, hour, minute);
 
-    document.getElementById('reportAreaSade').style.display = 'block';
+        // 3. Run Astronomical Engine for Natal Chart
+        const observer = new window.Observer(parseFloat(coords.lat), parseFloat(coords.lng), 0);
+        const tzOffsetMinutes = -(new Date().getTimezoneOffset());
+        const p = window.getPanchangam(birthDate, observer, { timezoneOffset: tzOffsetMinutes });
+
+        // 4. Extract True Moon Sign (Rashi) Index
+        let moonIdx = 0; 
+        if (p.planetaryPositions && p.planetaryPositions.moon && p.planetaryPositions.moon.rashiName) {
+            const rName = p.planetaryPositions.moon.rashiName.toLowerCase();
+            const nameMap = {
+                "aries": 0, "मेष": 0, "taurus": 1, "वृषभ": 1, "gemini": 2, "मिथुन": 2,
+                "cancer": 3, "कर्क": 3, "leo": 4, "सिंह": 4, "virgo": 5, "कन्या": 5,
+                "libra": 6, "तुला": 6, "scorpio": 7, "वृश्चिक": 7, "sagittarius": 8, "धनु": 8,
+                "capricorn": 9, "मकर": 9, "aquarius": 10, "कुंभ": 10, "pisces": 11, "मीन": 11
+            };
+            for (let key in nameMap) {
+                if (rName.includes(key)) {
+                    moonIdx = nameMap[key];
+                    break;
+                }
+            }
+        }
+
+        // 5. Perform Sade Sati & Dhaiya Math
+        const dist = (saturnIdx - moonIdx + 12) % 12;
+        let resultKey = "none";
+        if (dist === 11) resultKey = 11; // 1st phase
+        else if (dist === 0) resultKey = 0; // 2nd phase
+        else if (dist === 1) resultKey = 1; // 3rd phase
+        else if (dist === 3) resultKey = 3; // Kantak Dhaiya
+        else if (dist === 7) resultKey = 7; // Ashtam Dhaiya
+
+        // 6. Update UI with Results
+        const res = sadeSatiResults[resultKey];
+        const langKey = isEnglish ? 'En' : 'Hi';
+        
+        // Show dynamically generated Moon Sign
+        const moonSignName = isEnglish ? zodiacSigns[moonIdx] : zodiacSignsHi[moonIdx];
+        document.getElementById('lblSadeStatus').innerText = isEnglish 
+            ? `Saturn Status (Moon Sign: ${moonSignName})` 
+            : `शनि स्थिति (आपकी चंद्र राशि: ${moonSignName})`;
+
+        document.getElementById('resSadePhase').innerText = res[`title${langKey}`];
+        document.getElementById('resSadeDesc').innerText = res[`desc${langKey}`];
+
+    } catch (e) {
+        console.error("Sade Sati Calc Error:", e);
+        alert(isEnglish ? "Error calculating. Please check the city name." : "गणना में त्रुटि। कृपया शहर का नाम जांचें।");
+        document.getElementById('resSadePhase').innerText = "-";
+        document.getElementById('resSadeDesc').innerText = "";
+    }
 }
