@@ -321,3 +321,44 @@ const compMatrix = [
     [0, 20, 85, 50, 85, 60, 80, 55, 80, 40], // 8
     [0, 95, 60, 90, 45, 85, 75, 65, 40, 85]  // 9
 ];
+
+// ==========================================
+// 9. DOSHA (RAHU KAAL) DATA
+// ==========================================
+// 1-based index representing which 1/8th segment of the day holds the dosha
+// Array order: [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
+const doshaPeriods = {
+    rahu: [8, 2, 7, 5, 6, 4, 3],
+    yama: [5, 4, 3, 2, 1, 7, 6],
+    gulika: [7, 6, 5, 4, 3, 2, 1]
+};
+
+// ==========================================
+// 10. GEMSTONE & RUDRAKSHA DATA
+// ==========================================
+const gemData = {
+    1: { gemEn: "Ruby (Manik)", gemHi: "माणिक्य (Ruby)", rudEn: "1 or 12 Mukhi", rudHi: "1 या 12 मुखी", descEn: "Enhances leadership, immunity, and career authority.", descHi: "नेतृत्व, रोग प्रतिरोधक क्षमता और करियर में अधिकार बढ़ाता है।" },
+    2: { gemEn: "Natural Pearl", gemHi: "सच्चा मोती (Pearl)", rudEn: "2 Mukhi", rudHi: "2 मुखी", descEn: "Brings mental peace, emotional balance, and curbs anger.", descHi: "मानसिक शांति, भावनात्मक संतुलन लाता है और क्रोध पर नियंत्रण रखता है।" },
+    3: { gemEn: "Yellow Sapphire", gemHi: "पुखराज (Yellow Sapphire)", rudEn: "5 Mukhi", rudHi: "5 मुखी", descEn: "Attracts wealth, wisdom, academic success, and spiritual growth.", descHi: "धन, ज्ञान, शैक्षणिक सफलता और आध्यात्मिक विकास को आकर्षित करता है।" },
+    4: { gemEn: "Hessonite (Gomed)", gemHi: "गोमेद (Hessonite)", rudEn: "8 Mukhi", rudHi: "8 मुखी", descEn: "Removes confusion, protects from hidden enemies, and stabilizes wealth.", descHi: "भ्रम दूर करता है, गुप्त शत्रुओं से बचाता है और धन को स्थिर करता है।" },
+    5: { gemEn: "Emerald (Panna)", gemHi: "पन्ना (Emerald)", rudEn: "4 Mukhi", rudHi: "4 मुखी", descEn: "Boosts communication, memory, trade, and nervous system.", descHi: "संचार, स्मृति, व्यापार और तंत्रिका तंत्र को बढ़ावा देता है।" },
+    6: { gemEn: "Diamond / White Sapphire", gemHi: "हीरा या सफेद पुखराज", rudEn: "6 or 13 Mukhi", rudHi: "6 या 13 मुखी", descEn: "Attracts luxury, marital harmony, and creative success.", descHi: "विलासिता, वैवाहिक सुख और रचनात्मक सफलता को आकर्षित करता है।" },
+    7: { gemEn: "Cat's Eye (Lehsunia)", gemHi: "लहसुनिया (Cat's Eye)", rudEn: "9 Mukhi", rudHi: "9 मुखी", descEn: "Enhances intuition, protects from evil eye, and aids meditation.", descHi: "अंतर्ज्ञान बढ़ाता है, बुरी नज़र से बचाता है और ध्यान में मदद करता है।" },
+    8: { gemEn: "Blue Sapphire (Neelam)", gemHi: "नीलम (Blue Sapphire)", rudEn: "7 or 14 Mukhi", rudHi: "7 या 14 मुखी", descEn: "Brings rapid success, discipline, and protects from Saturn's wrath.", descHi: "तेजी से सफलता, अनुशासन लाता है और शनि के प्रकोप से बचाता है।" },
+    9: { gemEn: "Red Coral (Moonga)", gemHi: "मूंगा (Red Coral)", rudEn: "3 Mukhi", rudHi: "3 मुखी", descEn: "Gives courage, vitality, land gains, and removes debt.", descHi: "साहस, जीवन शक्ति, भूमि लाभ देता है और कर्ज दूर करता है।" }
+};
+
+// ==========================================
+// 11. SADE SATI & SATURN TRANSIT
+// ==========================================
+const zodiacSigns = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+const zodiacSignsHi = ["मेष", "वृषभ", "मिथुन", "कर्क", "सिंह", "कन्या", "तुला", "वृश्चिक", "धनु", "मकर", "कुंभ", "मीन"];
+
+const sadeSatiResults = {
+    11: { titleEn: "1st Phase (Rising)", titleHi: "प्रथम चरण (चढ़ती साढ़े साती)", descEn: "Mental tension, unexpected expenses, and location changes.", descHi: "मानसिक तनाव, अप्रत्याशित खर्चे और स्थान परिवर्तन।" },
+    0:  { titleEn: "2nd Phase (Peak)", titleHi: "मध्य चरण (शिखर)", descEn: "Career struggles, health issues, and heavy responsibilities.", descHi: "करियर में संघर्ष, स्वास्थ्य समस्याएं और भारी जिम्मेदारियां।" },
+    1:  { titleEn: "3rd Phase (Setting)", titleHi: "अंतिम चरण (उतरती साढ़े साती)", descEn: "Resolution of disputes, financial recovery, and hard-earned rewards.", descHi: "विवादों का समाधान, आर्थिक सुधार और मेहनत का फल।" },
+    3:  { titleEn: "Kantak Dhaiya (4th House)", titleHi: "कंटक ढैय्या", descEn: "Domestic unrest, property issues, and career hurdles.", descHi: "घरेलू अशांति, संपत्ति के मुद्दे और करियर में बाधाएं।" },
+    7:  { titleEn: "Ashtam Dhaiya (8th House)", titleHi: "अष्टम ढैय्या", descEn: "Health complications, hidden enemies, and sudden transformations.", descHi: "स्वास्थ्य संबंधी जटिलताएं, गुप्त शत्रु और अचानक बदलाव।" },
+    "none": { titleEn: "No Sade Sati / Dhaiya", titleHi: "कोई साढ़े साती या ढैय्या नहीं", descEn: "Saturn is in a neutral or favorable transit for your Moon sign.", descHi: "शनि आपकी चंद्र राशि के लिए तटस्थ या अनुकूल गोचर में है।" }
+};

@@ -59,6 +59,10 @@ function switchTab(tab) {
 	
     document.getElementById('tabNameOpt').style.display = tab === 'nameopt' ? 'block' : 'none';
     document.getElementById('tabHora').style.display = tab === 'hora' ? 'block' : 'none';
+	
+	document.getElementById('tabDosha').style.display = tab === 'dosha' ? 'block' : 'none';
+    document.getElementById('tabGemstone').style.display = tab === 'gemstone' ? 'block' : 'none';
+    document.getElementById('tabSadesati').style.display = tab === 'sadesati' ? 'block' : 'none';
 
     document.getElementById('navNum').className = tab === 'num' ? 'nav-item active' : 'nav-item';
     document.getElementById('navChog').className = tab === 'chog' ? 'nav-item active' : 'nav-item';
@@ -71,6 +75,7 @@ function switchTab(tab) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     closeMoreMenu();
 
+    if (tab === 'dosha') calculateDoshas();
     if (tab === 'chog') calculateChoghadiya();
     if (tab === 'panchang') calculateLivePanchang();
 	if (tab === 'hora') calculateHora();
@@ -130,6 +135,35 @@ function toggleLang() {
     document.getElementById('botNavNum').innerText = isEnglish ? "Numerology" : "अंक शास्त्र";
     document.getElementById('botNavChog').innerText = isEnglish ? "Choghadiya" : "चौघड़िया";
     document.getElementById('botNavPanchang').innerText = isEnglish ? "Panchang" : "पंचांग";
+
+// Dosha Translations
+    document.getElementById('doshaTitle').innerText = isEnglish ? "Rahu Kaal & Doshas" : "दैनिक दोष (Rahu Kaal)";
+    document.getElementById('doshaSub').innerText = isEnglish ? "Exact timings for Rahu Kaal, Yamaganda, and Gulika." : "राहु काल, यमगंड और गुलिक काल का सटीक समय।";
+    document.getElementById('btnCalcDosha').innerText = isEnglish ? "Calculate Today's Doshas" : "आज के दोष निकालें";
+    if (document.getElementById('sheetDoshaText')) document.getElementById('sheetDoshaText').innerText = isEnglish ? "Daily Doshas" : "राहु काल (Doshas)";
+
+    // Gemstone Translations
+    document.getElementById('gemTitle').innerText = isEnglish ? "Gems & Rudraksha" : "रत्न एवं रुद्राक्ष (Gems & Rudraksha)";
+    document.getElementById('gemSub').innerText = isEnglish ? "Vedic remedies based on your Life Path." : "आपके भाग्यांक और मूलांक के आधार पर सटीक वैदिक उपाय।";
+    document.getElementById('gemDobLabel').innerText = isEnglish ? "Date of Birth" : "जन्म तिथि (Date of Birth)";
+    document.getElementById('btnCalcGem').innerText = isEnglish ? "Get Remedies" : "उपाय जानें (Get Remedies)";
+    document.getElementById('lblLifePathGem').innerText = isEnglish ? "Life Path Gemstone" : "भाग्यांक रत्न (Life Path Gemstone)";
+    document.getElementById('lblRudraksha').innerText = isEnglish ? "Recommended Rudraksha" : "रुद्राक्ष अनुशंसा (Rudraksha)";
+    if (document.getElementById('sheetGemText')) document.getElementById('sheetGemText').innerText = isEnglish ? "Gems & Rudraksha" : "रत्न (Gems)";
+
+    // Sade Sati Translations
+    document.getElementById('sadeTitle').innerText = isEnglish ? "Sade Sati Tracker" : "साढ़े साती (Sade Sati Tracker)";
+    document.getElementById('sadeSub').innerText = isEnglish ? "Check your Saturn transit phases based on Moon Sign." : "अपनी चंद्र राशि के अनुसार शनि गोचर और ढैय्या की जांच करें।";
+    document.getElementById('sadeMoonLabel').innerText = isEnglish ? "Your Moon Sign" : "आपकी चंद्र राशि (Your Moon Sign)";
+    document.getElementById('sadeSaturnLabel').innerText = isEnglish ? "Current Saturn Transit" : "वर्तमान शनि गोचर (Saturn Transit)";
+    document.getElementById('btnCalcSade').innerText = isEnglish ? "Check Transit" : "गोचर जांचें (Check Transit)";
+    document.getElementById('lblSadeStatus').innerText = isEnglish ? "Saturn Status" : "शनि स्थिति (Saturn Status)";
+    if (document.getElementById('sheetSadeText')) document.getElementById('sheetSadeText').innerText = isEnglish ? "Sade Sati" : "साढ़े साती (Sade Sati)";
+
+    // Refresh dynamic content
+    if (document.getElementById('tabDosha').style.display === 'block') calculateDoshas();
+    if (document.getElementById('tabGemstone').style.display === 'block') recommendGems();
+    if (document.getElementById('tabSadesati').style.display === 'block') checkSadeSati();
 
     document.getElementById('guideContent').innerHTML = isEnglish ? guideContentEN : guideContentHI;
 
@@ -976,4 +1010,111 @@ async function calculateHora() {
     } catch (e) {
         console.error("Hora Error:", e);
     }
+}
+
+// ==========================================
+// 9. RAHU KAAL & DOSHA LOGIC
+// ==========================================
+async function calculateDoshas() {
+    const dateStr = document.getElementById('chogDateInput').value;
+    const city = document.getElementById('cityInput').value.trim() || 'Udaipur';
+    
+    try {
+        const coords = await getCoordinates(city);
+        const sunData = await getSunTimes(coords.lat, coords.lng, dateStr);
+        const sunrise = new Date(sunData.sunrise);
+        const sunset = new Date(sunData.sunset);
+        
+        const dayDuration = sunset.getTime() - sunrise.getTime();
+        const segMs = dayDuration / 8; // 8 segments of daylight
+        
+        const selectedDate = new Date(dateStr);
+        const dayOfWeek = selectedDate.getDay();
+
+        const rIndex = doshaPeriods.rahu[dayOfWeek] - 1;
+        const yIndex = doshaPeriods.yama[dayOfWeek] - 1;
+        const gIndex = doshaPeriods.gulika[dayOfWeek] - 1;
+
+        const getSlot = (idx) => {
+            const start = new Date(sunrise.getTime() + (idx * segMs));
+            const end = new Date(sunrise.getTime() + ((idx + 1) * segMs));
+            return `${formatTime12(start)} - ${formatTime12(end)}`;
+        };
+
+        const container = document.getElementById('doshaList');
+        const titleText = isEnglish ? "Major Daily Doshas (Daylight)" : "दिन के मुख्य दोष (सूर्योदय से सूर्यास्त)";
+        
+        container.innerHTML = `
+            <div class="chog-group-title">${titleText}</div>
+            <div class="chog-item-row" style="border-left: 4px solid #e11d48;">
+                <div class="chog-name-block"><strong>${isEnglish ? "Rahu Kaal" : "राहु काल"}</strong><span style="color:#e11d48;">${isEnglish ? "(Inauspicious)" : "(अशुभ)"}</span></div>
+                <div class="chog-time-text">${getSlot(rIndex)}</div>
+            </div>
+            <div class="chog-item-row" style="border-left: 4px solid #ea580c;">
+                <div class="chog-name-block"><strong>${isEnglish ? "Yamaganda" : "यमगंड काल"}</strong><span style="color:#ea580c;">${isEnglish ? "(Death Energy)" : "(मृत्यु ऊर्जा)"}</span></div>
+                <div class="chog-time-text">${getSlot(yIndex)}</div>
+            </div>
+            <div class="chog-item-row" style="border-left: 4px solid #64748b;">
+                <div class="chog-name-block"><strong>${isEnglish ? "Gulika Kaal" : "गुलिक काल"}</strong><span style="color:#64748b;">${isEnglish ? "(Delays)" : "(विलंब कारक)"}</span></div>
+                <div class="chog-time-text">${getSlot(gIndex)}</div>
+            </div>
+        `;
+    } catch (e) {
+        console.error("Dosha Error:", e);
+    }
+}
+
+// ==========================================
+// 10. GEMSTONE & RUDRAKSHA LOGIC
+// ==========================================
+function recommendGems() {
+    const dobInput = document.getElementById('gemDobInput').value;
+    if (!dobInput) return alert(isEnglish ? "Please select DOB." : "कृपया जन्म तिथि चुनें।");
+
+    const parts = dobInput.split('-');
+    const daySum = parts[2].split('').reduce((s, d) => s + parseInt(d, 10), 0);
+    const psychicScore = calculateRoot(daySum);
+
+    const fullDateSum = dobInput.replace(/\D/g, '').split('').reduce((s, d) => s + parseInt(d, 10), 0);
+    const destinyScore = calculateRoot(fullDateSum);
+
+    // Primary gem is based on Destiny number (Life Path) for long term success
+    const rec = gemData[destinyScore];
+    const rud = gemData[psychicScore]; // Rudraksha aligns well with psychic/body number
+
+    const langKey = isEnglish ? 'En' : 'Hi';
+
+    document.getElementById('resGem1').innerText = rec[`gem${langKey}`];
+    document.getElementById('resGemDesc1').innerText = rec[`desc${langKey}`];
+    
+    document.getElementById('resRud').innerText = rud[`rud${langKey}`];
+    document.getElementById('resRudDesc').innerText = rud[`desc${langKey}`];
+
+    document.getElementById('reportAreaGem').style.display = 'block';
+}
+
+// ==========================================
+// 11. SADE SATI TRACKER LOGIC
+// ==========================================
+function checkSadeSati() {
+    const moonIdx = parseInt(document.getElementById('moonSignSelect').value);
+    const saturnIdx = parseInt(document.getElementById('saturnTransitSelect').value);
+
+    // Calculate astrological distance
+    const dist = (saturnIdx - moonIdx + 12) % 12;
+    
+    let resultKey = "none";
+    if (dist === 11) resultKey = 11; // 12th from moon (1st phase)
+    else if (dist === 0) resultKey = 0; // On the moon (2nd phase)
+    else if (dist === 1) resultKey = 1; // 2nd from moon (3rd phase)
+    else if (dist === 3) resultKey = 3; // 4th from moon (Kantak Dhaiya)
+    else if (dist === 7) resultKey = 7; // 8th from moon (Ashtam Dhaiya)
+
+    const res = sadeSatiResults[resultKey];
+    const langKey = isEnglish ? 'En' : 'Hi';
+
+    document.getElementById('resSadePhase').innerText = res[`title${langKey}`];
+    document.getElementById('resSadeDesc').innerText = res[`desc${langKey}`];
+
+    document.getElementById('reportAreaSade').style.display = 'block';
 }
