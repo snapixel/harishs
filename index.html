@@ -583,6 +583,57 @@
             </div>
         </div>
     </section>
+	
+<!-- TAB 7: NAME OPTIMIZER -->
+    <section id="tabNameOpt" class="page-content" style="display:none;">
+        <div class="hero-banner numerology">
+            <div class="hero-pill-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                Real-Time Chaldean Engine
+            </div>
+            <h2 class="hero-title" id="optTitle">नाम वर्तनी जांच (Name Optimizer)</h2>
+            <p class="hero-subtitle" id="optSub">अपना सबसे भाग्यशाली नाम खोजने के लिए रीयल-टाइम कैल्डियन कैलकुलेटर।</p>
+        </div>
+        <div class="input-card no-print">
+            <div class="input-field-block">
+                <label class="input-field-label" id="optInputLabel">Test Spelling (अंग्रेजी में)</label>
+                <input type="text" id="optNameInput" class="custom-input" placeholder="e.g., AARAV vs AARAAV" oninput="optimizeName()">
+            </div>
+            <div class="num-stat-grid" style="margin-top: 20px;">
+                <div class="num-stat-card purple">
+                    <div class="stat-card-title">Compound</div>
+                    <div class="stat-number-circle" id="optCompound">0</div>
+                </div>
+                <div class="num-stat-card teal">
+                    <div class="stat-card-title">Root</div>
+                    <div class="stat-number-circle" id="optRoot">0</div>
+                </div>
+            </div>
+            <div class="trait-insight-box">
+                <div class="trait-box-title" style="color:var(--primary);" id="optMeaningTitle">कार्मिक अर्थ (Karmic Meaning)</div>
+                <p class="trait-box-desc" id="optMeaning">परिणाम देखने के लिए टाइप करना शुरू करें...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TAB 8: HORA CALCULATOR -->
+    <section id="tabHora" class="page-content" style="display:none;">
+        <div class="hero-banner choghadiya">
+            <div class="hero-pill-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                Vedic Planetary Hours
+            </div>
+            <h2 class="hero-title" id="horaTitle">होरा चक्र (Planetary Hours)</h2>
+            <p class="hero-subtitle" id="horaSub">शुभ कार्यों के लिए सटीक सूक्ष्म-समय (Micro-timing) गणना।</p>
+        </div>
+        <div class="input-card no-print">
+            <button class="primary-submit-btn" style="background: #11536b;" onclick="calculateHora()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span id="btnCalcHoraText">आज का होरा निकालें</span>
+            </button>
+        </div>
+        <div id="horaList" style="margin-top: 20px;"></div>
+    </section>
 
     <!-- RIGHT SIDE DRAWER (SETTINGS & ABOUT) -->
     <div class="drawer-overlay no-print" id="drawerOverlay" onclick="closeRightDrawer()"></div>
@@ -669,12 +720,20 @@
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 विस्तृत अंक ज्योतिष
             </button>
+            <button class="sheet-item" id="sheetOpt" onclick="switchTab('nameopt')">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                <span id="sheetOptText">नाम वर्तनी (Optimizer)</span>
+            </button>
+            <button class="sheet-item" id="sheetHora" onclick="switchTab('hora')">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <span id="sheetHoraText">होरा चक्र (Hora)</span>
+            </button>
         </div>
     </div>
 </div>
 
 <script src="data.js?v=11"></script>
-<script src="app.js?v=15"></script>
+<script src="app.js?v=16"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
 </html>

@@ -56,6 +56,9 @@ function switchTab(tab) {
     document.getElementById('tabSynastry').style.display = tab === 'synastry' ? 'block' : 'none';
     document.getElementById('tabStupank').style.display = tab === 'stupank' ? 'block' : 'none';
     document.getElementById('tabDetailed').style.display = tab === 'detailed' ? 'block' : 'none';
+	
+    document.getElementById('tabNameOpt').style.display = tab === 'nameopt' ? 'block' : 'none';
+    document.getElementById('tabHora').style.display = tab === 'hora' ? 'block' : 'none';
 
     document.getElementById('navNum').className = tab === 'num' ? 'nav-item active' : 'nav-item';
     document.getElementById('navChog').className = tab === 'chog' ? 'nav-item active' : 'nav-item';
@@ -70,6 +73,7 @@ function switchTab(tab) {
 
     if (tab === 'chog') calculateChoghadiya();
     if (tab === 'panchang') calculateLivePanchang();
+	if (tab === 'hora') calculateHora();
 }
 
 function toggleGuide() {
@@ -129,6 +133,26 @@ function toggleLang() {
 
     document.getElementById('guideContent').innerHTML = isEnglish ? guideContentEN : guideContentHI;
 
+    // Name Optimizer Translations
+    document.getElementById('optTitle').innerText = isEnglish ? "Name Spelling Optimizer" : "नाम वर्तनी जांच (Name Optimizer)";
+    document.getElementById('optSub').innerText = isEnglish ? "Real-time Chaldean compound calculator to find your luckiest spelling." : "अपना सबसे भाग्यशाली नाम खोजने के लिए रीयल-टाइम कैल्डियन कैलकुलेटर।";
+    document.getElementById('optInputLabel').innerText = isEnglish ? "Test Spelling (IN ENGLISH)" : "Test Spelling (अंग्रेजी में)";
+    document.getElementById('optMeaningTitle').innerText = isEnglish ? "Karmic Meaning" : "कार्मिक अर्थ (Karmic Meaning)";
+    
+    // Hora Calculator Translations
+    document.getElementById('horaTitle').innerText = isEnglish ? "Planetary Hours (Hora)" : "होरा चक्र (Planetary Hours)";
+    document.getElementById('horaSub').innerText = isEnglish ? "Precise micro-timing for auspicious actions." : "शुभ कार्यों के लिए सटीक सूक्ष्म-समय (Micro-timing) गणना।";
+    document.getElementById('btnCalcHoraText').innerText = isEnglish ? "Calculate Today's Hora" : "आज का होरा निकालें";
+    
+    // Slide-up Menu Translations
+    const sheetOptText = document.getElementById('sheetOptText');
+    if (sheetOptText) sheetOptText.innerText = isEnglish ? "Name Optimizer" : "नाम वर्तनी (Optimizer)";
+    const sheetHoraText = document.getElementById('sheetHoraText');
+    if (sheetHoraText) sheetHoraText.innerText = isEnglish ? "Hora Calculator" : "होरा चक्र (Hora)";
+
+    // Refresh dynamic content automatically
+    optimizeName();
+    if (document.getElementById('tabHora').style.display === 'block') calculateHora();
     if (currentData.name) calculateNumerology(true);
 }
 
@@ -858,3 +882,98 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('guideContent').innerHTML = guideContentHI;
     calculateChoghadiya();
 });
+
+// ==========================================
+// 7. NAME OPTIMIZER LOGIC
+// ==========================================
+function optimizeName() {
+    const rawInput = document.getElementById('optNameInput')?.value.toUpperCase().trim() || "";
+    const sanitizedInput = rawInput.replace(/[^A-Z]/g, '');
+    
+    if (!sanitizedInput) {
+        document.getElementById('optCompound').innerText = "0";
+        document.getElementById('optRoot').innerText = "0";
+        document.getElementById('optMeaning').innerText = isEnglish ? "Start typing to see real-time karmic results..." : "परिणाम देखने के लिए टाइप करना शुरू करें...";
+        return;
+    }
+
+    let totalScore = 0;
+    for (let char of sanitizedInput) {
+        if (chaldeanMap[char]) totalScore += chaldeanMap[char];
+    }
+
+    let effectiveCompound = totalScore > 80 ? totalScore.toString().split('').reduce((s, d) => s + parseInt(d, 10), 0) : totalScore;
+    const rootScore = calculateRoot(effectiveCompound);
+
+    document.getElementById('optCompound').innerText = effectiveCompound;
+    document.getElementById('optRoot').innerText = rootScore;
+
+    let meaning = effectiveCompound < 10 
+        ? rootPredictions[rootScore][isEnglish ? 'en' : 'hi']
+        : compoundPredictions[effectiveCompound] || (isEnglish ? "N/A" : "उपलब्ध नहीं");
+        
+    document.getElementById('optMeaning').innerHTML = meaning;
+}
+
+// ==========================================
+// 8. HORA CALCULATOR LOGIC
+// ==========================================
+const horaLords = {
+    en: ["Sun", "Venus", "Mercury", "Moon", "Saturn", "Jupiter", "Mars"],
+    hi: ["सूर्य (Sun)", "शुक्र (Venus)", "बुध (Mercury)", "चन्द्रमा (Moon)", "शनि (Saturn)", "बृहस्पति (Jupiter)", "मंगल (Mars)"]
+};
+
+async function calculateHora() {
+    const dateStr = document.getElementById('chogDateInput').value;
+    const city = document.getElementById('cityInput').value.trim() || 'Udaipur';
+    
+    try {
+        const coords = await getCoordinates(city);
+        const sunData = await getSunTimes(coords.lat, coords.lng, dateStr);
+        const sunrise = new Date(sunData.sunrise);
+        const sunset = new Date(sunData.sunset);
+        
+        const dayDuration = sunset.getTime() - sunrise.getTime();
+        const horaSeg = dayDuration / 12;
+        
+        const selectedDate = new Date(dateStr);
+        const dayOfWeek = selectedDate.getDay();
+        const startIndices = [0, 3, 6, 2, 5, 1, 4]; // Sun:0, Mon:3, Tue:6, Wed:2, Thu:5, Fri:1, Sat:4
+        let currentHoraIdx = startIndices[dayOfWeek];
+
+        const container = document.getElementById('horaList');
+        const titleText = isEnglish ? "Day Hora (Sunrise to Sunset)" : "दिन का होरा (सूर्योदय से सूर्यास्त)";
+        container.innerHTML = `<div class="chog-group-title">${titleText}</div>`;
+
+        const now = new Date().getTime();
+        const langKey = isEnglish ? 'en' : 'hi';
+        const horaPrefix = isEnglish ? 'Hora of' : 'होरा:';
+        const liveText = isEnglish ? '(LIVE)' : '(सक्रिय)';
+
+        for (let i = 0; i < 12; i++) {
+            const slotStart = new Date(sunrise.getTime() + (i * horaSeg));
+            const slotEnd = new Date(sunrise.getTime() + ((i + 1) * horaSeg));
+            const lord = horaLords[langKey][currentHoraIdx % 7];
+            
+            const isCurrentSlot = now >= slotStart.getTime() && now < slotEnd.getTime();
+
+            const row = document.createElement('div');
+            row.className = `chog-item-row ${isCurrentSlot ? 'is-current' : ''}`;
+            row.innerHTML = `
+                <div class="chog-row-left">
+                    <div class="chog-index-badge">${i + 1}</div>
+                    <div class="chog-name-block">
+                        <strong>${horaPrefix} ${lord} ${isCurrentSlot ? `<span style="color:#582be8; font-size:0.75rem; font-weight:800;">${liveText}</span>` : ''}</strong>
+                    </div>
+                </div>
+                <div class="chog-row-right">
+                    <div class="chog-time-text">${formatTime12(slotStart)} - ${formatTime12(slotEnd)}</div>
+                </div>
+            `;
+            container.appendChild(row);
+            currentHoraIdx++;
+        }
+    } catch (e) {
+        console.error("Hora Error:", e);
+    }
+}
