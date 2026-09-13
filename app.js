@@ -776,6 +776,9 @@ function calculateCompatibility() {
     document.getElementById('reportAreaSynastry').style.display = 'block';
 }
 
+// ==========================================
+// PDF & WHATSAPP EXPORTS
+// ==========================================
 function generatePDF(type) {
     let element, filename;
     if (type === 'num') {
@@ -789,18 +792,71 @@ function generatePDF(type) {
         filename = `Vedic_Panchang_${document.getElementById('panchangDateInput').value}.pdf`;
     }
 
-    element.classList.add('pdf-export-mode');
     const opt = {
-        margin: 0.25,
+        margin: 0.3,
         filename: filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+        image: { type: 'jpeg', quality: 1.0 },
+        html2canvas: { 
+            scale: 2, 
+            useCORS: true, 
+            backgroundColor: '#ffffff',
+            scrollY: 0, 
+            scrollX: 0,
+            // THE FIX: This intercepts the PDF engine and forces hardcoded colors
+            // specifically for the PDF document, ignoring mobile Dark Mode.
+            onclone: function(clonedDoc) {
+                const el = clonedDoc.getElementById(element.id);
+
+                // 1. Hide buttons in the PDF
+                el.querySelectorAll('.report-actions-grid, .floating-action-bar').forEach(bar => {
+                    bar.style.display = 'none';
+                });
+
+                // 2. Force all text to be pitch black (except badges/circles)
+                el.querySelectorAll('div, span, p, h2, h3, h4, li, strong').forEach(node => {
+                    // Skip text inside colored badges so they stay white
+                    if (!node.closest('.stat-number-circle') && !node.closest('.loshu-cell') && !node.closest('.system-pill') && !node.closest('.lucky-item-card strong') && !node.closest('.status-badge-pill') ) {
+                        node.style.color = '#1e1b2e';
+                        node.style.textShadow = 'none';
+                    }
+                });
+
+                // 3. Force solid backgrounds for all cards
+                el.style.backgroundColor = '#ffffff';
+                
+                el.querySelectorAll('.num-stat-card').forEach(card => {
+                    if(card.classList.contains('purple')) card.style.backgroundColor = '#f4efff';
+                    if(card.classList.contains('teal')) card.style.backgroundColor = '#e8faf4';
+                    if(card.classList.contains('orange')) card.style.backgroundColor = '#fff5e6';
+                    if(card.classList.contains('red')) card.style.backgroundColor = '#fdf0f2';
+                });
+                
+                el.querySelectorAll('.trait-insight-box').forEach(box => {
+                    box.style.backgroundColor = '#f9faff';
+                    if(box.classList.contains('green')) box.style.backgroundColor = '#f5fcf8';
+                    if(box.classList.contains('orange')) box.style.backgroundColor = '#fdfbf4';
+                    if(box.classList.contains('red')) box.style.backgroundColor = '#fdf5f6';
+                });
+
+                el.querySelectorAll('.loshu-matrix-card').forEach(card => {
+                    card.style.backgroundColor = '#0f0c20';
+                });
+                
+                el.querySelectorAll('.loshu-cell').forEach(cell => {
+                    if(cell.classList.contains('active')) {
+                        cell.style.background = '#9333ea';
+                        cell.style.color = '#ffffff';
+                    } else {
+                        cell.style.background = '#1b1638';
+                        cell.style.color = '#ffffff';
+                    }
+                });
+            }
+        },
         jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
     };
 
-    html2pdf().set(opt).from(element).save().then(() => {
-        element.classList.remove('pdf-export-mode');
-    });
+    html2pdf().set(opt).from(element).save();
 }
 
 function shareWhatsApp() {

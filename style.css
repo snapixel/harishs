@@ -301,11 +301,68 @@ body {
 .nav-item.active svg { stroke: var(--primary); transform: scale(1.12); }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.pdf-export-mode, .pdf-export-mode * { animation: none !important; transition: none !important; opacity: 1 !important; }
-.pdf-export-mode { padding: 0 !important; margin: 0 !important; background: white !important; }
-.pdf-export-mode .result-report-card { border: none !important; box-shadow: none !important; display: block !important; }
-.pdf-export-mode .loshu-matrix-card { background: #0f0c20 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+/* ==========================================
+   PDF EXPORT OVERRIDES (STRICT INK ENFORCEMENT)
+   ========================================== */
+.pdf-export-mode {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 20px !important;
+    margin: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-scheme: light !important;
+}
 
+.pdf-export-mode * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-scheme: light !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+}
+
+/* Force Text to Solid Black/Dark for PDF */
+.pdf-export-mode .report-name-title,
+.pdf-export-mode .report-tag,
+.pdf-export-mode .report-dob-sub,
+.pdf-export-mode .stat-card-title,
+.pdf-export-mode .stat-card-sub,
+.pdf-export-mode .calc-breakdown-card,
+.pdf-export-mode .trait-box-title,
+.pdf-export-mode .trait-box-desc,
+.pdf-export-mode .lucky-grid-section-title,
+.pdf-export-mode .lucky-item-card span,
+.pdf-export-mode .lucky-item-card strong,
+.pdf-export-mode .loshu-card-title,
+.pdf-export-mode .loshu-card-sub {
+    color: #000000 !important;
+    text-shadow: none !important;
+}
+
+/* Ensure Stat Circles Keep Their Vibrant Backgrounds & White Text */
+.pdf-export-mode .stat-number-circle { color: #ffffff !important; }
+.pdf-export-mode .num-stat-card.purple .stat-number-circle { background-color: #582be8 !important; }
+.pdf-export-mode .num-stat-card.teal .stat-number-circle { background-color: #00897b !important; }
+.pdf-export-mode .num-stat-card.orange .stat-number-circle { background-color: #ea580c !important; }
+.pdf-export-mode .num-stat-card.red .stat-number-circle { background-color: #e11d48 !important; }
+
+/* Keep Background Fills Solid */
+.pdf-export-mode .result-report-card { border: none !important; display: block !important; background-color: #ffffff !important; }
+.pdf-export-mode .loshu-matrix-card { background-color: #0f0c20 !important; color: #ffffff !important; }
+.pdf-export-mode .loshu-cell { background-color: #1b1638 !important; border: 1px solid #4a4270 !important; color: #ffffff !important;}
+.pdf-export-mode .loshu-cell.active { background-color: #9333ea !important; color: #ffffff !important;}
+
+/* Ensure insight boxes keep their light colors */
+.pdf-export-mode .num-stat-card.purple { background-color: #f4efff !important; border: 1px solid #e5d8ff !important; }
+.pdf-export-mode .num-stat-card.teal { background-color: #e8faf4 !important; border: 1px solid #c7f2e3 !important; }
+.pdf-export-mode .num-stat-card.orange { background-color: #fff5e6 !important; border: 1px solid #fee2b8 !important; }
+.pdf-export-mode .num-stat-card.red { background-color: #fdf0f2 !important; border: 1px solid #fad1d8 !important; }
+.pdf-export-mode .trait-insight-box { background-color: #f9faff !important; }
+.pdf-export-mode .trait-insight-box.green { background-color: #f5fcf8 !important; }
+.pdf-export-mode .trait-insight-box.orange { background-color: #fdfbf4 !important; }
+.pdf-export-mode .trait-insight-box.red { background-color: #fdf5f6 !important; }
 .score-display { text-align: center; margin: 20px 0; }
 .score-circle {
     width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(#ff4757 0%, #eee 0);
